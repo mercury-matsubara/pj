@@ -129,12 +129,16 @@
 		w = (w * 0.8);
 		h = (h * 0.8);
 		url = 'Modal.php?tablenum='+GET+'&form=insert';
-		n = showModalDialog(
-			url,
-			this,
-			"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
-		);
-	
+//		n = showModalDialog(
+//			url,
+//			this,
+//			"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
+//		);
+                n = window.open(
+                url,
+                this,
+                "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
+                );
 	}
 	function AddTableRows(id){
 		var table01 = document.getElementById('insert');

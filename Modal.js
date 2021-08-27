@@ -37,12 +37,17 @@ function click_mail()
 			},
 			complete:function() {
 				url = 'Mail.php';
-				n = showModalDialog(
-					url,
-					this,
-//					"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
-					"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
-				);
+//				n = showModalDialog(
+//					url,
+//					this,
+////					"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
+//					"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
+//				);
+                                n = window.open(
+                                url,
+                                this,
+                                "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
+                                );
 			}
 		});
 	}
@@ -91,12 +96,17 @@ function click_label()
 			},
 			complete:function() {
 				url = 'Label.php';
-				n = showModalDialog(
-					url,
-					this,
-//					"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
-					"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
-				);
+//				n = showModalDialog(
+//					url,
+//					this,
+////					"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
+//					"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
+//				);
+                                n = window.open(
+                                        url,
+                                        this,
+                                        "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
+                                );
 			}
 		});
 	}
@@ -113,12 +123,17 @@ function click_list(code,tablenum)
 	w = (w * 0.8);
 	h = (h * 0.8);
 	url = 'pdf.php?code='+code+'&tablenum='+tablenum;
-	n = showModalDialog(
-		url,
-		this,
-//		"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
-		"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
-	);
+//	n = showModalDialog(
+//		url,
+//		this,
+////		"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
+//		"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
+//	);
+        n = window.open(
+                url,
+                this,
+                "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
+        );	
 }
 function check_out(id)
 {

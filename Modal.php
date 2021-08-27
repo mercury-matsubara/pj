@@ -205,7 +205,8 @@
 	
 	function toMainWin()
 	{
-		var opener = window.dialogArguments;
+//		var opener = window.dialogArguments;
+                var opener = window.opener;
 		var columnum = "<?php echo $columns_num; ?>";
 		var type = "<?php echo $form_type; ?>";
 		var form_num ="<?php echo $form_num; ?>";
