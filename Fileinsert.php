@@ -231,7 +231,7 @@
 	echo "<a class = 'title'>".$title1.$title2."</a>";
 	echo "</div><br><br>";
 	echo "<div class = 'center'>";
-	echo '<input type="file" name="inpath" size="300" class="free"><br><br>';
+	echo '<input type="file" name="inpath" size="300"><br><br>';
 	echo '<input type="submit" name = "fileinsert" value = "Žæž" class="free">';
 	echo "</form>";
 	

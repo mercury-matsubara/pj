@@ -103,8 +103,8 @@
 		var judge_go = '<?php echo $isexist ; ?>';
 		if(judge_go)
 		{
-			if(confirm("入力内容正常確認。\n情報更新しますがよろしいですか？\
-				\n再度確認する場合は「キャンセル」ボタンを押してください。"))
+			if(confirm("入力内容正常確認。\n情報更新しますがよろしいですか？" +
+				"\n再度確認する場合は「キャンセル」ボタンを押してください。"))
 			{
 				location.href = "./deleteUserComp.php";
 			}

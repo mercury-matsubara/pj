@@ -158,13 +158,13 @@
 	
 	
 	$checkList = $_SESSION['check_column'];
-	echo "<div class = 'left'><form action='pageJump.php' method='post'>";
+	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
 	echo makebutton($filename,'top');
-	echo "</form>";
+	echo "</div></form>";
 	echo '<form name ="form" action="nenziJump.php" method="post">';
 	echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
-	echo "</form>";
 	echo "</div>";
+    echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";

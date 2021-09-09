@@ -355,7 +355,7 @@
 	$form_drop = makeformModal_set($damy_array,'readOnly','drop',$columns);
 	$checkList = $_SESSION['check_column'];
 
-	echo "<LEFT><div class = 'pad' >";
+	echo "<LEFT><div class = 'pad' id = 'pop'>";
 	echo '<form name ="form" action="Modal.php"  target = "Modal" method="post">';
 	echo "<input type = 'hidden' name = 'tablenum' value = '".$tablenum."'>";
 	echo "<input type = 'hidden' name = 'form' value = '".$form_name."'>";

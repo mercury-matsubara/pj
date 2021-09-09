@@ -123,6 +123,10 @@ a.error {
 	padding: 15px;
 }
 
+#pop
+{
+    zoom: 70%;
+}
 .readOnly
 {
 	background-color: #cccccc;

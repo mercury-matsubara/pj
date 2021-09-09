@@ -371,8 +371,8 @@
 		var judge = '<?php echo $judge ?>';
 		if(judge)
 		{
-			if(confirm("入力内容正常確認。\n情報登録しますがよろしいですか？\
-						\n再度確認する場合は「キャンセル」ボタンを押してください。"))
+			if(confirm("入力内容正常確認。\n情報登録しますがよろしいですか？" +
+						"\n再度確認する場合は「キャンセル」ボタンを押してください。"))
 			{
 				location.href = "./insertComp.php";
 			}
