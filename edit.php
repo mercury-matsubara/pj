@@ -553,7 +553,7 @@
 			$endjudge = true;
 			for($i = 0; $i < count($endMonth); $i = $i + 3)
 			{
-				if(($_SESSION['edit']['form_704_0'] == $endMonth[$i + 1]) && ($_SESSION['edit']['form_704_1'] == $endMonth[$i + 2]))
+				if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['form_704_0'] == $endMonth[$i + 1]) && ($_SESSION['edit']['form_704_1'] == $endMonth[$i + 2]))
 				{
 					$endjudge = false;
 				}

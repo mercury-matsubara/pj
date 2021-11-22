@@ -65,6 +65,7 @@
 	}
 	$edalist = edaget();
 	$koulist = kouget();
+        $syalist = syaget();
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>

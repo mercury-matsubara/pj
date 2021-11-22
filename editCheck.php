@@ -321,14 +321,17 @@
 		echo "<div class = 'center'><br><br>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
 		echo "</div><br><br>";
-		if($errorinfo[1] != "")
+		if(isset($errorinfo[1]) && $errorinfo[1] != "")
 		{
 			echo "<a class = 'error'>".$errorinfo[1]."</a><br>";
 		}
-		for($i = 2 ; $i < count($errorinfo) ; $i++)
-		{
-			echo "<a class = 'error'>".$errorinfo[$i]."</a><br>";
-		}
+                if(isset($errorinfo))
+                {
+                    for($i = 2 ; $i < count($errorinfo) ; $i++)
+                    {
+                            echo "<a class = 'error'>".$errorinfo[$i]."</a><br>";
+                    }
+                }
 		echo $form;
 		echo "</tr></table>";
 		echo "<div class = 'center'>";
@@ -345,7 +348,7 @@
 					class = "free" ';
 		}
 		
-		if($errorinfo[1] != "")
+		if(isset($errorinfo[1]) && $errorinfo[1] != "")
 		{
 			echo 'disabled>';
 		}
