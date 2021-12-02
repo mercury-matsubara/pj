@@ -1634,8 +1634,7 @@ function make_selectlist()
 戻り値	なし
 ************************************************************************************************************/
 function make_selectlist(){
-    $form_str = "";
-    $form_str .= "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><tr/></thead></table>";
+    $form_str = "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><tr/></thead></table>";
     
     return ($form_str);
 }

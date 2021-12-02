@@ -62,6 +62,18 @@
 		});
 		set_button_size();
 	});
+    
+    function error_pjend()
+    {
+        console.log("エラー処理");
+        $.ajax({
+            type: 'POST',
+            url: 'pjendsyori.php',
+            success: function(data) {
+
+            }
+        });
+    }
 --></script>
 </head>
 <body>
@@ -77,7 +89,14 @@
 	{
 		$judge = false;
 		$message = $_SESSION['message'];
+        $pjcode = $_SESSION['pjcode'];
+        $edabancode = $_SESSION['edabancode'];
+        $pjname = $_SESSION['pjname'];
+        
 		unset($_SESSION['message']);
+        unset($_SESSION['pjcode']);
+        unset($_SESSION['edabancode']);
+        unset($_SESSION['pjname']);
 	}
 	if($judge)
 	{
@@ -89,13 +108,32 @@
 		echo "</form>";
 		echo "<div class = 'center'><br><br>";
 		echo "<a class = 'title'>".$title."</a>";
-		echo "</div>";
+        echo "</div>";
 		echo "<br><br>";
-		echo "<table><tr>";
-		echo "<td class = 'space'></td><td class = 'one'><a class = 'itemname'>プロジェクトコード</a></td><td class = 'two'><a class = 'comp' >".$_SESSION['list']['form_102_0']."</a></td></tr>";
-		echo "<td class = 'space'></td><td class = 'one'><a class = 'itemname'>枝番コード</a></td><td class = 'two'><a class = 'comp' >".$_SESSION['list']['form_202_0']."</a></td></tr>";
-		echo "<td class = 'space'></td><td class = 'one'><a class = 'itemname'>製番・案件名</a></td><td class = 'two'><a class = 'comp' >".$_SESSION['list']['form_203_0']."</a></td></tr>";
+        echo '<div><center>';
+        echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></tr></thead>";
+        
+        $pjcode = explode(",",$_SESSION['list']['pjcode']);
+        $edabancode = explode(",",$_SESSION['list']['edabancode']);
+        $pjname = explode(",",$_SESSION['list']['pjname']);
+        
+        for($i=0; $i < count($pjcode);$i++){
+            if(($i % 2) == 1){
+                echo '<td id = "stripe">'.($i + 1).'</td>';
+                echo "<td id = 'stripe'>".$pjcode[$i]."</td>";
+                echo "<td id = 'stripe'>".$edabancode[$i]."</td>";
+                echo "<td id = 'stripe'>".$pjname[$i]."</td></tr>";
+            }
+            else
+            {
+                echo '<td>'.($i + 1).'</td>';
+                echo "<td>".$pjcode[$i]."</td>";
+                echo "<td>".$edabancode[$i]."</td>";
+                echo "<td>".$pjname[$i]."</td></tr>";
+            }
+        }
 		echo "</table>";
+        echo '</center></div>';
 //		echo '<form action="pjendJump.php" method="post" >';
 //		echo "<div class = 'center'>";
 //		echo '<input type="submit" name = "cancel" value = "一覧に戻る" class = "free">';
@@ -106,7 +144,6 @@
 	else
 	{
 		$_SESSION['post'] = $_SESSION['pre_post'];
-		$_SESSION['pre_post'] = null;
 		echo "<form action='pageJump.php' method='post'>";
 		echo "<div class = 'left' id = 'space_button'>　</div>";
 		echo "<div><table id = 'button'><tr><td>";
@@ -118,20 +155,52 @@
 		echo "</div>";;
 		echo "<br><br>";
 		echo "<div><center>";
+        echo ''.(count($message)).'件のPJが処理できませんでした。';
+        echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><th><a class ='head'>エラー内容</a></th></th><tr/></thead>";
+   
 		if(!empty($message))
 		{
-			echo $message;
+            for($i = 0; $i < count($message); $i++){
+                if(($i % 2) == 1){
+                    echo '<tr>';
+                    echo '<td id = "stripe">'.($i + 1).'</td>';
+                    echo '<td id = "stripe">'.$pjcode[$i].'</td>';
+                    echo '<td id = "stripe">'.$edabancode[$i].'</td>';
+                    echo '<td id = "stripe">'.$pjname[$i].'</td>';
+                    echo '<td id = "stripe">'.$message[$i].'</td>';
+                    echo '</tr>';
+                }
+                else{
+                    echo '<tr>';
+                    echo '<td>'.($i + 1).'</td>';
+                    echo '<td>'.$pjcode[$i].'</td>';
+                    echo '<td>'.$edabancode[$i].'</td>';
+                    echo '<td>'.$pjname[$i].'</td>';
+                    echo '<td>'.$message[$i].'</td>';
+                    echo '</tr>';
+                }
+            }
 		}
 		else
 		{
 			echo $list;
 		}
+        echo "</table>";
 		echo "</center></div><br><br>";
 		echo '<form action="pjendJump.php" method="post" >';
 		echo "<div class = 'center'>";
 		echo '<input type="submit" name = "cancel" value = "一覧に戻る" class = "free">';
 		echo "</div>";
 		echo "</form>";
+        
+        $select_code = explode(",",$_SESSION['list']['pjcode']);
+        
+        if(count($select_code) > count($pjcode))
+        {
+            echo '<script language=javascript>error_pjend();</script>';
+        }
+        
+        
 	}
 ?>
 <script language="JavaScript"><!--

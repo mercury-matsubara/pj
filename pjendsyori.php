@@ -17,7 +17,6 @@
 	
 	if($filename == 'pjend_5')
 	{
-		unset($_SESSION['post']);
 		$message = pjend($_SESSION['list']);
 		if($message == 'Š®—¹')
 		{

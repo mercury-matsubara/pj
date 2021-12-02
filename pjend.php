@@ -152,7 +152,8 @@
         const checkbox = document.form.checkbox;
         var oncheckbox = 0;
         var jadge = false;
-        
+        var tabledata = document.getElementById("endpjlist");
+
         for(let i = 0; i < checkbox.length; i++)
         {
             if(checkbox[i].checked === true)
@@ -161,13 +162,29 @@
             }
         }
         
-        //配列作成
-        const code_array = new Array(oncheckbox);
-        for(let i = 0; i < oncheckbox; i++)
-        {
-            code_array[i] = checkbox[i].value;
-        }
+        //PJ送信情報作成
+        const code_array = new Array(oncheckbox);        
+        const pjname_array = new Array(oncheckbox);
+        const pjcode_array = new Array(oncheckbox);
+        const edabancode_array = new Array(oncheckbox);
+        var count = 0;
         
+        for(let i = 0; i < checkbox.length; i++)
+        {
+            if(checkbox[i].checked === true)
+            {
+                code_array[count] = checkbox[i].value;
+                pjcode_array[count] = tabledata.rows[i].cells[1].textContent;
+                edabancode_array[count] = tabledata.rows[i].cells[2].textContent;
+                pjname_array[count] = tabledata.rows[i].cells[3].textContent;
+                count++;
+            }
+        }
+
+        console.log(code_array);
+        console.log(pjcode_array);
+        console.log(edabancode_array);
+        console.log(pjname_array);
         if(oncheckbox === 0)
         {
             alert("終了するプロジェクトを選択してください。");
@@ -186,19 +203,39 @@
                 request.type = 'hidden'; //入力フォームが表示されないように
                 request.name = '5CODE';
                 request.value = code_array;
-
                 form.appendChild(request);
                 
                 //PJ終了
                 end = document.createElement('input');
                 end.type = 'hidden'; //入力フォームが表示されないように
                 end.name = 'end';
-                end.value = 'PJ終了';
-                
+                end.value = 'PJ終了';                
                 form.appendChild(end);
                 
-                document.body.appendChild(form);
+                //プロジェクトコード
+                var pjcode = document.createElement('input');
+                pjcode.type = 'hidden'; //入力フォームが表示されないように
+                pjcode.name = 'pjcode';
+                pjcode.value = pjcode_array;
+                form.appendChild(pjcode);
+                
+                //枝番コード
+                var edabancode = document.createElement('input');
+                edabancode.type = 'hidden'; //入力フォームが表示されないように
+                edabancode.name = 'edabancode';
+                edabancode.value = edabancode_array;
+                form.appendChild(edabancode);
+                
+                //プロジェクト名コード
+                var pjname = document.createElement('input');
+                pjname.type = 'hidden'; //入力フォームが表示されないように
+                pjname.name = 'pjname';
+                pjname.value = pjname_array;
+                form.appendChild(pjname);
 
+                //フォーム送信
+                document.body.appendChild(form);
+                
                 form.submit();
              
             jadge = true;
