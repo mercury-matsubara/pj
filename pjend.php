@@ -42,8 +42,7 @@
 <script src='./pulldown.js'></script>
 <script src='./jquery.flatshadow.js'></script>
 <script src='./button_size.js'></script>
-<script language="JavaScript"><!--
-	
+<script language="JavaScript">    
 	$(function()
 	{
 		$(".button").corner();
@@ -83,6 +82,53 @@
 		}
 	}
 	
+    function select_checkbox(value,name,type)
+    {
+        const checkbox = document.form.checkbox;
+        var tabledata = document.getElementById("endpjlist");
+        var table = document.getElementById("select_pj");
+
+        //全行削除
+        var rowLen = table.rows.length;
+        for (var i = rowLen-1; i > 0; i--) {
+            table.deleteRow(-1);
+        }
+        
+        //表再作成                
+        table = document.getElementById("select_pj");
+        var oncheck_num = 0;
+        
+        for(let i = 0; i < checkbox.length; i++)
+        {
+            if(checkbox[i].checked === true)
+            {
+                oncheck_num++;
+                //追加の処理
+                var rows = table.insertRow(-1);
+
+                // -1で列末尾に追加。インデックスで指定の位置に追加も可能
+                var cell1 = rows.insertCell(-1);
+                var cell2 = rows.insertCell(-1);
+                var cell3 = rows.insertCell(-1);
+                var cell4 = rows.insertCell(-1);
+                
+                cell1.innerHTML = oncheck_num;
+                cell2.innerHTML = tabledata.rows[i].cells[1].textContent;
+                cell3.innerHTML = tabledata.rows[i].cells[2].textContent;
+                cell4.innerHTML = tabledata.rows[i].cells[3].textContent;
+                
+                //背景色変更(偶数行の背景色を水色にする)
+                if(oncheck_num%2 == 0)
+                {
+                    rows.style.backgroundColor="#B0E0E6";
+                }
+            }
+        }
+        
+        //選択メッセージ出力
+        document.getElementById("selectmsg").innerText = oncheck_num + "件選択中";
+    }
+    
 	function checkonradio()
 	{
 		var id ='<?php echo $main_table; ?>';
@@ -101,7 +147,102 @@
 		return judge;
 	}
 	
-// --></script>
+    function check_checkbox()
+    {
+        const checkbox = document.form.checkbox;
+        var oncheckbox = 0;
+        var jadge = false;
+        var tabledata = document.getElementById("endpjlist");
+
+        for(let i = 0; i < checkbox.length; i++)
+        {
+            if(checkbox[i].checked === true)
+            {
+                oncheckbox++;
+            }
+        }
+        
+        //PJ送信情報作成
+        const code_array = new Array(oncheckbox);        
+        const pjname_array = new Array(oncheckbox);
+        const pjcode_array = new Array(oncheckbox);
+        const edabancode_array = new Array(oncheckbox);
+        var count = 0;
+        
+        for(let i = 0; i < checkbox.length; i++)
+        {
+            if(checkbox[i].checked === true)
+            {
+                code_array[count] = checkbox[i].value;
+                pjcode_array[count] = tabledata.rows[i].cells[1].textContent;
+                edabancode_array[count] = tabledata.rows[i].cells[2].textContent;
+                pjname_array[count] = tabledata.rows[i].cells[3].textContent;
+                count++;
+            }
+        }
+
+        console.log(code_array);
+        console.log(pjcode_array);
+        console.log(edabancode_array);
+        console.log(pjname_array);
+        if(oncheckbox === 0)
+        {
+            alert("終了するプロジェクトを選択してください。");
+			jadge = false;
+        }
+        else
+        {
+                var form = document.createElement('form');
+                var request;
+                var end;
+                form.method = 'POST';
+                form.action = 'pjendJump.php';
+                
+                //5CODE送信
+                request = document.createElement('input');
+                request.type = 'hidden'; //入力フォームが表示されないように
+                request.name = '5CODE';
+                request.value = code_array;
+                form.appendChild(request);
+                
+                //PJ終了
+                end = document.createElement('input');
+                end.type = 'hidden'; //入力フォームが表示されないように
+                end.name = 'end';
+                end.value = 'PJ終了';                
+                form.appendChild(end);
+                
+                //プロジェクトコード
+                var pjcode = document.createElement('input');
+                pjcode.type = 'hidden'; //入力フォームが表示されないように
+                pjcode.name = 'pjcode';
+                pjcode.value = pjcode_array;
+                form.appendChild(pjcode);
+                
+                //枝番コード
+                var edabancode = document.createElement('input');
+                edabancode.type = 'hidden'; //入力フォームが表示されないように
+                edabancode.name = 'edabancode';
+                edabancode.value = edabancode_array;
+                form.appendChild(edabancode);
+                
+                //プロジェクト名コード
+                var pjname = document.createElement('input');
+                pjname.type = 'hidden'; //入力フォームが表示されないように
+                pjname.name = 'pjname';
+                pjname.value = pjname_array;
+                form.appendChild(pjname);
+
+                //フォーム送信
+                document.body.appendChild(form);
+                
+                form.submit();
+             
+            jadge = true;
+        }
+        return jadge;
+    }
+</script>
 </head>
 <body>
 
@@ -120,12 +261,13 @@
 	$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
 	$damy_array = array();
 	$list ="";
-	$list = makeList_radio($sql,$_SESSION['list'],$main_table);
+	//$list = makeList_radio($sql,$_SESSION['list'],$main_table);
+    $list = makeList_check($sql,$_SESSION['list'],$main_table);
 	$columns = $form_ini[$filename]['sech_form_num'];
 	$form = makeformModal_set($_SESSION['list'],'',"form",$columns);
 	$columns = $form_ini[$filename]['insert_form_tablenum'];
-	$form_drop = makeformModal_set($damy_array,'readOnly','drop',$columns);
-	
+	//$form_drop = makeformModal_set($damy_array,'readOnly','drop',$columns);
+	$form_drop = make_selectlist();
 	$checkList = $_SESSION['check_column'];
 	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
 	echo makebutton($filename,'top');
@@ -147,17 +289,19 @@
 	echo "</td></tr></table>";
 	echo $list;
 	echo "</form>";
-	echo '<form name ="drop" id = "drop" action="pjendJump.php" method="post" onsubmit ="return checkonradio();">';
+	//echo '<form name ="drop" id = "drop" action="pjendJump.php" method="post" onsubmit ="return checkonradio();">';
+    //echo '<form name ="drop" id = "drop" action="pjendJump.php" method="post" onsubmit ="return check_checkbox();">';
 	echo "<br><table><tr><td>";
-	echo "<input type = 'hidden' name = '".$main_table."CODE' id = '".$main_table."CODE' value =''>";
+	//echo "<input type = 'hidden' name = '".$main_table."CODE' id = '".$main_table."CODE' value =''>";
+    echo "<div id = 'select_code'></div>";
+    echo '<tr><td><div id="selectmsg">0件選択中</div></td><td><input type="submit" name="end" class="button" value="ＰＪ終了" onclick="check_checkbox();"></td></tr>';
 	echo $form_drop ;
 	echo "</td><td valign='bottom' >";
-	echo '<input type="submit" name="end" class="button" value="ＰＪ終了">';
 	echo "</td>";
 	echo "</tr></table>";
-	echo "</form>";
+	//echo "</form>";
 	echo "</div>";
 ?>
-	
+
 </body>
 </html>
