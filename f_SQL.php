@@ -1425,6 +1425,7 @@ function itemListSQL($post){
 	}
 	else if($filename == 'PJLIST_2')
 	{
+                $isone = false;
 		if(isset($post['5CODE']))
 		{
 			

@@ -26,6 +26,7 @@
 	require_once ("f_Form.php");
 	require_once ("f_SQL.php");
 	$form_ini = parse_ini_file('./ini/form.ini', true);
+	$SQL_ini = parse_ini_file('./ini/SQL.ini', true);
 	
 	$_SESSION['post'] = $_SESSION['pre_post'];
 	
@@ -54,6 +55,14 @@
 	if(isset($_SESSION['max_over']))
 	{
 		$maxover = $_SESSION['max_over'];
+	}
+        
+        if($filename == 'PJTOUROKU_1')
+	{
+		$sql[0] = $SQL_ini[$filename]['sql2'];
+		$sql[1] = $SQL_ini[$filename]['sql1'];
+		$_SESSION['list']['limitstart'] = 0;
+		$list = makeList_item($sql,$_SESSION['insert']);
 	}
 ?>
 <head>
@@ -152,7 +161,34 @@
 //		return judge;
 //	}
 
-
+        function goukeiCheck()
+	{
+		var total = "<?php echo $_SESSION['kobetu']['total']; ?>";
+		var id = 'kobetu_' + total + '_1';
+		if(inputcheck(id,8,7,0,2))
+		{
+			if(document.getElementById('chage').value == document.getElementById('form_504_0').value)
+			{
+				return true;
+			}
+			else
+			{
+				if(confirm("入力内容正常確認。\nプロジェクト金額と合計金額が異なります。\n合計金額でプロジェクト金額を変更しますがよろしいですか？\n再度確認する場合は「キャンセル」ボタンを押してください。"))
+				{
+                                        document.getElementById('form_504_0').value = document.getElementById('chage').value;
+                                        return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	function check(checkList,notnullcolumns,notnulltype)
 	{
@@ -195,6 +231,10 @@
 					}
 				}
 			}
+                        if(!goukeiCheck())
+                        {
+                            judge = false;
+                        }
 		}
 		return judge;
 	}
@@ -341,7 +381,7 @@
 	echo "<a class = 'title'>".$title1.$title2."</a>";
 	echo "</div>";
 	echo "<br><br>";
-	if($errorinfo[1] != "")
+	if(isset($errorinfo[1]) && $errorinfo[1] != "")
 	{
 		echo "<a class = 'error'>".$errorinfo[1]."</a><br>";
 	}
@@ -351,9 +391,16 @@
 	}
 	echo $form;
 	echo "</tr></table>";
+        if($filename == 'PJTOUROKU_1')
+	{
+                echo "<table style='margin: auto;'><tr><td class='one'><a class='itemname'>合計金額 : </a></td>";
+		echo "<td class='two'><input type = 'text' value = '".$_SESSION['kobetu']['totalCharge']."' id = 'chage' name = 'chage' class = 'readOnly' size = 49 readonly >";
+		echo "</td></tr></table>";
+                echo $list;
+	}
 	echo "<div class = 'center'>";
 	echo '<input type="submit" name = "insert" value = "登録" class="free" ';
-	if($errorinfo[1] != "")
+	if(isset($errorinfo[1]) && $errorinfo[1] != "")
 	{
 		echo 'disabled>';
 	}

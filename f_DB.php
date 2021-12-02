@@ -353,20 +353,20 @@ function selectUser(){
 	}
 	$list_str .= "</tbody>";
 	$list_str .= "</table>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
+	$list_str .= "<div class = 'left'>";
+	$list_str .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
 	if($limitstart == 0)
 	{
-		$list_html .= " disabled='disabled'";
+		$list_str .= " disabled='disabled'";
 	}
-	$list_html .= "></div><div class = 'left'>";
-	$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
+	$list_str .= "></div><div class = 'left'>";
+	$list_str .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
 	if(($limitstart + $listcount) == $totalcount)
 	{
-		$list_html .= " disabled='disabled'";
+		$list_str .= " disabled='disabled'";
 	}
-	$list_html .= "></div>";
-	$list_html .="<div style='clear:both;'></div>";
+	$list_str .= "></div>";
+	$list_str .="<div style='clear:both;'></div>";
 
 	return($list_str);
 }
@@ -1083,7 +1083,7 @@ function existCheck($post,$tablenum,$type){
 				error_log($con->error,0);
 				$judge = false;
 			}
-			if($result->num_rows != 0 )
+			if(isset($result->num_rows) && $result->num_rows != 0 )
 			{
 				$errorinfo[0] .= $uniquecolumn_array[$j].",";
 			}
@@ -1242,6 +1242,33 @@ function insert($post){
 				}
 			}
 		}
+                if($filename == 'PJTOUROKU_1')
+                {
+                    $CODE5 = $con->insert_id;
+                    $CODE4 = "";
+                    $name_arrsy = array();
+                    $keyarray = array_keys($_SESSION['insert']);
+                    foreach($keyarray as $key)
+                    {
+                        if (strstr($key, 'kobetu'))
+                        {
+                                $name_arrsy = explode('_',$key);
+                                $CODE4 = $name_arrsy[1];
+                                $judge = false;
+                                if($_SESSION['insert'][$key] != '')
+                                {
+                                        $judge = false;
+                                        $SQL = "INSERT INTO projectditealinfo (4CODE,5CODE,DETALECHARGE) VALUES(".$CODE4.",".$CODE5.",".$_SESSION['insert'][$key].");";
+                                        $con->query($SQL) or ($judge = true);																	// クエリ発行
+                                        if($judge)
+                                        {
+                                                error_log($con->error,0);
+                                                $judge = false;
+                                        }
+                                }
+                        }
+                }
+                }
 		if($filename == 'SIZAIINFO_1')
 		{
 			$main_CODE = $con->insert_id;
@@ -3451,7 +3478,7 @@ function makeList_item($sql,$post){
 		}
 	}
 	$_SESSION['kobetu']['total'] = $totalcount;
-	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2')
+	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1')
 	{
 		$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
 		$sql[0] .= $limit.";";																									// LIMIT追加
@@ -3471,7 +3498,13 @@ function makeList_item($sql,$post){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
-	$list_html .= "<table class ='list'><thead><tr>";
+	$list_html .= "<table class ='list'";
+        if($filename == "PJTOUROKU_1")
+        {
+            //PJ登録画面は中央寄せ
+            $list_html .= " style = 'margin: auto;'";
+        }
+        $list_html .= "><thead><tr>";
 	if($isCheckBox == 1 )
 	{
 		$list_html .="<th><a class ='head'>発行</a></th>";
@@ -3495,7 +3528,7 @@ function makeList_item($sql,$post){
 	
 	
 	
-	if($filename == 'PJTOUROKU_2')
+	if($filename == 'PJTOUROKU_2' || $filename == 'PJTOUROKU_1')
 	{
 		$list_html .="<th><a class ='head'>社員別金額</a></th>";
 	}
@@ -3586,7 +3619,7 @@ function makeList_item($sql,$post){
 		if($filename == 'PJTOUROKU_2')
 		{
 			$check_js = 'onChange = " return inputcheck(\'kobetu_'.$totalcount.'_'.$counter.'\',7,7,0,2)"';
-			$kobetu_value = '';
+			$kobetu_value = null;
 			$sql = "SELECT DETALECHARGE FROM  projectditealinfo WHERE 5CODE = ".$_SESSION['kobetu']['id']." AND 4CODE = ".$result_row['4CODE']." ;";
 			
 			$result1 = $con->query($sql) or ($judge = true);																		// クエリ発行
@@ -3602,6 +3635,24 @@ function makeList_item($sql,$post){
 					$kobetu_value = $result_row2['DETALECHARGE'];
 				}
 			}
+			$list_html .= "<td ".$id."><input type='text' name='kobetu_".
+							$result_row['4CODE']."' id = 'kobetu_".
+							$totalcount."_".$counter."' value = '"
+							.$kobetu_value."' ".$check_js."></td>";
+			$total_charge += $kobetu_value;
+		
+		}
+                else if($filename == 'PJTOUROKU_1')
+		{
+			$check_js = 'onChange = " return inputcheck(\'kobetu_'.$totalcount.'_'.$counter.'\',7,7,0,2)"';
+                        if(isset($_SESSION['insert']['kobetu_'.$result_row['4CODE']]) && $_SESSION['insert']['kobetu_'.$result_row['4CODE']] != null)
+                        {
+                            $kobetu_value = $_SESSION['insert']['kobetu_'.$result_row['4CODE']];
+                        }
+                        else
+                        {
+                            $kobetu_value = null;
+                        }
 			$list_html .= "<td ".$id."><input type='text' name='kobetu_".
 							$result_row['4CODE']."' id = 'kobetu_".
 							$totalcount."_".$counter."' value = '"
@@ -3628,7 +3679,7 @@ function makeList_item($sql,$post){
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
-	if($filename != 'PJTOUROKU_2')
+	if($filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1')
 	{
 		$list_html .="<div style='display:inline-flex'>";
 		$list_html .= "<div class = 'left'>";
@@ -4693,7 +4744,7 @@ function pjend($post){
 		}
 	}
 	
-	$_SESSION['error'];
+	//$_SESSION['error'];
 	//------------------------//
 	//      終了登録処理      //
 	//------------------------//
@@ -6165,7 +6216,7 @@ function make_pjdel($post){
 	//------------------------//
 	//          変数          //
 	//------------------------//
-	$listhtml = "";
+	$list_html = "";
 	
 	//------------------------//
 	//        検索処理        //
@@ -6212,7 +6263,7 @@ function pjdelete($post){
 	//          変数          //
 	//------------------------//
 	$sql = "";
-	
+	$judge = false;
 	//------------------------//
 	//          処理          //
 	//------------------------//
@@ -6611,7 +6662,7 @@ function syaget(){
 	}
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
-		$lisstr .= $result_row['STAFFID'].",".$result_row['PJNAME'].",";
+		$lisstr .= $result_row['STAFFID'].",".$result_row['STAFFNAME'].",";
 		$cntrow = $cntrow + 1;
 	}
 	$listrow = $lisstr."";
