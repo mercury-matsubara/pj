@@ -1242,6 +1242,33 @@ function insert($post){
 				}
 			}
 		}
+                if($filename == 'PJTOUROKU_1')
+                {
+                    $CODE5 = $con->insert_id;
+                    $CODE4 = "";
+                    $name_arrsy = array();
+                    $keyarray = array_keys($_SESSION['insert']);
+                    foreach($keyarray as $key)
+                    {
+                        if (strstr($key, 'kobetu'))
+                        {
+                                $name_arrsy = explode('_',$key);
+                                $CODE4 = $name_arrsy[1];
+                                $judge = false;
+                                if($_SESSION['insert'][$key] != '')
+                                {
+                                        $judge = false;
+                                        $SQL = "INSERT INTO projectditealinfo (4CODE,5CODE,DETALECHARGE) VALUES(".$CODE4.",".$CODE5.",".$_SESSION['insert'][$key].");";
+                                        $con->query($SQL) or ($judge = true);																	// クエリ発行
+                                        if($judge)
+                                        {
+                                                error_log($con->error,0);
+                                                $judge = false;
+                                        }
+                                }
+                        }
+                }
+                }
 		if($filename == 'SIZAIINFO_1')
 		{
 			$main_CODE = $con->insert_id;
@@ -3451,7 +3478,7 @@ function makeList_item($sql,$post){
 		}
 	}
 	$_SESSION['kobetu']['total'] = $totalcount;
-	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2')
+	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1')
 	{
 		$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
 		$sql[0] .= $limit.";";																									// LIMIT追加
@@ -3471,7 +3498,13 @@ function makeList_item($sql,$post){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
-	$list_html .= "<table class ='list'><thead><tr>";
+	$list_html .= "<table class ='list'";
+        if($filename == "PJTOUROKU_1")
+        {
+            //PJ登録画面は中央寄せ
+            $list_html .= " style = 'margin: auto;'";
+        }
+        $list_html .= "><thead><tr>";
 	if($isCheckBox == 1 )
 	{
 		$list_html .="<th><a class ='head'>発行</a></th>";
@@ -3495,7 +3528,7 @@ function makeList_item($sql,$post){
 	
 	
 	
-	if($filename == 'PJTOUROKU_2')
+	if($filename == 'PJTOUROKU_2' || $filename == 'PJTOUROKU_1')
 	{
 		$list_html .="<th><a class ='head'>社員別金額</a></th>";
 	}
@@ -3586,7 +3619,7 @@ function makeList_item($sql,$post){
 		if($filename == 'PJTOUROKU_2')
 		{
 			$check_js = 'onChange = " return inputcheck(\'kobetu_'.$totalcount.'_'.$counter.'\',7,7,0,2)"';
-			$kobetu_value = (int)'';
+			$kobetu_value = null;
 			$sql = "SELECT DETALECHARGE FROM  projectditealinfo WHERE 5CODE = ".$_SESSION['kobetu']['id']." AND 4CODE = ".$result_row['4CODE']." ;";
 			
 			$result1 = $con->query($sql) or ($judge = true);																		// クエリ発行
@@ -3602,6 +3635,24 @@ function makeList_item($sql,$post){
 					$kobetu_value = $result_row2['DETALECHARGE'];
 				}
 			}
+			$list_html .= "<td ".$id."><input type='text' name='kobetu_".
+							$result_row['4CODE']."' id = 'kobetu_".
+							$totalcount."_".$counter."' value = '"
+							.$kobetu_value."' ".$check_js."></td>";
+			$total_charge += $kobetu_value;
+		
+		}
+                else if($filename == 'PJTOUROKU_1')
+		{
+			$check_js = 'onChange = " return inputcheck(\'kobetu_'.$totalcount.'_'.$counter.'\',7,7,0,2)"';
+                        if(isset($_SESSION['insert']['kobetu_'.$result_row['4CODE']]) && $_SESSION['insert']['kobetu_'.$result_row['4CODE']] != null)
+                        {
+                            $kobetu_value = $_SESSION['insert']['kobetu_'.$result_row['4CODE']];
+                        }
+                        else
+                        {
+                            $kobetu_value = null;
+                        }
 			$list_html .= "<td ".$id."><input type='text' name='kobetu_".
 							$result_row['4CODE']."' id = 'kobetu_".
 							$totalcount."_".$counter."' value = '"
@@ -3628,7 +3679,7 @@ function makeList_item($sql,$post){
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
-	if($filename != 'PJTOUROKU_2')
+	if($filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1')
 	{
 		$list_html .="<div style='display:inline-flex'>";
 		$list_html .= "<div class = 'left'>";
