@@ -4076,7 +4076,315 @@ function makeList_radio($sql,$post,$tablenum){
 	return ($list_html);
 }
 
+/************************************************************************************************************
+function makeList_check($sql,$post,$tablenum)
 
+引数1		$sql						検索SQL
+引数2		$post						ページ移動時post
+引数3		$tablenum					表示テーブル番号
+
+戻り値		$list_html					モーダルに表示リストhtml
+************************************************************************************************************/
+
+function makeList_check($sql,$post,$tablenum){
+	
+	//------------------------//
+	//        初期設定        //
+	//------------------------//
+	$form_ini = parse_ini_file('./ini/form.ini', true);
+	require_once ("f_Form.php");
+	require_once ("f_DB.php");																							// DB関数呼び出し準備
+	
+	//------------------------//
+	//          定数          //
+	//------------------------//
+	$filename = $_SESSION['filename'];
+	$columns = $form_ini[$filename]['insert_form_tablenum'];
+	if($filename == "nenzi_5")
+	{
+		$columns = "102,202,203";
+	}
+	$columns_array = explode(',',$columns);
+	$main_table = $tablenum;
+	$limit_num = $form_ini[$filename]['limit'];
+	$limit = $_SESSION['list']['limit'];																				// limit
+	$limitstart = $_SESSION['list']['limitstart'];																		// limit開始位置
+	$resultcolumns = $form_ini[$filename]['result_num'];
+	$resultcolumns_array = explode(',',$resultcolumns);
+
+
+	
+	//------------------------//
+	//          変数          //
+	//------------------------//
+	$list_html = "";
+	$title_name = "";
+	$counter = 1;
+	$id = "";
+	$class = "";
+	$field_name = "";
+	$totalcount = 0;
+	$listcount = 0;
+	$result = array();
+	$judge = false;
+	$column_value = "";
+	$form_name = "";
+	$row = "";
+	$form_value = "";
+	$form_type = "";
+	
+	//------------------------//
+	//          処理          //
+	//------------------------//
+	
+	$con = dbconect();																									// db接続関数実行
+	$result = $con->query($sql[1]) or ($judge = true);																	// クエリ発行
+	if($judge)
+	{
+		error_log($con->error,0);
+		$judge = false;
+	}
+	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+	{
+		if($filename != 'pjagain_5' && $filename != 'nenzi_5')
+		{
+			$totalcount = $result_row['COUNT(*)'];
+			$quotient = floor($totalcount / $limit_num);
+			$remainder = $totalcount % $limit_num;
+			if($remainder != 0)
+			{
+				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
+			}
+			else
+			{
+				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
+			}
+		}
+		else if($filename == 'pjagain_5')
+		{
+			$totalcount = $result_row['COUNT(DISTINCT endpjinfo.PROJECTNUM,endpjinfo.EDABAN,endpjinfo.PJNAME,5CODE)'];
+			$quotient = floor($totalcount / $limit_num);
+			$remainder = $totalcount % $limit_num;
+			if($remainder != 0)
+			{
+				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
+			}
+			else
+			{
+				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
+			}
+
+		}
+		else
+		{
+			$totalcount = $result_row['COUNT(DISTINCT(5CODE),PROJECTNUM,EDABAN,PJNAME,CHARGE)'];
+			$quotient = floor($totalcount / $limit_num);
+			$remainder = $totalcount % $limit_num;
+			if($remainder != 0)
+			{
+				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
+			}
+			else
+			{
+				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
+			}
+		}
+	}
+	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
+	$sql[0] .= $limit.";";																								// LIMIT追加
+	$result = $con->query($sql[0]) or ($judge = true);																	// クエリ発行
+	if($judge)
+	{
+		error_log($con->error,0);
+		$judge = false;
+	}
+	$listcount = $result->num_rows;																						// 検索結果件数取得
+	if ($totalcount == $limitstart )
+	{
+		$list_html .= $totalcount."件中 ".($limitstart)."件?".($limitstart + $listcount)."件 表示中";					// 件数表示作成
+	}
+	else
+	{
+		$list_html .= $totalcount."件中 ".($limitstart + 1)."件?".($limitstart + $listcount)."件 表示中";				// 件数表示作成
+	}
+	$list_html .= "<table border='1' class ='list'><thead><tr>";
+	$list_html .="<th><a class ='head'>選択</a></th>";
+	for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
+	{
+		$title_name = $form_ini[$resultcolumns_array[$i]]['link_num'];
+		$list_html .="<th><a class ='head'>".$title_name."</a></th>";
+	}
+    
+    //社員名、社員別金額、作業時間項目追加
+    $syainsql = "SELECT * FROM syaininfo;";         //社員数を求めるSQL
+    $syainresult = $con->query($syainsql);																	// クエリ発行
+    $syain_rows = $syainresult -> num_rows;
+    
+    for($i = 0 ; $i < $syain_rows ; $i++)
+    {
+        $list_html .="<th><a class ='head'>社員名</a></th>";
+        $list_html .="<th><a class ='head'>金額</a></th>";
+        $list_html .="<th><a class ='head'>時間</a></th>";
+    }
+    
+	$list_html .="</tr></thead><tbody id ='endpjlist'>";
+	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+	{
+		$list_html .="<tr>";
+		if(($counter%2) == 1)
+		{
+			$id = "";
+		}
+		else
+		{
+			$id = "id = 'stripe'";
+		}
+		$list_html .= "<td ".$id." class = 'center'>";
+		if($filename == 'pjagain_5')
+		{
+			$column_value = $result_row['5CODE'].'#$';
+			$form_name = '5CODE,';
+			$form_type .= '9,';
+/*			$column_value .= $result_row['6CODE'].'#$';
+			$form_name .= '6CODE,';
+			$form_type .= '9,';
+*/		}
+		else
+		{
+			$column_value = $result_row[$tablenum.'CODE'].'#$';
+			$form_name = $tablenum.'CODE,';
+			$form_type .= '9,';
+		}
+		for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
+		{
+			$field_name = $form_ini[$resultcolumns_array[$i]]['column'];
+			$format = $form_ini[$resultcolumns_array[$i]]['format'];
+			$value = $result_row[$field_name];
+			if ($field_name == "PROJECTNUM" )
+			{
+				$value = substr($result_row[$field_name],0,2)."-".substr($result_row[$field_name],2,4);
+			}
+			if ($field_name == "EDABAN" )
+			{
+				$value = substr($result_row[$field_name],0,4)."-".substr($result_row[$field_name],4,2);
+			}
+			$type = $form_ini[$resultcolumns_array[$i]]['form_type'];
+			if($format != 0)
+			{
+				$value = format_change($format,$value,$type);
+			}
+			if($format == 4)
+			{
+				$class = "class = 'right'";
+			}
+			else
+			{
+				$class = "";
+			}
+			if($i == 3)
+			{
+				$class = "class = 'right'";
+			}
+			$row .="<td ".$id." ".$class." ><a class ='body'>"
+						.$value."</a></td>";
+		}
+		for($i = 0 ; $i < count($columns_array) ; $i++)
+		{
+			$field_name = $form_ini[$columns_array[$i]]['column'];
+			$format = $form_ini[$columns_array[$i]]['format'];
+			$value = $result_row[$field_name];
+			$type = $form_ini[$columns_array[$i]]['form_type'];
+			$form_value = formvalue_return($columns_array[$i],$value,$type);
+			$form_name .= $form_value[0];
+			$column_value .= $form_value[1];
+			$form_type .=  $form_value[2];
+		}
+        
+        //一覧の社員名、社員別金額、作業時間項目作成
+        $syainrow = "";
+        $list_num = 0;
+        $row_sql = "SELECT *FROM projectditealinfo where 5CODE = ".$result_row["5CODE"].";";
+        $row_result = $con->query($row_sql) or ($judge = true);
+
+        while($row_list = $row_result->fetch_array(MYSQLI_ASSOC)){
+            //社員名
+            $item_sql = "SELECT *FROM syaininfo where 4CODE = ".$row_list["4CODE"].";";
+            $item_result = $con->query($item_sql) or ($jadge = true);
+            $item = $item_result->fetch_array(MYSQLI_ASSOC);
+            $syainrow .="<td ".$id.">".$item["STAFFNAME"]."<a class ='body'></a></td>";
+
+            //社員別金額
+            $syainrow .="<td ".$id.">".$row_list["DETALECHARGE"]."<a class ='body'></a></td>";
+            	
+            //社員ごとの定時時間と残業時間の合計取得
+            $item_sql = "SELECT SUM(TEIZITIME),SUM(ZANGYOUTIME) FROM progressinfo WHERE 6CODE = ".$row_list["6CODE"].";";
+            $item_result = $con->query($item_sql) or ($judge = true);																		// クエリ発行
+            $item_row = $item_result->fetch_array(MYSQLI_ASSOC);
+            
+            $sagyoutime = $item_row["SUM(TEIZITIME)"] + $item_row["SUM(ZANGYOUTIME)"];
+                
+            $syainrow .="<td ".$id.">".$sagyoutime."<a class ='body'></a></td>";            
+            $list_num++;
+        }
+        
+        if($list_num < $syain_rows)
+        {
+            for(;$list_num < $syain_rows;$list_num++)
+            {
+                $syainrow .="<td ".$id."><a class ='body'></a></td>";       //社員名
+                $syainrow .="<td ".$id."><a class ='body'></a></td>";       //社員別金額
+                $syainrow .="<td ".$id."><a class ='body'></a></td>";       //作業時間
+            }
+        }
+        
+		$form_name = substr($form_name,0,-1);
+		$column_value = substr($column_value,0,-2);
+		$form_type = substr($form_type,0,-1);
+//		$list_html .= '<input type ="checkbox" name = "checkbox" onClick="select_value(\''
+//						.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';
+        $list_html .= '<input type ="checkbox" name = "checkbox" value = "'.$result_row["5CODE"].'" onClick="select_checkbox(\''
+        				.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';
+		$list_html .= "</td>";
+		$list_html .= $row;
+        $list_html .= $syainrow;
+		$list_html .= "</tr>";
+		$row ="";
+		$column_value = "";
+		$form_name = "";
+		$form_type = "";
+		$counter++;
+	}
+	$list_html .="</tbody></table>";
+	$list_html .= "<div class = 'left'>";
+	$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
+	if($limitstart == 0)
+	{
+		$list_html .= " disabled='disabled'";
+	}
+	$list_html .= "></div>";
+	$list_html .= "<div class = 'left'>";
+	$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
+	if($limitstart == 0)
+	{
+		$list_html .= " disabled='disabled'";
+	}
+	$list_html .= "></div><div class = 'left'>";
+	$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
+	if(($limitstart + $listcount) == $totalcount)
+	{
+		$list_html .= " disabled='disabled'";
+	}
+	$list_html .= "></div>";
+	$list_html .="<div class = 'left'>";
+	$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
+	if(($limitstart + $listcount) == $totalcount)
+	{
+		$list_html .= " disabled='disabled'";
+	}
+	$list_html .= "></div>";
+	$list_html .="<div style='clear:both;'></div>";
+	return ($list_html);
+}
 
 /************************************************************************************************************
 function genbaend($post)
@@ -4617,10 +4925,19 @@ function pjend($post){
 	//          定数          //
 	//------------------------//
 	$filename = $_SESSION['filename'];
-	$pjid = $post['5CODE'];
 	$nowdate = date_create("NOW");
 	$nowdate = date_format($nowdate, 'Y-n-j');
 	$teijitime = (float)$item_ini['settime']['teijitime'];
+        
+        if(isset($_SESSION['seizyou5code']))
+        {
+            $pjid = $_SESSION['seizyou5code'];
+            unset($_SESSION['seizyou5code']);
+        }
+        else
+        {
+            $pjid = explode(",",$post['5CODE']);
+        }
 	
 	//------------------------//
 	//          変数          //
@@ -4642,208 +4959,210 @@ function pjend($post){
 	//      定時チェック      //
 	//------------------------//
 	$con = dbconect();																									// db接続関数実行
-	
-	//プロジェクトの開始日と終了日取得
-	$sql = "SELECT MIN(SAGYOUDATE),MAX(SAGYOUDATE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
-			."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
-			."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-			."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid." order by SAGYOUDATE ;";
-	
-	$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-	$result_row = $result->fetch_array(MYSQLI_ASSOC);
-	$start = $result_row['MIN(SAGYOUDATE)'];
-	$end =  $result_row['MAX(SAGYOUDATE)'];
-	
-	//プロジェクトの作業社員取得
-	$sql = "SELECT DISTINCT(4CODE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
-			."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
-			."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-			."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid." order by 4CODE ;";
-	$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-	{
-		$syainArray[$syaincnt] = $result_row['4CODE'];
-		$syaincnt++;
-	}
-	
-	//社員ごとに定時チェック
-	for($s = 0; $s < count($syainArray); $s++)
-	{
-		//社員が変わるごとにbeforeとteiziを初期化
-		$before = "";
-		$teizi = 0;
-		
-		$sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) "
-				."LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-				."LEFT JOIN kouteiinfo USING(3CODE) WHERE progressinfo.SAGYOUDATE BETWEEN '".$start."' AND '".$end."' AND syaininfo.4CODE = ".$syainArray[$s]." ORDER BY SAGYOUDATE;";
-		
-		$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-		while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-		{
-			$after = $result_row['SAGYOUDATE'];
-			if(!empty($before))
-			{
-				if($before == $after)
-				{
-					
-					$teizi += $result_row['TEIZITIME'];
-					if($teizi > $teijitime)
-					{
-						$checkflg = true;
-						//定時エラー//
-						$errrecname = $result_row['STAFFNAME'];
-						$errrecdate = $result_row['SAGYOUDATE'];
-						$error[$errorcnt]['STAFFNAME'] = $errrecname;
-						$error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
-						$error[$errorcnt]['KOUTEINAME'] = "";
-						$error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
-						$errorcnt++;
-					}
-				}
-				else
-				{
-					//日付が変わるごとにteiziを初期化
-					$teizi = 0;
-					$teizi += $result_row['TEIZITIME'];
-					if($teizi > $teijitime)
-					{
-						$checkflg = true;
-						//定時エラー//
-						$errrecname = $result_row['STAFFNAME'];
-						$errrecdate = $result_row['SAGYOUDATE'];
-						$error[$errorcnt]['STAFFNAME'] = $errrecname;
-						$error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
-						$error[$errorcnt]['KOUTEINAME'] = "";
-						$error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
-						$errorcnt++;
-					}
-				}
-			}
-			else
-			{
-				$teizi += $result_row['TEIZITIME'];
-				if($teizi > $teijitime)
-				{
-					$checkflg = true;
-					//定時エラー//
-					$errrecname = $result_row['STAFFNAME'];
-					$errrecdate = $result_row['SAGYOUDATE'];
-					$error[$errorcnt]['STAFFNAME'] = $errrecname;
-					$error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
-					$error[$errorcnt]['KOUTEINAME'] = "";
-					$error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
-					$errorcnt++;
-				}
-			}
-			$before = $result_row['SAGYOUDATE'];
-		}
-	}
-	
-	//$_SESSION['error'];
-	//------------------------//
-	//      終了登録処理      //
-	//------------------------//
-	
-	if(!$checkflg)
-	{
-		//該当プロジェクト($pjid)を選択
-		$sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) "
-				."LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-				."LEFT JOIN kouteiinfo USING(3CODE) WHERE projectditealinfo.5CODE = ".$pjid." order by SAGYOUDATE ;";
-		$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-		while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-		{
-			//社員別プロジェクトコード(6CODE)ごとに多次元配列に格納
-			if(isset($time[$result_row['6CODE']]))
-			{
-				$time[$result_row['6CODE']][count($time[$result_row['6CODE']])] = $result_row;
-			}
-			else
-			{
-				$time[$result_row['6CODE']][0] = $result_row;
-			}
-		}
-		
-		$keyarray = array_keys($time);
-		foreach($keyarray as $key)
-		{
-			//$key(=6CODE)が変わるごとに初期化
-			$teizi = 0;
-			$zangyou = 0;
-			unset($before);
-			//実績時間計算
-			for($i = 0 ; $i < count($time[$key]) ; $i++)
-			{
-				$teizi += $time[$key][$i]['TEIZITIME'];
-				$zangyou += $time[$key][$i]['ZANGYOUTIME'];
-			}
-			//終了PJ登録
-			$pjnum = $time[$key][0]['PROJECTNUM'];
-			$pjeda = $time[$key][0]['EDABAN'];
-			$pjname = $time[$key][0]['PJNAME'];
-			$charge = $time[$key][0]['DETALECHARGE'];
-			$total = $teizi + $zangyou;
-			$performance = round($charge/$total,3);
-			$sql_end = "INSERT INTO endpjinfo (6CODE,TEIJITIME,ZANGYOTIME,TOTALTIME,PERFORMANCE,8ENDDATE,PROJECTNUM,EDABAN,PJNAME) VALUES "
-						."(".$key.",".$teizi.",".$zangyou.",".$total.",".$performance.","."'".$nowdate."'".","."'".$pjnum."'".","."'".$pjeda."'".","."'".$pjname."'".") ;";
-			$result = $con->query($sql_end) or ($judge = true);																		// クエリ発行
-			if($judge)
-			{
-				error_log($con->error,0);
-				$judge = false;
-			}
-			if(!empty($upcode6))
-			{
-				$upcode6 .= $key.",";
-			}
-			else
-			{
-				$upcode6 = $key.",";
-			}
-		}
-		//フラグを終了PJ(STAT=2)に更新
-		$sql_update = "UPDATE projectinfo SET  5ENDDATE = '".$nowdate."' , 5PJSTAT = '2' WHERE 5CODE = ".$pjid." ;";
-		$result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-		
-		$upcode6 = substr($upcode6, 0, -1);
-		$sql_update = "UPDATE projectditealinfo SET 6ENDDATE = '".$nowdate."' , 6PJSTAT = '2' WHERE 6CODE IN (".$upcode6.");";
-		$result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-		$sql_update = "UPDATE progressinfo SET 7ENDDATE = '".$nowdate."' , 7PJSTAT = '2' WHERE 6CODE IN (".$upcode6.");";
-		$result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-	}
-	if(!$checkflg)
-	{
-		$message = '完了';
-	}
-	else
-	{
-		$message = 'エラー';
-	}
+	for($o=0; $o < count($pjid); $o++)
+        {
+            //プロジェクトの開始日と終了日取得
+            $sql = "SELECT MIN(SAGYOUDATE),MAX(SAGYOUDATE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
+                    ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
+                    ."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                    ."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid[$o]." order by SAGYOUDATE ;";
+
+            $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+            $result_row = $result->fetch_array(MYSQLI_ASSOC);
+            $start = $result_row['MIN(SAGYOUDATE)'];
+            $end =  $result_row['MAX(SAGYOUDATE)'];
+
+            //プロジェクトの作業社員取得
+            $sql = "SELECT DISTINCT(4CODE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
+                    ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
+                    ."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                    ."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid[$o]." order by 4CODE ;";
+            $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+            while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+            {
+                $syainArray[$syaincnt] = $result_row['4CODE'];
+                $syaincnt++;
+            }
+
+            //社員ごとに定時チェック
+            for($s = 0; $s < count($syainArray); $s++)
+            {
+                //社員が変わるごとにbeforeとteiziを初期化
+                $before = "";
+                $teizi = 0;
+
+                $sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) "
+                        ."LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                        ."LEFT JOIN kouteiinfo USING(3CODE) WHERE progressinfo.SAGYOUDATE BETWEEN '".$start."' AND '".$end."' AND syaininfo.4CODE = ".$syainArray[$s]." ORDER BY SAGYOUDATE;";
+
+                $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+                while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $after = $result_row['SAGYOUDATE'];
+                    if(!empty($before))
+                    {
+                        if($before == $after)
+                        {
+
+                            $teizi += $result_row['TEIZITIME'];
+                            if($teizi > $teijitime)
+                            {
+                                $checkflg = true;
+                                //定時エラー//
+                                $errrecname = $result_row['STAFFNAME'];
+                                $errrecdate = $result_row['SAGYOUDATE'];
+                                $error[$errorcnt]['STAFFNAME'] = $errrecname;
+                                $error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
+                                $error[$errorcnt]['KOUTEINAME'] = "";
+                                $error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
+                                $errorcnt++;
+                            }
+                        }
+                        else
+                        {
+                            //日付が変わるごとにteiziを初期化
+                            $teizi = 0;
+                            $teizi += $result_row['TEIZITIME'];
+                            if($teizi > $teijitime)
+                            {
+                                $checkflg = true;
+                                //定時エラー//
+                                $errrecname = $result_row['STAFFNAME'];
+                                $errrecdate = $result_row['SAGYOUDATE'];
+                                $error[$errorcnt]['STAFFNAME'] = $errrecname;
+                                $error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
+                                $error[$errorcnt]['KOUTEINAME'] = "";
+                                $error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
+                                $errorcnt++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $teizi += $result_row['TEIZITIME'];
+                        if($teizi > $teijitime)
+                        {
+                            $checkflg = true;
+                            //定時エラー//
+                            $errrecname = $result_row['STAFFNAME'];
+                            $errrecdate = $result_row['SAGYOUDATE'];
+                            $error[$errorcnt]['STAFFNAME'] = $errrecname;
+                            $error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
+                            $error[$errorcnt]['KOUTEINAME'] = "";
+                            $error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
+                            $errorcnt++;
+                        }
+                    }
+                    $before = $result_row['SAGYOUDATE'];
+                }
+            }
+
+            //$_SESSION['error'];
+            //------------------------//
+            //      終了登録処理      //
+            //------------------------//
+
+            if(!$checkflg)
+            {
+                //該当プロジェクト($pjid)を選択
+                $sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) "
+                        ."LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                        ."LEFT JOIN kouteiinfo USING(3CODE) WHERE projectditealinfo.5CODE = ".$pjid[$o]." order by SAGYOUDATE ;";
+                $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+                while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    //社員別プロジェクトコード(6CODE)ごとに多次元配列に格納
+                    if(isset($time[$result_row['6CODE']]))
+                    {
+                        $time[$result_row['6CODE']][count($time[$result_row['6CODE']])] = $result_row;
+                    }
+                    else
+                    {
+                        $time[$result_row['6CODE']][0] = $result_row;
+                    }
+                }
+
+                $keyarray = array_keys($time);
+                foreach($keyarray as $key)
+                {
+                    //$key(=6CODE)が変わるごとに初期化
+                    $teizi = 0;
+                    $zangyou = 0;
+                    unset($before);
+                    //実績時間計算
+                    for($i = 0 ; $i < count($time[$key]) ; $i++)
+                    {
+                        $teizi += $time[$key][$i]['TEIZITIME'];
+                        $zangyou += $time[$key][$i]['ZANGYOUTIME'];
+                    }
+                    //終了PJ登録
+                    $pjnum = $time[$key][0]['PROJECTNUM'];
+                    $pjeda = $time[$key][0]['EDABAN'];
+                    $pjname = $time[$key][0]['PJNAME'];
+                    $charge = $time[$key][0]['DETALECHARGE'];
+                    $total = $teizi + $zangyou;
+                    $performance = round($charge/$total,3);
+                    $sql_end = "INSERT INTO endpjinfo (6CODE,TEIJITIME,ZANGYOTIME,TOTALTIME,PERFORMANCE,8ENDDATE,PROJECTNUM,EDABAN,PJNAME) VALUES "
+                                ."(".$key.",".$teizi.",".$zangyou.",".$total.",".$performance.","."'".$nowdate."'".","."'".$pjnum."'".","."'".$pjeda."'".","."'".$pjname."'".") ;";
+                    $result = $con->query($sql_end) or ($judge = true);																		// クエリ発行
+                    if($judge)
+                    {
+                        error_log($con->error,0);
+                        $judge = false;
+                    }
+                    if(!empty($upcode6))
+                    {
+                        $upcode6 .= $key.",";
+                    }
+                    else
+                    {
+                        $upcode6 = $key.",";
+                    }
+                }
+                //フラグを終了PJ(STAT=2)に更新
+                $sql_update = "UPDATE projectinfo SET  5ENDDATE = '".$nowdate."' , 5PJSTAT = '2' WHERE 5CODE = ".$pjid[$o]." ;";
+                $result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+
+                $upcode6 = substr($upcode6, 0, -1);
+                $sql_update = "UPDATE projectditealinfo SET 6ENDDATE = '".$nowdate."' , 6PJSTAT = '2' WHERE 6CODE IN (".$upcode6.");";
+                $result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+                $sql_update = "UPDATE progressinfo SET 7ENDDATE = '".$nowdate."' , 7PJSTAT = '2' WHERE 6CODE IN (".$upcode6.");";
+                $result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+            }
+            if(!$checkflg)
+            {
+                $message = '完了';
+            }
+            else
+            {
+                $message = 'エラー';
+            }
+        }
 	return($message);
 }
 
@@ -5719,11 +6038,11 @@ function pjCheck($post){
 	}
 	else if($filename == 'pjend_5')
 	{
-		$pjid = $post['5CODE'];					//プロジェクト終了
+		$pjid = explode(",",$post["5CODE"]);					//プロジェクト終了
 	}
 	else
 	{
-		$pjid = $post;							//プロジェクト削除
+		$pjid = explode(",",$post);							//プロジェクト削除
 	}
 	$nowdate = date_create("NOW");
 	$nowdate = date_format($nowdate, 'Y-n-j');
@@ -5854,137 +6173,147 @@ function pjCheck($post){
 	}
 	else
 	{
-		//進捗情報の有無
-		$sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
-				."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
-				."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-				."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid." order by SAGYOUDATE ;";
-		$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-		//進捗情報の有無を確認
-		$rows = $result->num_rows;
-		if($rows > 0)
-		{
-			//プロジェクトの開始日と終了日取得
-			$sql = "SELECT MIN(SAGYOUDATE),MAX(SAGYOUDATE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
-					."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
-					."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-					."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid." order by SAGYOUDATE ;";
-			$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-			if($judge)
-			{
-				error_log($con->error,0);
-				$judge = false;
-			}
-			$result_row = $result->fetch_array(MYSQLI_ASSOC);
-			$start = $result_row['MIN(SAGYOUDATE)'];
-			$end =  $result_row['MAX(SAGYOUDATE)'];
-			
-			//プロジェクトの作業社員取得
-			$sql = "SELECT DISTINCT(4CODE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
-					."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
-					."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-					."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid." order by 4CODE ;";
-			
-			$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-			if($judge)
-			{
-				error_log($con->error,0);
-				$judge = false;
-			}
-			while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-			{
-				$syainArray[$syaincnt] = $result_row['4CODE'];
-				$syaincnt++;
-			}
-			
-			//社員ごとに定時チェック
-			for($s = 0; $s < count($syainArray); $s++)
-			{
-				//社員が変わるごとにbeforeとteiziを初期化
-				$before = "";
-				$teizi = 0;
-				
-				$sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) "
-						."LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
-						."LEFT JOIN kouteiinfo USING(3CODE) WHERE progressinfo.SAGYOUDATE BETWEEN '".$start."' AND '".$end."' AND syaininfo.4CODE = ".$syainArray[$s]." ORDER BY SAGYOUDATE;";
-				
-				$result = $con->query($sql) or ($judge = true);																		// クエリ発行
-				if($judge)
-				{
-					error_log($con->error,0);
-					$judge = false;
-				}
-				while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-				{
-					$after = $result_row['SAGYOUDATE'];
-					if(!empty($before))
-					{
-						if($before == $after)
-						{
-							
-							$teizi += $result_row['TEIZITIME'];
-							if($teizi > $teijitime)
-							{
-								$checkflg = true;
-								//定時エラー//
-								$errrecname = $result_row['STAFFNAME'];
-								$errrecdate = $result_row['SAGYOUDATE'];
-								$error[$errorcnt]['STAFFNAME'] = $errrecname;
-								$error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
-								$error[$errorcnt]['KOUTEINAME'] = "";
-								$error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
-								$errorcnt++;
-							}
-						}
-						else
-						{
-							//日付が変わるごとにteiziを初期化
-							$teizi = 0;
-							$teizi += $result_row['TEIZITIME'];
-							if($teizi > $teijitime)
-							{
-								$checkflg = true;
-								//定時エラー//
-								$errrecname = $result_row['STAFFNAME'];
-								$errrecdate = $result_row['SAGYOUDATE'];
-								$error[$errorcnt]['STAFFNAME'] = $errrecname;
-								$error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
-								$error[$errorcnt]['KOUTEINAME'] = "";
-								$error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
-								$errorcnt++;
-							}
-						}
-					}
-					else
-					{
-						$teizi += $result_row['TEIZITIME'];
-						if($teizi > $teijitime)
-						{
-							$checkflg = true;
-							//定時エラー//
-							$errrecname = $result_row['STAFFNAME'];
-							$errrecdate = $result_row['SAGYOUDATE'];
-							$error[$errorcnt]['STAFFNAME'] = $errrecname;
-							$error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
-							$error[$errorcnt]['KOUTEINAME'] = "";
-							$error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
-							$errorcnt++;
-						}
-					}
-					$before = $result_row['SAGYOUDATE'];
-				}
-			}
-			
-		}
-		else
-		{
-			$_SESSION['message'] = "<br><a class = 'error'>進捗情報が登録されていません。</a>";
-		}
+		for($i = 0; $i < count($pjid); $i++)
+                {
+                    //進捗情報の有無
+                    $sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
+                            ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
+                            ."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                            ."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid[$i]." order by SAGYOUDATE ;";
+                    $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+                    if($judge)
+                    {
+                        error_log($con->error,0);
+                        $judge = false;
+                    }
+                    //進捗情報の有無を確認
+                    $rows = $result->num_rows;
+                    if($rows > 0)
+                    {
+                        //プロジェクトの開始日と終了日取得
+                        $sql = "SELECT MIN(SAGYOUDATE),MAX(SAGYOUDATE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
+                                ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
+                                ."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                                ."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid[$i]." order by SAGYOUDATE ;";
+                        $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+                        if($judge)
+                        {
+                            error_log($con->error,0);
+                            $judge = false;
+                        }
+                        $result_row = $result->fetch_array(MYSQLI_ASSOC);
+                        $start = $result_row['MIN(SAGYOUDATE)'];
+                        $end =  $result_row['MAX(SAGYOUDATE)'];
+
+                        //プロジェクトの作業社員取得
+                        $sql = "SELECT DISTINCT(4CODE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
+                                ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
+                                ."LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                                ."LEFT JOIN kouteiinfo USING(3CODE) WHERE 5CODE = ".$pjid[$i]." order by 4CODE ;";
+
+                        $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+                        if($judge)
+                        {
+                            error_log($con->error,0);
+                            $judge = false;
+                        }
+                        while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+                        {
+                            $syainArray[$syaincnt] = $result_row['4CODE'];
+                            $syaincnt++;
+                        }
+
+                        //社員ごとに定時チェック
+                        for($s = 0; $s < count($syainArray); $s++)
+                        {
+                            //社員が変わるごとにbeforeとteiziを初期化
+                            $before = "";
+                            $teizi = 0;
+
+                            $sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) "
+                                    ."LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) "
+                                    ."LEFT JOIN kouteiinfo USING(3CODE) WHERE progressinfo.SAGYOUDATE BETWEEN '".$start."' AND '".$end."' AND syaininfo.4CODE = ".$syainArray[$s]." ORDER BY SAGYOUDATE;";
+
+                            $result = $con->query($sql) or ($judge = true);																		// クエリ発行
+                            if($judge)
+                            {
+                                error_log($con->error,0);
+                                $judge = false;
+                            }
+                            while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+                            {
+                                $after = $result_row['SAGYOUDATE'];
+                                if(!empty($before))
+                                {
+                                    if($before == $after)
+                                    {
+
+                                        $teizi += $result_row['TEIZITIME'];
+                                        if($teizi > $teijitime)
+                                        {
+                                            $checkflg = true;
+                                            //定時エラー//
+                                            $errrecname = $result_row['STAFFNAME'];
+                                            $errrecdate = $result_row['SAGYOUDATE'];
+                                            $error[$errorcnt]['STAFFNAME'] = $errrecname;
+                                            $error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
+                                            $error[$errorcnt]['KOUTEINAME'] = "";
+                                            $error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
+                                            $errorcnt++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //日付が変わるごとにteiziを初期化
+                                        $teizi = 0;
+                                        $teizi += $result_row['TEIZITIME'];
+                                        if($teizi > $teijitime)
+                                        {
+                                            $checkflg = true;
+                                            //定時エラー//
+                                            $errrecname = $result_row['STAFFNAME'];
+                                            $errrecdate = $result_row['SAGYOUDATE'];
+                                            $error[$errorcnt]['STAFFNAME'] = $errrecname;
+                                            $error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
+                                            $error[$errorcnt]['KOUTEINAME'] = "";
+                                            $error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
+                                            $errorcnt++;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    $teizi += $result_row['TEIZITIME'];
+                                    if($teizi > $teijitime)
+                                    {
+                                        $checkflg = true;
+                                        //定時エラー//
+                                        $errrecname = $result_row['STAFFNAME'];
+                                        $errrecdate = $result_row['SAGYOUDATE'];
+                                        $error[$errorcnt]['STAFFNAME'] = $errrecname;
+                                        $error[$errorcnt]['SAGYOUDATE'] = $errrecdate;
+                                        $error[$errorcnt]['KOUTEINAME'] = "";
+                                        $error[$errorcnt]['GENIN'] = "規定の定時時間を越えています。";
+                                        $errorcnt++;
+                                    }
+                                }
+                                $before = $result_row['SAGYOUDATE'];
+                            }
+                        }
+                        $_SESSION['seizyou5code'][] = $pjid[$i];
+                    }
+                    else
+                    {
+                        $pjcode = explode(",",$_SESSION['list']['pjcode']);
+                        $edabancode = explode(",",$_SESSION['list']['edabancode']);
+                        $pjname = explode(",",$_SESSION['list']['pjname']);
+
+                        $_SESSION['pjcode'][] = $pjcode[$i];
+                        $_SESSION['edabancode'][] = $edabancode[$i];
+                        $_SESSION['pjname'][] = $pjname[$i];
+                        $_SESSION['message'][] = "<a class = 'error'>進捗情報が登録されていません。</a>";
+                    }
+                }
 	}
 
 /*
