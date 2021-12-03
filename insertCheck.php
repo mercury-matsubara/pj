@@ -57,12 +57,14 @@
 		$maxover = $_SESSION['max_over'];
 	}
         
+        $syain_total = 0;
         if($filename == 'PJTOUROKU_1')
 	{
 		$sql[0] = $SQL_ini[$filename]['sql2'];
 		$sql[1] = $SQL_ini[$filename]['sql1'];
 		$_SESSION['list']['limitstart'] = 0;
 		$list = makeList_item($sql,$_SESSION['insert']);
+                $syain_total = $_SESSION['kobetu']['total'];
 	}
 ?>
 <head>
@@ -163,7 +165,7 @@
 
         function goukeiCheck()
 	{
-		var total = "<?php echo $_SESSION['kobetu']['total']; ?>";
+		var total = "<?php echo $syain_total; ?>";
 		var id = 'kobetu_' + total + '_1';
 		if(inputcheck(id,8,7,0,2))
 		{
