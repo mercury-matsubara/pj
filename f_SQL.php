@@ -544,8 +544,50 @@ function joinSelectSQL($post,$tablenum){
 	//佐竹
 	if ($filename != 'ENDPJLIST_2' && $filename != 'MONTHLIST_2' && $filename != 'PJLIST_2' && $tablenum == 5)
 	{
-		$select_SQL .= " 5PJSTAT = 1 ";
-		$count_SQL .= " 5PJSTAT = 1 ";
+        if($filename == "pjend_5" && isset($_SESSION["list"]["pjstat"]))
+        {
+            if($_SESSION["list"]["pjstat"] == "1")
+            {
+                $select_SQL .= " 5PJSTAT = 1 ";
+                $count_SQL .= " 5PJSTAT = 1 ";
+
+            }
+            elseif($_SESSION["list"]["pjstat"] == "2")
+            {
+                $select_SQL .= " 5PJSTAT = 2 ";
+                $count_SQL .= " 5PJSTAT = 2 ";
+                
+                if($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] == "")
+                {
+                    //すべての日付
+                    $select_SQL .= "";
+                    $count_SQL .= "";
+                }
+                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] == "")
+                {
+                    //入力日付以降
+                    $select_SQL .= "AND 5ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+                    $count_SQL .= "AND 5ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+                }
+                elseif ($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] != "")
+                {
+                    //入力日付以前
+                    $select_SQL .= "AND 5ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
+                    $count_SQL .= "AND 5ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
+                }
+                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] != "")
+                {
+                    //入力日付期限内
+                    $select_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
+                    $count_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
+                }
+            }
+        }
+        else
+        {
+            $select_SQL .= " 5PJSTAT = 1 ";
+            $count_SQL .= " 5PJSTAT = 1 ";
+        }
 	}
 	else if ($filename != 'ENDPJLIST_2' && $tablenum == 8)
 	{

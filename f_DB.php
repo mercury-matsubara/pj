@@ -4201,11 +4201,11 @@ function makeList_check($sql,$post,$tablenum){
 	$listcount = $result->num_rows;																						// 検索結果件数取得
 	if ($totalcount == $limitstart )
 	{
-		$list_html .= $totalcount."件中 ".($limitstart)."件?".($limitstart + $listcount)."件 表示中";					// 件数表示作成
+		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
 	}
 	else
 	{
-		$list_html .= $totalcount."件中 ".($limitstart + 1)."件?".($limitstart + $listcount)."件 表示中";				// 件数表示作成
+		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
 	$list_html .= "<table border='1' class ='list'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
@@ -4214,6 +4214,9 @@ function makeList_check($sql,$post,$tablenum){
 		$title_name = $form_ini[$resultcolumns_array[$i]]['link_num'];
 		$list_html .="<th><a class ='head'>".$title_name."</a></th>";
 	}
+    
+    //終了日付項目追加
+    $list_html .="<th><a class ='head'>終了日付</a></th>";
     
     //社員名、社員別金額、作業時間項目追加
     $syainsql = "SELECT * FROM syaininfo;";         //社員数を求めるSQL
@@ -4299,6 +4302,9 @@ function makeList_check($sql,$post,$tablenum){
 			$column_value .= $form_value[1];
 			$form_type .=  $form_value[2];
 		}
+        //終了日付項目作成
+        $row .= "<td ".$id." ".$class." ><a class ='body'>"
+						.$result_row['5ENDDATE']."</a></td>";
         
         //一覧の社員名、社員別金額、作業時間項目作成
         $syainrow = "";
@@ -4340,10 +4346,16 @@ function makeList_check($sql,$post,$tablenum){
 		$form_name = substr($form_name,0,-1);
 		$column_value = substr($column_value,0,-2);
 		$form_type = substr($form_type,0,-1);
-//		$list_html .= '<input type ="checkbox" name = "checkbox" onClick="select_value(\''
-//						.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';
-        $list_html .= '<input type ="checkbox" name = "checkbox" value = "'.$result_row["5CODE"].'" onClick="select_checkbox(\''
-        				.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';
+        
+        if($result_row["5PJSTAT"] == "2")
+        {
+            $list_html .= '済';           
+        }
+        else
+        {
+            $list_html .= '<input type ="checkbox" name = "checkbox" value = "'.$result_row["5CODE"].'" onClick="select_checkbox(\''
+                .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';           
+        }
 		$list_html .= "</td>";
 		$list_html .= $row;
         $list_html .= $syainrow;

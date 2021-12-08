@@ -1785,13 +1785,20 @@ function makeformModal_set($post,$isReadOnly,$form_Name,$columns){
 		}
 		$form_str .= "</td></tr>";
 	}
+    
+    if($filename == "pjend_5")
+	{
+		$form_str.= "<tr><td>未終了PJ　<input type='radio' name='pjstat' value='1' onclick='onpjstat()'></td>";
+        $form_str.= "<td>終了済みPJ　<input type='radio' name='pjstat' value='2' onclick='onpjstat()'></td></tr>";
+        $form_str.= "<tr><td>終了日付　<input type='date' id='startdate' name='startdate'></td>";
+        $form_str.= "<td>　～　<input type='date' id='enddate' name='enddate'></td></tr>";
+	}
+    
 	$form_str .= "</table>";
 	$check_column_str =  substr($check_column_str,0,-1);
 	$_SESSION['check_column'] = $check_column_str;
 	return ($form_str);
 }
-
-
 
 
 /************************************************************************************************************

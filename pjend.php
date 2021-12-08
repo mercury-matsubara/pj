@@ -149,98 +149,138 @@
 	
     function check_checkbox()
     {
-        const checkbox = document.form.checkbox;
-        var oncheckbox = 0;
-        var jadge = false;
-        var tabledata = document.getElementById("endpjlist");
-
-        for(let i = 0; i < checkbox.length; i++)
-        {
-            if(checkbox[i].checked === true)
-            {
-                oncheckbox++;
-            }
-        }
+        let pjstat = document.getElementById("pjstat_value").value;
         
-        //PJ送信情報作成
-        const code_array = new Array(oncheckbox);        
-        const pjname_array = new Array(oncheckbox);
-        const pjcode_array = new Array(oncheckbox);
-        const edabancode_array = new Array(oncheckbox);
-        var count = 0;
-        
-        for(let i = 0; i < checkbox.length; i++)
-        {
-            if(checkbox[i].checked === true)
-            {
-                code_array[count] = checkbox[i].value;
-                pjcode_array[count] = tabledata.rows[i].cells[1].textContent;
-                edabancode_array[count] = tabledata.rows[i].cells[2].textContent;
-                pjname_array[count] = tabledata.rows[i].cells[3].textContent;
-                count++;
-            }
-        }
-
-        console.log(code_array);
-        console.log(pjcode_array);
-        console.log(edabancode_array);
-        console.log(pjname_array);
-        if(oncheckbox === 0)
+        if(pjstat == "2")
         {
             alert("終了するプロジェクトを選択してください。");
-			jadge = false;
         }
         else
         {
-                var form = document.createElement('form');
-                var request;
-                var end;
-                form.method = 'POST';
-                form.action = 'pjendJump.php';
-                
-                //5CODE送信
-                request = document.createElement('input');
-                request.type = 'hidden'; //入力フォームが表示されないように
-                request.name = '5CODE';
-                request.value = code_array;
-                form.appendChild(request);
-                
-                //PJ終了
-                end = document.createElement('input');
-                end.type = 'hidden'; //入力フォームが表示されないように
-                end.name = 'end';
-                end.value = 'PJ終了';                
-                form.appendChild(end);
-                
-                //プロジェクトコード
-                var pjcode = document.createElement('input');
-                pjcode.type = 'hidden'; //入力フォームが表示されないように
-                pjcode.name = 'pjcode';
-                pjcode.value = pjcode_array;
-                form.appendChild(pjcode);
-                
-                //枝番コード
-                var edabancode = document.createElement('input');
-                edabancode.type = 'hidden'; //入力フォームが表示されないように
-                edabancode.name = 'edabancode';
-                edabancode.value = edabancode_array;
-                form.appendChild(edabancode);
-                
-                //プロジェクト名コード
-                var pjname = document.createElement('input');
-                pjname.type = 'hidden'; //入力フォームが表示されないように
-                pjname.name = 'pjname';
-                pjname.value = pjname_array;
-                form.appendChild(pjname);
+            const checkbox = document.form.checkbox;
+            var oncheckbox = 0;
+            var jadge = false;
+            var tabledata = document.getElementById("endpjlist");
 
-                //フォーム送信
-                document.body.appendChild(form);
-                
-                form.submit();
-             
-            jadge = true;
+            for(let i = 0; i < checkbox.length; i++)
+            {
+                if(checkbox[i].checked === true)
+                {
+                    oncheckbox++;
+                }
+            }
+
+            //PJ送信情報作成
+            const code_array = new Array(oncheckbox);        
+            const pjname_array = new Array(oncheckbox);
+            const pjcode_array = new Array(oncheckbox);
+            const edabancode_array = new Array(oncheckbox);
+            var count = 0;
+
+            for(let i = 0; i < checkbox.length; i++)
+            {
+                if(checkbox[i].checked === true)
+                {
+                    code_array[count] = checkbox[i].value;
+                    pjcode_array[count] = tabledata.rows[i].cells[1].textContent;
+                    edabancode_array[count] = tabledata.rows[i].cells[2].textContent;
+                    pjname_array[count] = tabledata.rows[i].cells[3].textContent;
+                    count++;
+                }
+            }
+
+            console.log(code_array);
+            console.log(pjcode_array);
+            console.log(edabancode_array);
+            console.log(pjname_array);
+            if(oncheckbox === 0)
+            {
+                alert("終了するプロジェクトを選択してください。");
+                jadge = false;
+            }
+            else
+            {
+                    var form = document.createElement('form');
+                    var request;
+                    var end;
+                    form.method = 'POST';
+                    form.action = 'pjendJump.php';
+
+                    //5CODE送信
+                    request = document.createElement('input');
+                    request.type = 'hidden'; //入力フォームが表示されないように
+                    request.name = '5CODE';
+                    request.value = code_array;
+                    form.appendChild(request);
+
+                    //PJ終了
+                    end = document.createElement('input');
+                    end.type = 'hidden'; //入力フォームが表示されないように
+                    end.name = 'end';
+                    end.value = 'PJ終了';                
+                    form.appendChild(end);
+
+                    //プロジェクトコード
+                    var pjcode = document.createElement('input');
+                    pjcode.type = 'hidden'; //入力フォームが表示されないように
+                    pjcode.name = 'pjcode';
+                    pjcode.value = pjcode_array;
+                    form.appendChild(pjcode);
+
+                    //枝番コード
+                    var edabancode = document.createElement('input');
+                    edabancode.type = 'hidden'; //入力フォームが表示されないように
+                    edabancode.name = 'edabancode';
+                    edabancode.value = edabancode_array;
+                    form.appendChild(edabancode);
+
+                    //プロジェクト名コード
+                    var pjname = document.createElement('input');
+                    pjname.type = 'hidden'; //入力フォームが表示されないように
+                    pjname.name = 'pjname';
+                    pjname.value = pjname_array;
+                    form.appendChild(pjname);
+
+                    //フォーム送信
+                    document.body.appendChild(form);
+
+                    form.submit();
+
+                jadge = true;
+            }
+            return jadge;
         }
-        return jadge;
+    }
+    
+    function onpjstat()
+    {
+        let elements = document.getElementsByName("pjstat");
+        
+        if(elements.item(0).checked)
+        {            
+            //日付入力欄入力不可
+            document.getElementById("startdate").disabled = true;
+            document.getElementById("enddate").disabled = true;
+            
+            //日付入力欄背景色変更
+            document.getElementById("startdate").style.backgroundColor = '#c0c0c0';
+            document.getElementById("enddate").style.backgroundColor = '#c0c0c0';
+            
+            //日付入力欄値初期化
+            document.getElementById("startdate").value = "";
+            document.getElementById("enddate").value = "";
+        }
+        
+        if(elements.item(1).checked)
+        {
+            //日付入力欄入力可
+            document.getElementById("startdate").disabled = false;
+            document.getElementById("enddate").disabled = false;
+            
+            //日付入力欄背景色変更
+            document.getElementById("startdate").style.backgroundColor = '#ffffff';
+            document.getElementById("enddate").style.backgroundColor = '#ffffff';
+        }
     }
 </script>
 </head>
@@ -259,9 +299,9 @@
 	$sql = array();
 	$sql = joinSelectSQL($_SESSION['list'],$main_table);
 	$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
+    
 	$damy_array = array();
 	$list ="";
-	//$list = makeList_radio($sql,$_SESSION['list'],$main_table);
     $list = makeList_check($sql,$_SESSION['list'],$main_table);
 	$columns = $form_ini[$filename]['sech_form_num'];
 	$form = makeformModal_set($_SESSION['list'],'',"form",$columns);
@@ -291,8 +331,16 @@
 	echo "</form>";
 	//echo '<form name ="drop" id = "drop" action="pjendJump.php" method="post" onsubmit ="return checkonradio();">';
     //echo '<form name ="drop" id = "drop" action="pjendJump.php" method="post" onsubmit ="return check_checkbox();">';
+    if(isset($_SESSION["list"]["pjstat"]))
+    {
+        $pjstat = $_SESSION["list"]["pjstat"];
+    }
+    else
+    {
+        $pjstat = "1";
+    }
 	echo "<br><table><tr><td>";
-	//echo "<input type = 'hidden' name = '".$main_table."CODE' id = '".$main_table."CODE' value =''>";
+    echo "<input type = 'hidden' name = 'pjstat_value' id = 'pjstat_value' value ='".$pjstat."'>";
     echo "<div id = 'select_code'></div>";
     echo '<tr><td><div id="selectmsg">0件選択中</div></td><td><input type="submit" name="end" class="button" value="ＰＪ終了" onclick="check_checkbox();"></td></tr>';
 	echo $form_drop ;
@@ -304,4 +352,42 @@
 ?>
 
 </body>
+<script language="JavaScript">
+    window.onload = function() {
+        var pjstat = '<?php if(isset($_SESSION["list"]["pjstat"])){ echo $_SESSION["list"]["pjstat"];}else{ echo "1"; } ?>';
+        let elements = document.getElementsByName("pjstat");
+        
+        if(pjstat == 2)
+        {
+            elements.item(1).checked = true;
+            //日付入力欄入力可
+            document.getElementById("startdate").disabled = false;
+            document.getElementById("enddate").disabled = false;
+            
+            //日付入力欄背景色変更
+            document.getElementById("startdate").style.backgroundColor = '#ffffff';
+            document.getElementById("enddate").style.backgroundColor = '#ffffff';
+
+            //日付入力欄値
+            document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
+            document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
+        }
+        else
+        {
+            elements.item(0).checked = true;
+               
+            //日付入力欄入力不可
+            document.getElementById("startdate").disabled = true;
+            document.getElementById("enddate").disabled = true;
+            
+            //日付入力欄背景色変更
+            document.getElementById("startdate").style.backgroundColor = '#c0c0c0';
+            document.getElementById("enddate").style.backgroundColor = '#c0c0c0';
+            
+            //日付入力欄値
+            document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
+            document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
+        }
+    }
+</script>
 </html>

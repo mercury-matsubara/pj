@@ -63,17 +63,6 @@
 		set_button_size();
 	});
     
-    function error_pjend()
-    {
-        console.log("エラー処理");
-        $.ajax({
-            type: 'POST',
-            url: 'pjendsyori.php',
-            success: function(data) {
-
-            }
-        });
-    }
 --></script>
 </head>
 <body>
@@ -155,7 +144,7 @@
 		echo "</div>";;
 		echo "<br><br>";
 		echo "<div><center>";
-        echo ''.(count($message)).'件のPJが処理できませんでした。';
+        echo ''.(count($message)).'件のPJが処理できません。PJ終了処理がキャンセルされました。';
         echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><th><a class ='head'>エラー内容</a></th></th><tr/></thead>";
    
 		if(!empty($message))
@@ -192,14 +181,6 @@
 		echo '<input type="submit" name = "cancel" value = "一覧に戻る" class = "free">';
 		echo "</div>";
 		echo "</form>";
-        
-        $select_code = explode(",",$_SESSION['list']['pjcode']);
-        
-        if(count($select_code) > count($pjcode))
-        {
-            echo '<script language=javascript>error_pjend();</script>';
-        }
-        
         
 	}
 ?>
