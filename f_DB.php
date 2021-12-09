@@ -1314,6 +1314,7 @@ function insert($post){
 				error_log($con->error,0);
 				$judge =false;
 			}
+                        $_SESSION['list']['id'] = $con->insert_id;
 		}
 	}
 }
@@ -3478,7 +3479,7 @@ function makeList_item($sql,$post){
 		}
 	}
 	$_SESSION['kobetu']['total'] = $totalcount;
-	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1')
+	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1' && $filename != 'EDABANINFO_2')
 	{
 		$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
 		$sql[0] .= $limit.";";																									// LIMIT追加
@@ -3490,14 +3491,17 @@ function makeList_item($sql,$post){
 		$judge = false;
 	}
 	$listcount = $result->num_rows;																						// 検索結果件数取得
-	if ($totalcount == $limitstart )
-	{
-		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
-	}
-	else
-	{
-		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
-	}
+	if($filename != 'PJTOUROKU_1')
+        {
+                if ($totalcount == $limitstart )
+                {
+                        $list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
+                }
+                else
+                {
+                        $list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
+                }
+        }
 	$list_html .= "<table class ='list'";
         if($filename == "PJTOUROKU_1")
         {
@@ -3528,7 +3532,7 @@ function makeList_item($sql,$post){
 	
 	
 	
-	if($filename == 'PJTOUROKU_2' || $filename == 'PJTOUROKU_1')
+	if($filename == 'PJTOUROKU_2' || $filename == 'PJTOUROKU_1' || $filename == 'EDABANINFO_2')
 	{
 		$list_html .="<th><a class ='head'>社員別金額</a></th>";
 	}
@@ -3616,7 +3620,7 @@ function makeList_item($sql,$post){
 		
 		
 		
-		if($filename == 'PJTOUROKU_2')
+		if($filename == 'PJTOUROKU_2' || $filename == 'EDABANINFO_2')
 		{
 			$check_js = 'onChange = " return inputcheck(\'kobetu_'.$totalcount.'_'.$counter.'\',7,7,0,2)"';
 			$kobetu_value = null;
@@ -3679,7 +3683,7 @@ function makeList_item($sql,$post){
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
-	if($filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1')
+	if($filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1' && $filename != 'EDABANINFO_2')
 	{
 		$list_html .="<div style='display:inline-flex'>";
 		$list_html .= "<div class = 'left'>";

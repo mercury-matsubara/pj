@@ -224,6 +224,14 @@
 				.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/insertrireki.php");
 		exit();
 	}
+        else if($filename == 'EDABANINFO_2')
+	{
+		$_SESSION['list'] = $_POST;
+		$_SESSION['post'] = null;
+		header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
+				.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/insertrireki.php");
+		exit();
+	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C/DTD HTML 4.01">
 <!-- saved from url(0013)about:internet -->

@@ -51,7 +51,7 @@
 	$form = getPJdata($_SESSION['list']['id']);
 	
 	
-	if($filename == 'PJTOUROKU_2')
+	if($filename == 'PJTOUROKU_2' || $filename == 'EDABANINFO_2')
 	{
 		$sql[0] = $SQL_ini[$filename]['sql2'];
 		$sql[1] = $SQL_ini[$filename]['sql1'];
@@ -84,7 +84,7 @@
 //	echo '<input type="submit" name="serch" value = "表示" class="free" >';
 	echo "</td></tr></table>";
 	
-	if($filename == 'PJTOUROKU_2')
+	if($filename == 'PJTOUROKU_2' || $filename == 'EDABANINFO_2')
 	{
 		echo "<table><tr><td>合計金額 : </td><td>";
 		echo "<input type = 'text' value = '".$_SESSION['kobetu']['totalCharge']."' id = 'chage' name = 'chage' class = 'readOnly' size = 40 readonly >";
@@ -102,10 +102,13 @@
 	echo "<input type ='hidden' name = 'id' class='free' value = '".$_SESSION['list']['id']."'>";
 	echo "<input type ='submit' name = 'alldel' class='free' value = 'クリア'>";
 	echo "</form>";
-	echo '<form name ="form" action="listJump.php" method="post" onsubmit = "return delmessage2();">';
-	echo "<input type ='hidden' name = 'id' class='free' value = '".$_SESSION['list']['id']."'>";
-	echo "<input type ='submit' name = 'delete' class='free' value = 'プロジェクト削除'>";
-	echo "</form>";
+        if($filename != 'EDABANINFO_2')
+        {
+                echo '<form name ="form" action="listJump.php" method="post" onsubmit = "return delmessage2();">';
+                echo "<input type ='hidden' name = 'id' class='free' value = '".$_SESSION['list']['id']."'>";
+                echo "<input type ='submit' name = 'delete' class='free' value = 'プロジェクト削除'>";
+                echo "</form>";
+        }
 	echo "</div>";
 ?>
 <head>

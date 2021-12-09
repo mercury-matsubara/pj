@@ -69,6 +69,11 @@
 		echo "<form action='insertJump.php' method='post'>";
 		echo "<input type='submit' name = 'cancel' value='“o˜^‚É–ß‚é'
 				class='free'>";
+                if($filename == "EDABANINFO_1")
+                {
+                    echo "<input type='submit' name = 'pjtouroku' value='ŒÂ•Ê‹àŠzÝ’è'
+				class='free'>";
+                }
 		echo "</form></div>";
 		$_SESSION['insert'] = null;
 	}
