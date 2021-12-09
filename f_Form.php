@@ -1352,7 +1352,11 @@ function makeformSerch_set($post,$formName){
 		$serch_str.="</td></tr>";
 	}
 	
-	
+	if($filename == "ENDPJLIST_2")
+    {
+        $serch_str .= "<tr><td><a class = 'itemname'>終了日付</a></td>";
+        $serch_str .= "<td><input type='date' id='startdate' name='startdate'>　～　<input type='date' id='enddate' name='enddate'></td></tr>";
+    }
 	$serch_str .= "</table>";
 	$check_column_str =  substr($check_column_str,0,-1);
 	$_SESSION['check_column'] = $check_column_str;

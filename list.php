@@ -165,7 +165,7 @@
 	}
 	if($filename == 'ENDPJLIST_2' && $main_table =='8' )
 	{
-		$sql[0] =  str_replace("*", " a.PROJECTNUM as PROJECTNUM,a.EDABAN as EDABAN,a.PJNAME as PJNAME,STAFFNAME,TEIJITIME,ZANGYOTIME,DETALECHARGE,TOTALTIME,PERFORMANCE ", $sql[0]);
+		$sql[0] =  str_replace("*", " a.PROJECTNUM as PROJECTNUM,a.EDABAN as EDABAN,a.PJNAME as PJNAME,STAFFNAME,TEIJITIME,ZANGYOTIME,DETALECHARGE,TOTALTIME,PERFORMANCE,5ENDDATE", $sql[0]);
 		$sql[0] =  str_replace("endpjinfo", " endpjinfo as a ", $sql[0]);
 		$sql[0] =  str_replace("projectnuminfo.PROJECTNUM", " a.PROJECTNUM ", $sql[0]);
 		$sql[0] =  str_replace("edabaninfo.EDABAN", " a.EDABAN ", $sql[0]);
@@ -258,4 +258,15 @@
 	echo "</div>";
 ?>
 </body>
+<script language="JavaScript">
+    window.onload = function() {
+        var filename = '<?php if($filename == "ENDPJLIST_2"){ echo $filename; }else{ echo ""; } ?>';
+        
+        if(filename == 'ENDPJLIST_2'){
+            //“ú•t“ü—Í—“’l
+            document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
+            document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
+        }
+    }
+</script>
 </html>

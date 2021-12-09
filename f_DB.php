@@ -592,6 +592,12 @@ function makeList($sql,$post){
 		$list_html .="<th><a class ='head'>処理</a></th></tr><thead>";
 	}
 
+    //終了PJ一覧画面（終了日付欄追加）
+    if($filename == "ENDPJLIST_2")
+    {
+        $list_html .= "<th><a class = 'head'>終了日付</a></th>";
+    }
+    
 	$list_html .="<tbody>";
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
@@ -661,6 +667,21 @@ function makeList($sql,$post){
 			$list_html .="<td ".$id." ".$class." ><a class ='body'>".
 			$value."</a></td>";
 		}
+        
+        //終了PJ一覧画面（終了日付欄追加）
+        if($filename == "ENDPJLIST_2")
+        {
+            if(isset($_SESSION["enddate"][$counter]))
+            {
+                $enddate = $_SESSION["enddate"][$counter];
+                $list_html .="<td ".$id." ".$class." ><a class ='body'>".$enddate."</a></td>";
+            }
+            elseif (isset($result_row["5ENDDATE"])) 
+            {
+                $_SESSION["enddate"][$counter] = $result_row["5ENDDATE"];
+            }            
+        }
+
 		if($isList == 1)
 		{
 			for($i = 0 ; $i < count($listtable_array) ; $i++)
@@ -691,7 +712,7 @@ function makeList($sql,$post){
 			$list_html .= "<td ".$id."  valign='top'><input type='submit' name='edit_".
 				$result_row[$main_table.'CODE']."' value = '期またぎ' ".$disabled."></td>";
 		}
-		
+		        
 		$list_html .= "</tr>";
 		$counter++;
 	}
@@ -1640,7 +1661,7 @@ function make_csv($post){
 	}
 	if($filename == 'ENDPJLIST_2')
 	{
-		$sql[0] = str_replace("*"," a.PROJECTNUM as PROJECTNUM,a.EDABAN as EDABAN,a.PJNAME as PJNAME,STAFFNAME,TEIJITIME,ZANGYOTIME,DETALECHARGE,TOTALTIME,PERFORMANCE ",$sql[0]);
+		$sql[0] = str_replace("*"," a.PROJECTNUM as PROJECTNUM,a.EDABAN as EDABAN,a.PJNAME as PJNAME,STAFFNAME,TEIJITIME,ZANGYOTIME,DETALECHARGE,TOTALTIME,PERFORMANCE,5ENDDATE ",$sql[0]);
 		$sql[0] =  str_replace("endpjinfo", " endpjinfo as a ", $sql[0]);
 	}
 	if($filename == 'KOUTEIINFO_2')
