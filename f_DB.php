@@ -675,10 +675,11 @@ function makeList($sql,$post){
             {
                 $enddate = $_SESSION["enddate"][$counter];
                 $list_html .="<td ".$id." ".$class." ><a class ='body'>".$enddate."</a></td>";
+                unset($_SESSION["enddate"][$counter]);
             }
-            elseif (isset($result_row["5ENDDATE"])) 
+            elseif (isset($result_row["8ENDDATE"])) 
             {
-                $_SESSION["enddate"][$counter] = $result_row["5ENDDATE"];
+                $_SESSION["enddate"][$counter] = $result_row["8ENDDATE"];
             }            
         }
 
@@ -4215,14 +4216,17 @@ function makeList_check($sql,$post,$tablenum){
 			}
 		}
 	}
-	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
-	$sql[0] .= $limit.";";																								// LIMIT追加
+	//$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
+	//$sql[0] .= $limit.";";																								// LIMIT追加
+    
 	$result = $con->query($sql[0]) or ($judge = true);																	// クエリ発行
 	if($judge)
 	{
 		error_log($con->error,0);
 		$judge = false;
 	}
+    
+    $list_html .= "<div>";
 	$listcount = $result->num_rows;																						// 検索結果件数取得
 	if ($totalcount == $limitstart )
 	{
@@ -4232,9 +4236,14 @@ function makeList_check($sql,$post,$tablenum){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
+    
+    $list_html .= "</div>";
+    $list_html .= "<div class='listScroll'>";
 	$list_html .= "<table border='1' class ='list'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
-	for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
+    
+    $resultcolumns_array_value = count($resultcolumns_array);
+	for($i = 0 ; $i < $resultcolumns_array_value ; ++$i)
 	{
 		$title_name = $form_ini[$resultcolumns_array[$i]]['link_num'];
 		$list_html .="<th><a class ='head'>".$title_name."</a></th>";
@@ -4242,24 +4251,15 @@ function makeList_check($sql,$post,$tablenum){
     
     //終了日付項目追加
     $list_html .="<th><a class ='head'>終了日付</a></th>";
-    
-    //社員名、社員別金額、作業時間項目追加
-    $syainsql = "SELECT * FROM syaininfo;";         //社員数を求めるSQL
-    $syainresult = $con->query($syainsql);																	// クエリ発行
-    $syain_rows = $syainresult -> num_rows;
-    
-    for($i = 0 ; $i < $syain_rows ; $i++)
-    {
-        $list_html .="<th><a class ='head'>社員名</a></th>";
-        $list_html .="<th><a class ='head'>金額</a></th>";
-        $list_html .="<th><a class ='head'>時間</a></th>";
-    }
+        
+    //PJ詳細ボタン追加
+    $list_html .= "<th><a class = 'head'>詳細</a></th>";
     
 	$list_html .="</tr></thead><tbody id ='endpjlist'>";
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
 		$list_html .="<tr>";
-		if(($counter%2) == 1)
+		if(($counter%2) === 1)
 		{
 			$id = "";
 		}
@@ -4268,7 +4268,7 @@ function makeList_check($sql,$post,$tablenum){
 			$id = "id = 'stripe'";
 		}
 		$list_html .= "<td ".$id." class = 'center'>";
-		if($filename == 'pjagain_5')
+		if($filename === 'pjagain_5')
 		{
 			$column_value = $result_row['5CODE'].'#$';
 			$form_name = '5CODE,';
@@ -4283,16 +4283,18 @@ function makeList_check($sql,$post,$tablenum){
 			$form_name = $tablenum.'CODE,';
 			$form_type .= '9,';
 		}
-		for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
+        
+        $resultcolumns_array_count = count($resultcolumns_array);
+		for($i = 0 ; $i < $resultcolumns_array_count ; ++$i)
 		{
 			$field_name = $form_ini[$resultcolumns_array[$i]]['column'];
 			$format = $form_ini[$resultcolumns_array[$i]]['format'];
 			$value = $result_row[$field_name];
-			if ($field_name == "PROJECTNUM" )
+			if ($field_name === "PROJECTNUM" )
 			{
 				$value = substr($result_row[$field_name],0,2)."-".substr($result_row[$field_name],2,4);
 			}
-			if ($field_name == "EDABAN" )
+			if ($field_name === "EDABAN" )
 			{
 				$value = substr($result_row[$field_name],0,4)."-".substr($result_row[$field_name],4,2);
 			}
@@ -4301,7 +4303,7 @@ function makeList_check($sql,$post,$tablenum){
 			{
 				$value = format_change($format,$value,$type);
 			}
-			if($format == 4)
+			if($format === 4)
 			{
 				$class = "class = 'right'";
 			}
@@ -4309,14 +4311,17 @@ function makeList_check($sql,$post,$tablenum){
 			{
 				$class = "";
 			}
-			if($i == 3)
+			if($i === 3)
 			{
 				$class = "class = 'right'";
 			}
 			$row .="<td ".$id." ".$class." ><a class ='body'>"
 						.$value."</a></td>";
 		}
-		for($i = 0 ; $i < count($columns_array) ; $i++)
+        
+        $columns_array_count = count($columns_array);
+        
+		for($i = 0 ; $i < $columns_array_count ; ++$i)
 		{
 			$field_name = $form_ini[$columns_array[$i]]['column'];
 			$format = $form_ini[$columns_array[$i]]['format'];
@@ -4331,48 +4336,14 @@ function makeList_check($sql,$post,$tablenum){
         $row .= "<td ".$id." ".$class." ><a class ='body'>"
 						.$result_row['5ENDDATE']."</a></td>";
         
-        //一覧の社員名、社員別金額、作業時間項目作成
-        $syainrow = "";
-        $list_num = 0;
-        $row_sql = "SELECT *FROM projectditealinfo where 5CODE = ".$result_row["5CODE"].";";
-        $row_result = $con->query($row_sql) or ($judge = true);
-
-        while($row_list = $row_result->fetch_array(MYSQLI_ASSOC)){
-            //社員名
-            $item_sql = "SELECT *FROM syaininfo where 4CODE = ".$row_list["4CODE"].";";
-            $item_result = $con->query($item_sql) or ($jadge = true);
-            $item = $item_result->fetch_array(MYSQLI_ASSOC);
-            $syainrow .="<td ".$id.">".$item["STAFFNAME"]."<a class ='body'></a></td>";
-
-            //社員別金額
-            $syainrow .="<td ".$id.">".$row_list["DETALECHARGE"]."<a class ='body'></a></td>";
-            	
-            //社員ごとの定時時間と残業時間の合計取得
-            $item_sql = "SELECT SUM(TEIZITIME),SUM(ZANGYOUTIME) FROM progressinfo WHERE 6CODE = ".$row_list["6CODE"].";";
-            $item_result = $con->query($item_sql) or ($judge = true);																		// クエリ発行
-            $item_row = $item_result->fetch_array(MYSQLI_ASSOC);
-            
-            $sagyoutime = $item_row["SUM(TEIZITIME)"] + $item_row["SUM(ZANGYOUTIME)"];
-                
-            $syainrow .="<td ".$id.">".$sagyoutime."<a class ='body'></a></td>";            
-            $list_num++;
-        }
-        
-        if($list_num < $syain_rows)
-        {
-            for(;$list_num < $syain_rows;$list_num++)
-            {
-                $syainrow .="<td ".$id."><a class ='body'></a></td>";       //社員名
-                $syainrow .="<td ".$id."><a class ='body'></a></td>";       //社員別金額
-                $syainrow .="<td ".$id."><a class ='body'></a></td>";       //作業時間
-            }
-        }
+        //詳細ボタン追加
+        $row .= '<td '.$id.' class = "center"><input type ="button" value = "詳細" onClick="syousai_open(\''.$result_row["5CODE"].'\')"></td>'; 
         
 		$form_name = substr($form_name,0,-1);
 		$column_value = substr($column_value,0,-2);
 		$form_type = substr($form_type,0,-1);
         
-        if($result_row["5PJSTAT"] == "2")
+        if($result_row["5PJSTAT"] === "2")
         {
             $list_html .= '済';           
         }
@@ -4383,42 +4354,16 @@ function makeList_check($sql,$post,$tablenum){
         }
 		$list_html .= "</td>";
 		$list_html .= $row;
-        $list_html .= $syainrow;
 		$list_html .= "</tr>";
 		$row ="";
 		$column_value = "";
 		$form_name = "";
 		$form_type = "";
 		$counter++;
-	}
+	}   
 	$list_html .="</tbody></table>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div><div class = 'left'>";
-	$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .="<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
+    $list_html .= "</div>";
+
 	$list_html .="<div style='clear:both;'></div>";
 	return ($list_html);
 }

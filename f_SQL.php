@@ -582,11 +582,23 @@ function joinSelectSQL($post,$tablenum){
                     $count_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
                 }
             }
+            $select_SQL .= "AND PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%'";
+            $count_SQL .= "AND PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%'";
         }
         else
         {
             $select_SQL .= " 5PJSTAT = 1 ";
             $count_SQL .= " 5PJSTAT = 1 ";
+            
+            //Œ»Ý‚ÌŠú‚ð‹‚ß‚é
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $startyear = $item_ini['period']['startyear'];
+            $period = $year - $startyear + 1;
+            
+            $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
+            $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
         }
 	}
 	else if ($filename != 'ENDPJLIST_2' && $tablenum == 8)
@@ -715,56 +727,59 @@ function joinSelectSQL($post,$tablenum){
     
     if($filename == "ENDPJLIST_2" && $tablenum == "8")
     {
+        //Šú‚ÌðŒ’Ç‰Á
         if(strstr($select_SQL, ' WHERE ') == false)
         {
-            if(isset($_SESSION["list"]["startdate"]) && isset($_SESSION["list"]["enddate"]))
-            {
-                if($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] == "")
-                {
-                    $select_SQL .= "";
-                    $count_SQL .= "";
-                }
-                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] == "")
-                {
-                    $select_SQL .= " WHERE 8ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
-                    $count_SQL .= " WHERE 8ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
-                }
-                elseif($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] != "")
-                {
-                    $select_SQL .= " WHERE 8ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
-                    $count_SQL .= " WHERE 8ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
-                }
-                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] != "")
-                {
-                    $select_SQL .= " WHERE 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
-                    $count_SQL .= " WHERE 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
-                }
-            }            
+            $select_SQL .= " WHERE ";
+            $count_SQL .= " WHERE ";
         }
         else 
         {
-            if(isset($_SESSION["list"]["startdate"]) && isset($_SESSION["list"]["enddate"]))
+            $select_SQL .= " AND ";
+            $count_SQL .= " AND ";
+        }
+        
+        if(isset($_SESSION["list"]["period_0"]))
+        {
+            $select_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%' ";
+            $count_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%' ";
+        }
+        else
+        {
+            //Œ»Ý‚ÌŠú‚ð‹‚ß‚é
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $startyear = $item_ini['period']['startyear'];
+            $period = $year - $startyear + 1;
+
+            $select_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+            $count_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+        }
+        
+        
+        //“ú•tðŒ’Ç‰Á
+        if(isset($_SESSION["list"]["startdate"]) && isset($_SESSION["list"]["enddate"]))
+        {
+            if($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] == "")
             {
-                if($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] == "")
-                {
-                    $select_SQL .= "";
-                    $count_SQL .= "";
-                }
-                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] == "")
-                {
-                    $select_SQL .= " AND 8ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
-                    $count_SQL .= " AND 8ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
-                }
-                elseif($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] != "")
-                {
-                    $select_SQL .= " AND 8ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
-                    $count_SQL .= " AND 8ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
-                }
-                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] != "")
-                {
-                    $select_SQL .= " AND 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
-                    $count_SQL .= " AND 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
-                }
+                $select_SQL .= "";
+                $count_SQL .= "";
+            }
+            elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] == "")
+            {
+                $select_SQL .= " AND 8ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+                $count_SQL .= " AND 8ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+            }
+            elseif($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] != "")
+            {
+                $select_SQL .= " AND 8ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
+                $count_SQL .= " AND 8ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
+            }
+            elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] != "")
+            {
+                $select_SQL .= " AND 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
+                $count_SQL .= " AND 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
             }
         }
     }

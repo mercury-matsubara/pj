@@ -144,11 +144,12 @@
 		echo "</div>";;
 		echo "<br><br>";
 		echo "<div><center>";
-        echo ''.(count($message)).'件のPJが処理できません。PJ終了処理がキャンセルされました。';
-        echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><th><a class ='head'>エラー内容</a></th></th><tr/></thead>";
    
 		if(!empty($message))
 		{
+            echo ''.(count($message)).'件のPJが処理できません。PJ終了処理がキャンセルされました。';
+            echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><th><a class ='head'>エラー内容</a></th></th><tr/></thead>";
+
             for($i = 0; $i < count($message); $i++){
                 if(($i % 2) == 1){
                     echo '<tr>';

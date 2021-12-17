@@ -339,15 +339,12 @@
     {
         $pjstat = "1";
     }
-	echo "<br><table><tr><td>";
     echo "<input type = 'hidden' name = 'pjstat_value' id = 'pjstat_value' value ='".$pjstat."'>";
-    echo "<div id = 'select_code'></div>";
-    echo '<tr><td><div id="selectmsg">0åèëIëíÜ</div></td><td><input type="submit" name="end" class="button" value="ÇoÇièIóπ" onclick="check_checkbox();"></td></tr>';
+    echo '<table><tr><td><div id="selectmsg">0åèëIëíÜ</div></td><td><input type="submit" name="end" class="button" value="ÇoÇièIóπ" onclick="check_checkbox();"></td></tr></table>';
+    echo "<div class='listScroll'>";
 	echo $form_drop ;
-	echo "</td><td valign='bottom' >";
-	echo "</td>";
-	echo "</tr></table>";
-	//echo "</form>";
+    echo "</div>";
+
 	echo "</div>";
 ?>
 
@@ -388,6 +385,26 @@
             document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
             document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
         }
+    }
+    
+    function syousai_open(code5)
+    {
+		var w = screen.availWidth;
+		var h = screen.availHeight;
+		w = (w * 0.8);
+		h = (h * 0.8);
+		url = 'pj_syousai.php?code='+code5+'';
+//		n = showModalDialog(
+//			url,
+//			this,
+////			"dialogWidth=800px; dialogHeight=480px; resizable=yes; maximize=yes"
+//			"dialogWidth=" + w + "px; dialogHeight=" + h + "px; resizable=yes; maximize=yes"
+//		);
+                n = window.open(
+                        url,
+                        this,
+                        "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
+                );	        
     }
 </script>
 </html>

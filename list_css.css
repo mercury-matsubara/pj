@@ -221,3 +221,47 @@ table.list input[type="text"]
 {
 	HEIGHT: 20px;
 }
+
+.listScroll{    
+    /*画面に対する比率で最大の幅を設定*/
+    max-width: 98%;
+
+    /*中身の横幅に合わせる*/
+    display: inline-block;
+    
+    /*10件分の表の高さを最大値とする*/
+    max-height: 340px;
+    
+    /*中身の高さに合わせる*/
+    height: auto;
+    
+    /**/
+    /*縦スクロール（必要なときのみ表示）*/
+    overflow: auto;
+    /*横スクロール（必要なときのみ表示）*/
+    overflow-x: auto;
+    margin-left: auto;
+    margin-right: auto;
+    white-space: nowrap;
+    
+    /*要素を左寄せにする*/
+    margin-right: auto;
+    
+    /*余白設定*/
+    margin-bottom: 30px;
+    
+    border-style: solid;
+    border-width: thin;
+    }   
+
+.listScroll th {  
+    /*スクロール時にヘッダーを固定する*/
+    position: sticky;
+    top: 0; 
+}
+
+/* カラムの調整 */
+.column {
+    overflow: hidden;/*スクロール時にカラム名を固定*/
+    text-overflow: ellipsis;
+}

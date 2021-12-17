@@ -1354,8 +1354,17 @@ function makeformSerch_set($post,$formName){
 	
 	if($filename == "ENDPJLIST_2")
     {
+        //終了日付条件
         $serch_str .= "<tr><td><a class = 'itemname'>終了日付</a></td>";
         $serch_str .= "<td><input type='date' id='startdate' name='startdate'>　～　<input type='date' id='enddate' name='enddate'></td></tr>";
+        
+        //期のプルダウン作成
+        $form_name = "period";
+        $over = "";
+       
+        $serch_str .= "<tr><td><a class ='itemname'>期</a></td><td>";
+        $serch_str.= period_pulldown_set($form_name,$over,$post,"",$formName,0);
+        $serch_str .= "</td><tr>";
     }
 	$serch_str .= "</table>";
 	$check_column_str =  substr($check_column_str,0,-1);
@@ -1639,7 +1648,6 @@ function make_selectlist()
 ************************************************************************************************************/
 function make_selectlist(){
     $form_str = "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><tr/></thead></table>";
-    
     return ($form_str);
 }
 /************************************************************************************************************
@@ -1794,9 +1802,15 @@ function makeformModal_set($post,$isReadOnly,$form_Name,$columns){
 	{
 		$form_str.= "<tr><td>未終了PJ　<input type='radio' name='pjstat' value='1' onclick='onpjstat()'></td>";
         $form_str.= "<td>終了済みPJ　<input type='radio' name='pjstat' value='2' onclick='onpjstat()'></td></tr>";
-        $form_str.= "<tr><td>終了日付　<input type='date' id='startdate' name='startdate'></td>";
-        $form_str.= "<td>　～　<input type='date' id='enddate' name='enddate'></td></tr>";
-	}
+        $form_str.= "<tr><td>終了日付</td><td><input type='date' id='startdate' name='startdate'>";
+        $form_str.= "　～　<input type='date' id='enddate' name='enddate'></td></tr>";
+        $form_name = "period";
+        $over = "";
+        $form_str .= "<tr><td>期</td><td>";
+        $form_str.= period_pulldown_set($form_name,$over,$post,"",$form_Name,0);
+        $form_str .= "";
+
+    }
     
 	$form_str .= "</table>";
 	$check_column_str =  substr($check_column_str,0,-1);
@@ -3426,30 +3440,59 @@ function period_pulldown_set($name,$over,$post,$ReadOnly,$formName,$isnotnull){
 	$pulldown.='<select id="'.$formname.'"  class ="'.$ReadOnly.'" name="'.$formname.'"
 					 onMouseOver ="change(this.id,\''.$ReadOnly.'\',\''.$formName.'\');" 
 					onChange = "notnullcheck(this.id,'.$isnotnull.',\''.$formName.'\');">';
-	for($i = 1 ;$i <= $period ; $i++)
-	{
-		$text = $i."期";
-		$value = $i;
-		if(isset($post[$formname]))
-		{
-			if($value == $post[$formname])
-			{
-				$select = ' selected ';
-				$isSelect=true;
-				$disable = "";
-			}
-		}
-		$pulldown.='<option value ="'.$value.'" '.$select.' >'.$text.'</option>';
-		$select = "";
-	}
-	if($isSelect)
-	{
-		$pulldown.='<option value ="" > </option>';
-	}
-	else
-	{
-		$pulldown.='<option value ="" selected > </option>';
-	}
+    
+    if($filename == "pjend_5" || $filename == "ENDPJLIST_2")
+    {
+        //9期から現在の期までの選択肢を作成する
+        for($i = 9 ;$i <= $period ; $i++)
+        {
+            $text = $i."期";
+            $value = $i;
+            if(isset($post[$formname]))
+            {
+                if($value == $post[$formname])
+                {
+                    $select = ' selected ';
+                    $isSelect=true;
+                    $disable = "";
+                }
+            }
+            elseif($i == $period)
+            {
+                $select = ' selected';
+            }
+            $pulldown.='<option value ="'.$value.'" '.$select.' >'.$text.'</option>';
+            $select = "";
+        }        
+    }
+    else 
+    {                
+        //9期から現在の期までの選択肢を作成する
+        for($i = 9 ;$i <= $period ; $i++)
+        {
+            $text = $i."期";
+            $value = $i;
+            if(isset($post[$formname]))
+            {
+                if($value == $post[$formname])
+                {
+                    $select = ' selected ';
+                    $isSelect=true;
+                    $disable = "";
+                }
+            }
+            $pulldown.='<option value ="'.$value.'" '.$select.' >'.$text.'</option>';
+            $select = "";
+        }
+        if($isSelect)
+        {
+            $pulldown.='<option value ="" > </option>';
+        }
+        else
+        {
+            $pulldown.='<option value ="" selected > </option>';
+        }
+    }
 	return $pulldown;
 }
 
