@@ -620,7 +620,7 @@
 <?php
 
 	echo "<form action='pageJump.php' method='post'>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "<div style='clear:both;'></div></form><br><br><br>";
 
 ?>

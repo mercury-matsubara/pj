@@ -686,20 +686,17 @@
 	$notnullcolumns = $_SESSION['notnullcolumns'];
 	$notnulltype = $_SESSION['notnulltype'];
 	echo "<form action='pageJump.php' method='post'><div class='left'>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "</div>";
 	echo "</form>";
-	echo "<form action='insertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-	echo "<input type ='submit' value = '–ß‚é' name = 'back' class = 'free'>";
-	echo "</div></form>";
 	echo "<div style='clear:both;'></div>";
 	echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
 				onsubmit = "return check(\''.$checkList.
 				'\',\''.$notnullcolumns.
 				'\',\''.$notnulltype.'\');">';
-	echo "<div class = 'center'><br><br>";
+	echo "<div class = 'center'>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
-	echo "</div><br><br>";
+	echo "</div><br>";
 	echo $form;
 	echo "</tr></table>";
         if($filename == 'PJTOUROKU_1')
@@ -714,7 +711,7 @@
 	echo "<div class='center'>";
 	echo '<input type="submit" name = "insert" value = "“o˜^" class="free">';
 	echo '<input type="submit" name = "cancel" value = "ƒNƒŠƒA" class="free" onClick ="isCancel = true;">';
-//	echo '<input type="submit" name = "back" value = "–ß‚é" class="free" onClick ="isCancel = true;">';
+	echo '<input type="submit" name = "back" value = "–ß‚é" class="free" onClick ="isCancel = true;">';
 	echo "</form>";
 	echo "</div>";
 ?>

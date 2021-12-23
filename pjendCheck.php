@@ -92,7 +92,7 @@
 		echo "<form action='pageJump.php' method='post'>";
 		echo "<div class = 'left' id = 'space_button'>Å@</div>";
 		echo "<div><table id = 'button'><tr><td>";
-		echo makebutton($filename,'center');
+		echo makebutton();
 		echo "</td></tr></table></div>";
 		echo "</form>";
 		echo "<div class = 'center'><br><br>";
@@ -105,6 +105,9 @@
         $pjcode = explode(",",$_SESSION['list']['pjcode']);
         $edabancode = explode(",",$_SESSION['list']['edabancode']);
         $pjname = explode(",",$_SESSION['list']['pjname']);
+        $_SESSION['post'] = $_SESSION['pre_post'];
+        $_SESSION['list'] = $_SESSION['kensaku'];
+        unset($_SESSION['kensaku']);
         
         for($i=0; $i < count($pjcode);$i++){
             if(($i % 2) == 1){
@@ -122,7 +125,7 @@
             }
         }
 		echo "</table>";
-        echo '</center></div>';
+                echo '</center></div>';
 //		echo '<form action="pjendJump.php" method="post" >';
 //		echo "<div class = 'center'>";
 //		echo '<input type="submit" name = "cancel" value = "àÍóóÇ…ñﬂÇÈ" class = "free">';
@@ -136,7 +139,7 @@
 		echo "<form action='pageJump.php' method='post'>";
 		echo "<div class = 'left' id = 'space_button'>Å@</div>";
 		echo "<div><table id = 'button'><tr><td>";
-		echo makebutton($filename,'center');
+		echo makebutton();
 		echo "</td></tr></table></div>";
 		echo "</form>";
 		echo "<div class = 'center'><br><br>";
@@ -175,7 +178,7 @@
 		{
 			echo $list;
 		}
-        echo "</table>";
+                echo "</table>";
 		echo "</center></div><br><br>";
 		echo '<form action="pjendJump.php" method="post" >';
 		echo "<div class = 'center'>";

@@ -68,11 +68,11 @@
 	require_once("f_Button.php");
 	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
 	echo "<left>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "</div>";
 //	echo "<form action='pageJump.php' method='post'>";
 //	echo "<left>";
-//	echo makebutton($filename,'top');
+//	echo makebutton();
 	echo "</left><br><br><br><br>";
 	echo "<center>";
 	echo "<a class='title'>".$title."</a><br><br><br>";
@@ -81,7 +81,7 @@
 	echo "<br><br>";
 	echo "<div class = 'left' id = 'space_button'>Å@</div>";
 	echo "<div><table id = 'button'><tr><td>";
-	echo makebutton($filename,'center');
+	echo makebutton();
 	echo "</td></tr></table></div>";
 	echo "</form>";
 ?>

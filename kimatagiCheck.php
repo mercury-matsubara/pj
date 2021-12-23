@@ -103,7 +103,7 @@
 		echo "<form action='pageJump.php' method='post'>";
 		echo "<div class = 'left' id = 'space_button'>Å@</div>";
 		echo "<div><table id = 'button'><tr><td>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</td></tr></table></div>";
 		echo "</form>";
 		echo "<div class = 'center'><br><br>";
@@ -135,7 +135,7 @@
 		echo "<form action='pageJump.php' method='post'>";
 		echo "<div class = 'left' id = 'space_button'>Å@</div>";
 		echo "<div><table id = 'button'><tr><td>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</td></tr></table></div>";
 		echo "</form>";
 		echo "<div class = 'center'><br><br>";

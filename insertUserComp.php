@@ -30,7 +30,7 @@
 		}
 		$password = null;
 		echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "<div class = 'center'>";

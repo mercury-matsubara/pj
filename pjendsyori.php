@@ -21,14 +21,17 @@
 		if($message == '完了')
 		{
 			echo "<div class = 'center'><br><br>";
+			echo "<form action='pageJump.php' method='post'>";
+			echo makebutton();
+			echo "</form>";
 			echo "<a class = 'title'>".$title."完了</a>";
 			echo "</div>";
 			echo "<div class = 'center'>";
 			echo "</div>";
-			echo "<form action='pageJump.php' method='post'>";
+                        echo '<form action="pjendJump.php" method="post" >';
 			echo "<div class = 'left' id = 'space_button'>　</div>";
 			echo "<div><table id = 'button'><tr><td>";
-			echo makebutton($filename,'center');
+                        echo "<input type ='submit' value = '戻る' name = 'cancel' class = 'free'>";
 			echo "</td></tr></table></div>";
 			echo "</form>";
 		}
@@ -36,17 +39,17 @@
 		{
 			$error = $_SESSION['error'];
 			echo "<div class = 'center'><br><br>";
+			echo "<form action='pageJump.php' method='post'>";
+			echo makebutton();
+			echo "</form>";
 			echo "<a class = 'title'>".$title."エラー</a>";
 			echo "</div>";
 			echo "<div class = 'center'>";
 			echo "</div>";
-			echo "<form action='pageJump.php' method='post'>";
 			echo "<div class = 'left' id = 'space_button'>　</div>";
 			echo "<div><table id = 'button'><tr><td>";
 			echo makeList_error($error);
-			echo makebutton($filename,'center');
 			echo "</td></tr></table></div>";
-			echo "</form>";
 			unset($_SESSION['pjend']);
 			unset($_SESSION['error']);
 		}

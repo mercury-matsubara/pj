@@ -218,6 +218,7 @@
 	}
 	if($filename == 'PJTOUROKU_2')
 	{
+                $_SESSION['kensaku'] = $_SESSION['list'];
 		$_SESSION['list'] = $_POST;
 		$_SESSION['post'] = null;
 		header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")

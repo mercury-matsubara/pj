@@ -111,11 +111,11 @@
 		$form = FileReadInsert();
 		echo "<table border='0' WIDTH=100%><tr>";
 		echo "<form action='pageJump.php' method='post'><div>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div></form>";
-		echo "<form action='FileinsertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-		echo "<input type ='submit' value = '–ß‚é' name = 'back' class = 'free'>";
-		echo "</div></form>";
+//		echo "<form action='FileinsertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
+//		echo "<input type ='submit' value = '–ß‚é' name = 'back' class = 'free'>";
+//		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
 		echo "</tr></table>";
 		/*
@@ -148,9 +148,13 @@
 		echo $form;
 		//----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ start ----->>
 		echo "<br><br>";
+                echo "<div style='display:inline-flex'>";
+                echo "<form action='FileinsertJump.php' method='post'>";
+                echo "<input type ='submit' value = 'ˆê——‚É–ß‚é' name = 'back' class = 'free'>";
+                echo "</form>";
 		echo "<form action='pageJump.php' method='post'>";
 		echo "<input type ='submit' value = 'æ‰æ–Ê‚É–ß‚é' class = 'free' name = 'PROGRESSINFO_6_button'>";
-		echo "</form></div>";
+		echo "</form></div></div>";
 		//----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ end -----<<
 		echo "</center>";
 		$_SESSION['insert'] = null;

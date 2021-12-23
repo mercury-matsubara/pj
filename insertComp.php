@@ -53,20 +53,21 @@
 		insert($_SESSION['insert']);
 		unset($_SESSION['upload']);
 		echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</form>";
 		echo "</div>";
-		echo "<form action='insertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-		echo "<input type ='submit' value = '–ß‚é' name = 'back' class = 'free'>";
-		echo "</div></form>";
+//		echo "<form action='insertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
+//		echo "<input type ='submit' value = '–ß‚é' name = 'back' class = 'free'>";
+//		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
-		echo "<div class = 'center'><br><br>";
+		echo "<div class = 'center'>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
 		echo "</div>";
 		echo "<br><br>";
 		echo InsertComp($_SESSION['insert']);
 		echo "<div class = 'center'>";
 		echo "<form action='insertJump.php' method='post'>";
+                echo '<input type="submit" name = "back" value = "ˆê——‚É–ß‚é" class="free">';
 		echo "<input type='submit' name = 'cancel' value='“o˜^‚É–ß‚é'
 				class='free'>";
                 if($filename == "EDABANINFO_1")

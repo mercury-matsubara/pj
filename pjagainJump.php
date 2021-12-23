@@ -14,7 +14,7 @@
 	$_SESSION['post'] = null;
 	$keyarray = array_keys($_POST);
 	$url = 'retry';
-	foreach($keyarray as $key)
+        foreach($keyarray as $key)
 	{
 		if (strstr($key, 'serch'))
 		{
@@ -64,13 +64,18 @@
 		}
 		if($key == 'cancel')
 		{
-			$_SESSION['list'] = $_POST;
+                        if(!isset($_SESSION['kensaku']))
+                        {
+                            $_SESSION['kensaku'] = $_SESSION['list'];
+                            $_SESSION['list'] = $_POST;
+                        }
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/pjagain.php");
 			exit();
 		}
 		if($key == 'again')
 		{
+                        $_SESSION['kensaku'] = $_SESSION['list'];
 			$_SESSION['list'] = $_POST;
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/pjagainCheck.php");

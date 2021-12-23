@@ -41,7 +41,7 @@
 		{
 			delete($_SESSION['edit'],$_SESSION['data']);
 			echo "<form action='pageJump.php' method='post'><div class='left'>";
-			echo makebutton($filename,'top');
+			echo makebutton();
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
 			echo "<div class = 'center'><br><br>";
@@ -62,7 +62,7 @@
 		else
 		{
 			echo "<form action='pageJump.php' method='post'><div class='left'>";
-			echo makebutton($filename,'top');
+			echo makebutton();
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
 			echo "<div class = 'center'><br><br>";

@@ -131,7 +131,7 @@
 	
 	$checkList = $_SESSION['check_column'];
 	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "</div>";
 	echo "</form>";
 	echo "<div style='clear:both;'></div>";

@@ -113,12 +113,15 @@
 	function check()
 	{
 		var judge = true;
-		if(document.getElementsByName('inpath')[(document.getElementsByName('inpath').length-1)].value == "")
-		{
-			document.getElementsByName('inpath')[(document.getElementsByName('inpath').length-1)].style.backgroundColor = '#ff0000';
-			judge = false;
-			alert('ファイルを選択して下さい');
-		}
+                if(isCancel == false)
+                {
+                        if(document.getElementsByName('inpath')[(document.getElementsByName('inpath').length-1)].value == "")
+                        {
+                                document.getElementsByName('inpath')[(document.getElementsByName('inpath').length-1)].style.backgroundColor = '#ff0000';
+                                judge = false;
+                                alert('ファイルを選択して下さい');
+                        }
+                }
 		return judge;
 	}
 	
@@ -218,11 +221,11 @@
 	$columns_array = explode(',',$columns);
 	echo "<table border='0' WIDTH=100%><tr>";
 	echo "<form action='pageJump.php' method='post'><div>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "</div></form>";
-	echo "<form action='FileinsertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-	echo "<input type ='submit' value = '戻る' name = 'back' class = 'free'>";
-	echo "</div></form>";
+//	echo "<form action='FileinsertJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
+//	echo "<input type ='submit' value = '戻る' name = 'back' class = 'free'>";
+//	echo "</div></form>";
 	echo "<div style='clear:both;'></div>";
 	echo "</tr></table>";
 	echo '<form name ="fileinsert" action="FileinsertJump.php" method="post" enctype="multipart/form-data" 
@@ -233,6 +236,7 @@
 	echo "<div class = 'center'>";
 	echo '<input type="file" name="inpath" size="300"><br><br>';
 	echo '<input type="submit" name = "fileinsert" value = "取込" class="free">';
+        echo "<input type ='submit' value = '戻る' name = 'back' class = 'free' onClick ='isCancel = true;'>";
 	echo "</form>";
 	
 	echo "<br><br><br>";

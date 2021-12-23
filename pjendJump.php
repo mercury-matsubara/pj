@@ -64,13 +64,18 @@
 		}
 		if($key == 'cancel')
 		{
+                    if(!isset($_SESSION['kensaku']))
+                    {
+                        $_SESSION['kensaku'] = $_SESSION['list'];
 			$_SESSION['list'] = $_POST;
+                    }
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/pjend.php");
 			exit();
 		}
 		if($key == 'end')
 		{
+                        $_SESSION['kensaku'] = $_SESSION['list'];
 			$_SESSION['list'] = $_POST;
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/pjendCheck.php");

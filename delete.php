@@ -134,7 +134,7 @@
 		if($filename != 'PJTOUROKU_2')
 		{
 			echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-			echo makebutton($filename,'top');
+			echo makebutton();
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
 			echo "<div class = 'center'><br><br>";
@@ -158,7 +158,7 @@
 		else
 		{
 			echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-			echo makebutton($filename,'top');
+			echo makebutton();
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
 			echo "<div class = 'center'><br><br>";
@@ -186,7 +186,7 @@
 	{
 		$judge = false;
 		echo "<form action='pageJump.php' method='post'><div class='left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "</form>";

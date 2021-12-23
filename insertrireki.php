@@ -25,7 +25,8 @@
 	require_once ("f_Form.php");
 	require_once ("f_SQL.php");
 	$form_ini = parse_ini_file('./ini/form.ini', true);
-	
+	$_SESSION['post'] = $_SESSION['pre_post'];
+        $_SESSION['pre_post'] = null;
 	
 	$filename = $_SESSION['filename'];
 	$title = $form_ini[$filename]['title'];
@@ -76,8 +77,8 @@
 <body>
 <?php
 	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
-	echo "</div>";
+	echo makebutton();
+	echo "</form></div>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>PJå¬ï ã‡äzê›íËäÆóπ</a>";
@@ -87,9 +88,10 @@
 	echo "</div>";
 	echo "<div class = 'left' id = 'space_button'>Å@</div>";
 	echo "<div><table id = 'button'><tr><td>";
-	echo makebutton($filename,'center');
+        echo "<form action='listJump.php' method='post'>";
+        echo '<input type="submit" name = "cancel" value = "àÍóóÇ…ñﬂÇÈ" class="free">';
+        echo "</form>";
 	echo "</td></tr></table></div>";
-	echo "</form>";
 	$con = dbconect();																									// dbê⁄ë±ä÷êîé¿çs
 	$CODE5 = $_SESSION['kobetu']['id'];
 	$CODE4 = "";
@@ -153,6 +155,8 @@
 			}
 		}
 	}
+        $_SESSION['list'] = $_SESSION['kensaku'];
+        unset($_SESSION['kensaku']);
 ?>
 </body>
 </html>

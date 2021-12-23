@@ -22,7 +22,7 @@
 		$filename = $_SESSION['filename'];
 		echo "<left>";
 		echo "<form action='pageJump.php' method='post'><div class='left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "</form>";

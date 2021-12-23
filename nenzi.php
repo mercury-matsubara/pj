@@ -85,11 +85,11 @@
 	{
 		echo "<left>";
 		echo "<form action='pageJump.php' method='post'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "<div style='clear:both;'></div>";
 		echo "</form>";
 		echo "</left>";
-		echo "<center>";
+		echo "<center><br>";
 		echo "<a class = 'title'>îNéüèàóù</a>";
 		echo "<br><a class = 'error'>".$message."</a>";
 		echo "<br><br>";
@@ -113,7 +113,7 @@
 	{
 		nenji($_SESSION['nenzi']['period']);
 		echo "<form action='pageJump.php' method='post'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "<div style='clear:both;'></div>";
 		echo "</form>";
 		echo "<center>";

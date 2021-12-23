@@ -61,14 +61,20 @@
 			{
 				$_SESSION['userName'] = $userName;
 				$_SESSION['pre_post'] = $_POST;
-				$_SESSION['filename'] = 'MENU_4';
+//				$_SESSION['filename'] = 'MENU_4';
+                                $_SESSION['filename'] = 'PROGRESSINFO_2';
 				if($result[0] == 2)
 				{
 					limit_mail($result[1]);
 				}
-				echo '<script type="text/javascript">';
+//				echo '<script type="text/javascript">';
+//				echo "<!--\n";
+//				echo 'location.href = "./mainmenu.php";';
+//				echo '// -->';
+//				echo '</script>';
+                                echo '<script type="text/javascript">';
 				echo "<!--\n";
-				echo 'location.href = "./mainmenu.php";';
+				echo 'location.href = "./list.php";';
 				echo '// -->';
 				echo '</script>';
 			}
@@ -113,7 +119,7 @@
 --></script>
 </head>
 <body>
-	<input type='button' name='login' class='button' value = 'âÊñ Çï¬Ç∂ÇÈ' style="WIDTH: 130px; HEIGHT: 30px" onClick="closewindow();">
+<!--	<input type='button' name='login' class='button' value = 'âÊñ Çï¬Ç∂ÇÈ' style="WIDTH: 130px; HEIGHT: 30px" onClick="closewindow();">-->
 	<CENTER>
 	<?php
 		if($message != '')
@@ -123,9 +129,9 @@
 	?>
 	<br><br>
 	<a class = "title">ÉçÉOÉCÉì</a>
-	<br><br>
+	<br>
 	<form action="login.php" method="post">
-	<img src="./image/rogo.png">
+        <img src="./image/mlogo.png" style="width:370px">
 	<?php
 	if($comment != "")
 	{

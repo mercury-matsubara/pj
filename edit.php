@@ -566,20 +566,20 @@
 		$notnullcolumns = $_SESSION['notnullcolumns'];
 		$notnulltype = $_SESSION['notnulltype'];
 		echo "<form action='pageJump.php' method='post'><div class='left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "</form>";
-		echo "<form action='listJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-		echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
-		echo "</div></form>";
+//		echo "<form action='listJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
+//		echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
+//		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
 		echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
 					onsubmit = "return check(\''.$checkList.
 					'\',\''.$notnullcolumns.
 					'\',\''.$notnulltype.'\');">';
-		echo "<div class = 'center'><br><br>";
+		echo "<div class = 'center'>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
-		echo "</div><br><br>";
+		echo "</div><br>";
 		echo $form;
 		echo "</tr></table>";
 		echo "<div class = 'center'>";
@@ -590,6 +590,7 @@
 					class="free">';
 			echo '<input type="submit" name = "clear" value = "ƒNƒŠƒA" 
 					class = "free" onClick = "ischeckpass = false;">';
+                        echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free' onClick = 'ischeckpass = false;'>";
 		}
 		else
 		{
@@ -604,13 +605,22 @@
 							class = "free" onClick = "ischeckpass = false;">';
 					echo '<input type="submit" name = "insert" value = "•ÊŒ“o˜^" 
 							class = "free"">';
+                                        echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free' "
+                                            . "onClick = 'ischeckpass = false;'>";
 				}
 				else
 				{
+                                        echo '<div style="display:inline-flex">';
 					echo '<input type="submit" name = "clear" value = "ƒNƒŠƒA" 
 							class = "free" onClick = "ischeckpass = false;">';
 					echo '<input type="submit" name = "insert" value = "•ÊŒ“o˜^" 
 							class = "free"">';
+                                        echo '</form>';
+                                        echo "<form action='listJump.php' method='post'>";
+                                        echo "<input type ='submit' value = '–ß‚é' name = 'cancel' "
+                                            . "class = 'free' onClick = 'ischeckpass = false;'>";
+                                        echo '</form>';
+                                        echo '</div>';
 				}
 			}else{
 					echo '<input type="submit" name = "kousinn" value = "XV" 
@@ -619,6 +629,8 @@
 							class = "free" onClick = "ischeckpass = false;">';
 					echo '<input type="submit" name = "delete" value = "íœ" 
 							class = "free" onClick = "ischeckpass = false;">';
+                                        echo "<input type ='submit' value = '–ß‚é' name = 'cancel' "
+                                            . "class = 'free' onClick = 'ischeckpass = false;'>";
 			
 			}
 		}
@@ -629,7 +641,7 @@
 	else
 	{
 		echo "<form action='pageJump.php' method='post'><div class='left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "</form>";

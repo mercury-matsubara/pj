@@ -307,18 +307,18 @@
 		$notnullcolumns = $_SESSION['notnullcolumns'];
 		$notnulltype = $_SESSION['notnulltype'];
 		echo "<form action='pageJump.php' method='post'><div class='left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "</form>";
-		echo "<form action='listJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-		echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
-		echo "</div></form>";
+//		echo "<form action='listJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
+//		echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
+//		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
 		echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
 					onsubmit = "return check(\''.$checkList.
 					'\',\''.$notnullcolumns.
 					'\',\''.$notnulltype.'\');">';
-		echo "<div class = 'center'><br><br>";
+		echo "<div class = 'center'>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
 		echo "</div><br><br>";
 		if(isset($errorinfo[1]) && $errorinfo[1] != "")
@@ -358,6 +358,8 @@
 		}
 		echo '<input type="submit" name = "clear" value = "ƒNƒŠƒA" 
 				class = "free" onClick = "iscansel = false;">';
+                echo '<input type="submit" name = "cancel" value = "–ß‚é" 
+				class = "free" onClick = "iscansel = false;">';
 		echo "</form>";
 		echo "</div>";
 	}
@@ -365,7 +367,7 @@
 	{
 		$judge = false;
 		echo "<form action='pageJump.php' method='post'><div class='left'>";
-		echo makebutton($filename,'top');
+		echo makebutton();
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "</form>";

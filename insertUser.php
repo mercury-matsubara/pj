@@ -33,6 +33,7 @@
 <script src='./button_size.js'></script>
 <script language="JavaScript"><!--
 	history.forward();
+        var isCancel = false;
 	
 	$(window).resize(function()
 	{
@@ -73,29 +74,32 @@
 		var judge = true;
 		var checkListArray = checkList.split(",");
 		var isenpty = false;
-		for (var i = 0 ; i < checkListArray.length ; i++ )
-		{
-			var param = checkListArray[i].split("_");
-			if(!inputcheck(param[0],param[1],param[2]))
-			{
-				judge = false;
-			}
-			if(document.getElementById(param[0]).value =="")
-			{
-				judge = false;
-				document.getElementById(param[0]).style.backgroundColor = '#ff0000';
-				isenpty = true;
-			}
-		}
-		if(isenpty)
-		{
-			window.alert('項目を入力してください。');
-		}
-		if (document.getElementById('pass').value != document.getElementById('passCheck').value)
-		{
-			judge = false;
-			window.alert('パスワードと確認用パスワードの内容が一致していません。');
-		}
+                if(isCancel == false)
+                {
+                        for (var i = 0 ; i < checkListArray.length ; i++ )
+                        {
+                                var param = checkListArray[i].split("_");
+                                if(!inputcheck(param[0],param[1],param[2]))
+                                {
+                                        judge = false;
+                                }
+                                if(document.getElementById(param[0]).value =="")
+                                {
+                                        judge = false;
+                                        document.getElementById(param[0]).style.backgroundColor = '#ff0000';
+                                        isenpty = true;
+                                }
+                        }
+                        if(isenpty)
+                        {
+                                window.alert('項目を入力してください。');
+                        }
+                        if (document.getElementById('pass').value != document.getElementById('passCheck').value)
+                        {
+                                judge = false;
+                                window.alert('パスワードと確認用パスワードの内容が一致していません。');
+                        }
+                }
 		return judge;
 	}
 --></script>
@@ -108,7 +112,7 @@
 	$filename = $_SESSION['filename'];
 	$checkList = "uid_20_3,pass_20_3,passCheck_20_3";
 	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "</div>";
 	echo "<div style='clear:both;'></div>";
 	echo "</form>";
@@ -130,6 +134,8 @@
 	echo "<br>";
 	echo "<div class = 'center'>";
 	echo "<input type='submit' name = 'insert' value = '登録' class='free'>";
+//        echo '<input type="submit" name = "back" value = "一覧に戻る" 
+//				class = "free" onClick ="isCancel = true;">';
 	echo "</div>";
 	echo "</form>";
 ?>

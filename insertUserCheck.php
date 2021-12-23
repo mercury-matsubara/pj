@@ -125,7 +125,7 @@
 	$checkList = "uid_20_3,pass_20_3,passCheck_20_3";
 	
 	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo "</div>";
 	echo "<div style='clear:both;'></div>";
 	echo "</form>";

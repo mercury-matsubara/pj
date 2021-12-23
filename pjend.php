@@ -21,6 +21,11 @@
 	$isCSV = $form_ini[$filename]['isCSV'];
 	$filename_array = explode('_',$filename);
 	$filename_insert = $filename_array[0]."_1";
+        if(isset($_SESSION['kensaku']))
+        {
+            $_SESSION['list'] = $_SESSION['kensaku'];
+            unset($_SESSION['kensaku']);
+        }
 	if(isset($_SESSION['list']['limit']) == false)
 	{
 		$_SESSION['list']['limitstart'] = 0 ;
@@ -302,17 +307,16 @@
     
 	$damy_array = array();
 	$list ="";
-    $list = makeList_check($sql,$_SESSION['list'],$main_table);
+        $list = makeList_check($sql,$_SESSION['list'],$main_table);
 	$columns = $form_ini[$filename]['sech_form_num'];
 	$form = makeformModal_set($_SESSION['list'],'',"form",$columns);
 	$columns = $form_ini[$filename]['insert_form_tablenum'];
 	//$form_drop = makeformModal_set($damy_array,'readOnly','drop',$columns);
 	$form_drop = make_selectlist();
 	$checkList = $_SESSION['check_column'];
-	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
-	echo "</div>";
-	echo "</form>";
+        echo "<form action='pageJump.php' method='post'>";
+        echo makebutton();
+        echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -345,7 +349,7 @@
 	echo $form_drop ;
     echo "</div>";
 
-	echo "</div>";
+    echo "</div>";
 ?>
 
 </body>

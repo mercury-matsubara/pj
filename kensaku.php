@@ -122,7 +122,7 @@
 	$isMail = $form_ini[$filename]['isMail'];
 	$isCheckBox = $form_ini[$filename]['isCheckBox'];
 	echo "<form action='pageJump.php' method='post'>";
-	echo makebutton($filename,'top');
+	echo makebutton();
 	echo '</form>';
 	if($isLavel == 1)
 	{

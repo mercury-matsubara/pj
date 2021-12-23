@@ -180,10 +180,7 @@
 	$checkList = $_SESSION['check_column'];
 	$isLavel = $form_ini[$filename]['isLabel'];
 	$isMail = $form_ini[$filename]['isMail'];
-	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
-	echo "</div>";
-	echo "</form>";
+	
 	if($isLavel == 1)
 	{
 		echo "<div class = 'left'>";
@@ -198,6 +195,9 @@
 				onClick = "click_mail();">';
 		echo "</div>";
 	}
+        echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";

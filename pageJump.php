@@ -63,6 +63,9 @@
 			{
 				$url = 'Fileinsert';
 				$_SESSION['filename'] = $pre_url[0]."_6";
+                                if( empty($listArray) !== FLASE){
+					$_SESSION['list'] = $listArray;
+				}
 			}
 			else if($pre_url[1] == 'MENU')
 			{

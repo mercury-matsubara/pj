@@ -25,16 +25,19 @@
 		{
 			$title = str_replace("èàóùäÆóπ", "ÉGÉâÅ[", $title);
 		}
+		echo "<form action='pageJump.php' method='post'>";
+		echo makebutton();
+		echo "</form>";
 		echo "<div class = 'center'><br><br>";
 		echo "<a class = 'title'>".$title."</a>";
 		echo "</div>";
 		echo "<div class = 'center'>";
 		echo "<br>".$message."<br>";
 		echo "</div>";
-		echo "<form action='pageJump.php' method='post'>";
+		echo "<form action='pjagainJump.php' method='post'>";
 		echo "<div class = 'left' id = 'space_button'>Å@</div>";
 		echo "<div><table id = 'button'><tr><td>";
-		echo makebutton($filename,'center');
+                echo "<input type ='submit' value = 'ñﬂÇÈ' name = 'cancel' class = 'free'>";
 		echo "</td></tr></table></div>";
 		echo "</form>";
 	}

@@ -62,12 +62,9 @@
 	$checkList = $_SESSION['check_column'];
 	$isLavel = $form_ini[$filename]['isLabel'];
 	$isMail = $form_ini[$filename]['isMail'];
-	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton($filename,'top');
-	echo "</div></form>";
-	echo "<form action='listJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
-	echo "<input type ='submit' value = '戻る' name = 'cancel' class = 'free'>";
-	echo "</div></form>";
+	echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -110,6 +107,9 @@
                 echo "<input type ='submit' name = 'delete' class='free' value = 'プロジェクト削除'>";
                 echo "</form>";
         }
+        echo "<form action='listJump.php' method='post'><div class = 'left' style = 'HEIGHT : 30px'>";
+        echo "<input type ='submit' value = '戻る' name = 'cancel' class = 'free'>";
+        echo "</div></form>";
 	echo "</div>";
 ?>
 <head>
@@ -126,6 +126,8 @@
 <script src='./button_size.js'></script>
 <script src='./syukkacheck.js'></script>
 <script language="JavaScript"><!--
+        var isCancel = false;
+        
 	$(function()
 	{
 		$(".button").corner();
@@ -172,35 +174,38 @@
 	{
 		var total = "<?php echo $_SESSION['kobetu']['total']; ?>";
 		var id = 'kobetu_' + total + '_1';
-		if(inputcheck(id,8,7,0,2))
+                if(isCancel == false)
 		{
-			if(document.getElementById('chage').value == document.getElementById('PJCharge').value)
-			{
-				if(confirm("入力内容正常確認。\n記入金額で個別金額を設定しますがよろしいですか？\n再度確認する場合は「キャンセル」ボタンを押してください。"))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				if(confirm("入力内容正常確認。\nプロジェクト金額と合計金額が異なります。\n合計金額でプロジェクト金額を変更しますがよろしいですか？\n再度確認する場合は「キャンセル」ボタンを押してください。"))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-		else
-		{
-			return false;
-		}
+                        if(inputcheck(id,8,7,0,2))
+                        {
+                                if(document.getElementById('chage').value == document.getElementById('PJCharge').value)
+                                {
+                                        if(confirm("入力内容正常確認。\n記入金額で個別金額を設定しますがよろしいですか？\n再度確認する場合は「キャンセル」ボタンを押してください。"))
+                                        {
+                                                return true;
+                                        }
+                                        else
+                                        {
+                                                return false;
+                                        }
+                                }
+                                else
+                                {
+                                        if(confirm("入力内容正常確認。\nプロジェクト金額と合計金額が異なります。\n合計金額でプロジェクト金額を変更しますがよろしいですか？\n再度確認する場合は「キャンセル」ボタンを押してください。"))
+                                        {
+                                                return true;
+                                        }
+                                        else
+                                        {
+                                                return false;
+                                        }
+                                }
+                        }
+                        else
+                        {
+                                return false;
+                        }
+                }
 	}
 	
 	function delmessage()

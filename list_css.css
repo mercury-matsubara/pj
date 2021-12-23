@@ -92,6 +92,7 @@ a.title {
 	line-height: 100%;
 	overflow: hidden;
 	text-transform: uppercase;
+        margin-top: 55px;
 	margin-right: 15px;
 	border-radius: 50px;
 	-moz-border-radius: 50px;
@@ -265,3 +266,97 @@ table.list input[type="text"]
     overflow: hidden;/*スクロール時にカラム名を固定*/
     text-overflow: ellipsis;
 }
+
+/*ナビゲーション全体の設定*/
+nav{
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        box-shadow: 0 5px 10px 0 #b9b9b9;
+}
+/*ナビゲーションを横並びに*/
+nav ul{
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        background: #efefef;
+        border-bottom: 1px solid #afafaf;
+}
+/*2階層目以降は横並びにしない*/
+nav ul ul{
+        display: block;
+}
+
+/*下の階層のulや矢印の基点にするためliにrelativeを指定*/
+nav ul li{
+        position: relative;
+        width: 210px;
+}
+
+/*ナビゲーションのリンク設定*/
+nav ul li a{
+        display: block;
+        text-decoration: none;
+        color: #383839;
+        padding:20px 20px;
+        transition:all .3s;
+}
+.line{
+        position:relative;
+}
+.line::after {
+        content: '';
+        position: absolute;
+        bottom:-2px;
+        left: 0;
+        width: 0%;
+        height: 1px;
+        background: #000;
+        transition: all .3s;
+}
+nav ul li a:hover .line::after{
+        width: 100%;
+}
+/*下の階層を持っているulの指定*/
+nav li.has-child ul{
+        /*絶対配置で位置を指定*/
+        position: absolute;
+        left:0;
+        top:72px;
+        z-index: 4;
+        /*形状を指定*/
+        background:none;
+        width:240px;
+        /*はじめは非表示*/
+        visibility: hidden;
+        opacity: 0;
+        /*アニメーション設定*/
+        transition: all .3s;
+        border: none;
+}
+/*hoverしたら表示*/
+nav li.has-child:hover > ul,
+nav li.has-child ul li:hover > ul,
+nav li.has-child:active > ul,
+nav li.has-child ul li:active > ul{
+        visibility: visible;
+        opacity: 1;
+}
+/*サブボタンデザイン*/
+input.menu{
+        background: #efefef;
+        border: 1px solid #afafaf;
+        margin: 0 0 5px 0px;
+        box-shadow: 0 5px 10px 0 #b9b9b9;
+        height: 40px;
+        width: 210px;
+}
+input.menu:hover{
+        background: gray;
+        color: #fff;
+}
+
