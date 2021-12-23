@@ -93,11 +93,12 @@
 	
 	echo $list;
 	echo "<div class = 'left'>";
-	echo "<input type ='submit' name = 'syukka' class='free' value = 'Ý’è'>";
+	//echo "<input type ='submit' name = 'syukka' class='free' value = 'Ý’è'>";
 	echo "</div>";
 	echo "</div>";
-	echo "</form>";
 	echo "<div class = 'pad' >";
+    echo "<input type ='submit' name = 'syukka' class='free' value = 'Ý’è'>";
+    echo "</form>";
 	echo '<form name ="form" action="alldelJump.php" method="post" onsubmit = "return delmessage();">';
 	echo "<input type ='hidden' name = 'id' class='free' value = '".$_SESSION['list']['id']."'>";
 	echo "<input type ='submit' name = 'alldel' class='free' value = 'ƒNƒŠƒA'>";

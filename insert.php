@@ -704,12 +704,14 @@
 	echo "</tr></table>";
         if($filename == 'PJTOUROKU_1')
 	{
-                echo "<table style='margin: auto;'><tr><td class='one'><a class='itemname'>çáåvã‡äz : </a></td>";
+                echo "<table><tr><td class='space' style='width: 137px;'></td><td class='one' style='width: 154px;'><a class='itemname'>çáåvã‡äz : </a></td>";
 		echo "<td class='two'><input type = 'text' value = '".$_SESSION['kobetu']['totalCharge']."' id = 'chage' name = 'chage' class = 'readOnly' size = 49 readonly >";
 		echo "</td></tr></table>";
-                echo $list;
+        echo "<table><tr><td class='space' style='width: 137px;'></td><td style='width: 1000px;'>";
+        echo $list;
+        echo "</td></tr></table>";
 	}
-	echo "<div class = 'center'>";
+	echo "<div class='center'>";
 	echo '<input type="submit" name = "insert" value = "ìoò^" class="free">';
 	echo '<input type="submit" name = "cancel" value = "ÉNÉäÉA" class="free" onClick ="isCancel = true;">';
 //	echo '<input type="submit" name = "back" value = "ñﬂÇÈ" class="free" onClick ="isCancel = true;">';

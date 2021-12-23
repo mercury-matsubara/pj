@@ -344,6 +344,7 @@
 	$list ="";
 	$list = makeList_Modal($sql,$_POST,$tablenum);
 	$columns = $form_ini[$tablenum]['sech_form_num'];
+    $_SESSION["tablenum"] = $tablenum;
 	$form = makeformModal_set($_POST,'',"form",$columns);
 	$columns = $form_ini[$tablenum]['insert_form_num'];
 	

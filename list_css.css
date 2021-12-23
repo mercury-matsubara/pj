@@ -224,7 +224,7 @@ table.list input[type="text"]
 
 .listScroll{    
     /*‰æ–Ê‚É‘Î‚·‚é”ä—¦‚ÅÅ‘å‚Ì•‚ğİ’è*/
-    max-width: 98%;
+    max-width: 99%;
 
     /*’†g‚Ì‰¡•‚É‡‚í‚¹‚é*/
     display: inline-block;
@@ -248,7 +248,7 @@ table.list input[type="text"]
     margin-right: auto;
     
     /*—]”’İ’è*/
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     
     border-style: solid;
     border-width: thin;

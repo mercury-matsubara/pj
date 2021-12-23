@@ -582,8 +582,16 @@ function joinSelectSQL($post,$tablenum){
                     $count_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
                 }
             }
-            $select_SQL .= "AND PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%'";
-            $count_SQL .= "AND PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%'";
+            if($_SESSION["list"]["period_0"] < 10)
+            {
+                $period = "0".$_SESSION["list"]["period_0"];
+            }
+            else
+            {
+                $period = $_SESSION["list"]["period_0"];
+            }
+            $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
+            $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
         }
         else
         {
@@ -605,6 +613,26 @@ function joinSelectSQL($post,$tablenum){
 	{
 		$select_SQL .= " 5PJSTAT = 2 ";
 		$count_SQL .= " 5PJSTAT = 2 ";
+        
+        if($filename == "pjagain_5" && isset($_SESSION["list"]["period_0"]))
+        {
+            if($_SESSION["list"]["period_0"] < 10)
+            {
+                $period = "0".$_SESSION["list"]["period_0"];
+            }
+            else
+            {
+                $period = $_SESSION["list"]["period_0"];
+            }
+            $select_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%'";
+            $count_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%'";
+        }
+        elseif($filename == "pjagain_5")
+        {
+            $period = "15";
+            $select_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%'";
+            $count_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%'";
+        }
 	}
 	//²’|
 
@@ -741,8 +769,16 @@ function joinSelectSQL($post,$tablenum){
         
         if(isset($_SESSION["list"]["period_0"]))
         {
-            $select_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%' ";
-            $count_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$_SESSION["list"]["period_0"]."%' ";
+            if($_SESSION["list"]["period_0"] < 10)
+            {
+                $period = "0".$_SESSION["list"]["period_0"];
+            }
+            else 
+            {
+                $period = $_SESSION["list"]["period_0"];
+            }
+            $select_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+            $count_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
         }
         else
         {
@@ -782,6 +818,75 @@ function joinSelectSQL($post,$tablenum){
                 $count_SQL .= " AND 8ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
             }
         }
+    }
+    
+    if(($filename == "ENDPJLIST_2" || $filename == "PJLIST_2" || $filename == "MONTHLIST_2") && $tablenum == "5")
+    {
+        if(isset($post["period_0"]))
+        {
+            if($post["period_0"] < 10)
+            {
+                $period = "0".$post["period_0"];
+            }
+            else
+            {
+                $period = $post["period_0"];
+            }
+            //Šú‚ÌðŒ’Ç‰Á
+            if(strstr($select_SQL, ' WHERE ') == false)
+            {
+                $select_SQL .= " WHERE ";
+                $count_SQL .= " WHERE ";
+            }
+            else 
+            {
+                $select_SQL .= " AND ";
+                $count_SQL .= " AND ";
+            }
+            
+            $select_SQL .= " projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+            $count_SQL .= " projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+        }
+        else 
+        {
+            //Œ»Ý‚ÌŠú‚ð‹‚ß‚é
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $startyear = $item_ini['period']['startyear'];
+            $period = $year - $startyear + 1;
+
+            $select_SQL .= " WHERE projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+            $count_SQL .= " WHERE projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+        }
+    }
+    
+    if(($filename == "PROGRESSINFO_2" || $filename == "PROGRESSINFO_1") && $tablenum == "6")
+    {
+        if(isset($post["period_0"]))
+        {
+            if($post["period_0"] < 10)
+            {
+                $period = "0".$post["period_0"];
+            }
+            else 
+            {
+                $period = $post["period_0"];
+            }
+            $select_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+            $count_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%' ";            
+        }
+        else
+        {
+            //Œ»Ý‚ÌŠú‚ð‹‚ß‚é
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $startyear = $item_ini['period']['startyear'];
+            $period = $year - $startyear + 1;        
+            $select_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+            $count_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
+        }        
     }
 	$select_SQL .= ";";
 	$count_SQL .= ";";
@@ -1533,6 +1638,16 @@ function itemListSQL($post){
 				$sql .= " PERIOD = ".$post['form_904_0']." ";
 			}
 		}
+        else
+        {
+            //Œ»Ý‚ÌŠú‚ð‹‚ß‚é
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $startyear = $item_ini['period']['startyear'];
+            $period = $year - $startyear + 1;
+            $sql .= " WHERE PERIOD = ".$period." ";
+        }
 //		$sql .= $SQL_ini[$serchkey]['group'];
 //		$sql .= " ;";
 	}
@@ -1623,7 +1738,39 @@ function itemListSQL($post){
 			
 			$sql .= " progressinfo.SAGYOUDATE BETWEEN '".$startdate."' AND '".$enddate."' ";
 		}
-		
+        
+        if(isset($_SESSION["list"]["period_0"]))
+        {
+            if($isone)
+			{
+				$sql .= " AND ";
+			}
+			else
+			{
+				$sql .= " WHERE ";
+				$isone  = true;
+			}
+            
+            if($_SESSION["list"]["period_0"] < 10)
+            {
+                $period = "0".$_SESSION["list"]["period_0"];
+            }
+            else
+            {
+                $period = $_SESSION["list"]["period_0"];
+            }
+            $sql .= " PROJECTNUM LIKE '".$period."%' ";
+        }
+		else
+        {
+            //Œ»Ý‚ÌŠú‚ð‹‚ß‚é
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $startyear = $item_ini['period']['startyear'];
+            $period = $year - $startyear + 1;
+            $sql .= " WHERE PROJECTNUM LIKE '".$period."%' ";
+        }
 		$cntsql = $sql;
 		$sql .= ' group by progressinfo.7CODE';
 		$sql .= ' ;';

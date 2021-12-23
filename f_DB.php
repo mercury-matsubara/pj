@@ -302,7 +302,7 @@ function selectUser(){
 	$where = $_SESSION['listUser']['where'];																			// 条件
 	$orderby = $_SESSION['listUser']['orderby'];																		// order by 条件
 	$totalSelectsql = "SELECT * from loginuserinfo ".$where." ;";														// 管理者全件取得SQL
-	$selectsql = "SELECT * from loginuserinfo ".$where.$orderby.$limit." ;";											// 管理者リスト分取得SQL文
+	$selectsql = "SELECT * from loginuserinfo ".$where.$orderby." ;";											// 管理者リスト分取得SQL文
 	
 	//------------------------//
 	//          変数          //
@@ -321,7 +321,8 @@ function selectUser(){
 	$totalcount = $result->num_rows;																					// 検索結果件数取得
 	$result = $con->query($selectsql);																					// クエリ発行
 	$listcount = $result->num_rows;																						// 検索結果件数取得
-	if ($totalcount == $limitstart )
+	$list_str .= "<div>";
+    if ($totalcount == $limitstart )
 	{
 		$list_str .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
 	}
@@ -329,10 +330,12 @@ function selectUser(){
 	{
 		$list_str .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
-	$list_str .= "<table class = 'list' ><thead><tr>";
-	$list_str .= "<th>No.</th>";
-	$list_str .= "<th>管理者ID</th>";
-	$list_str .= "<th>編集</th>";
+    $list_str .= "</div>";
+    $list_str .= "<div class='listScroll'>";
+	$list_str .= "<table class = 'list' border='1'><thead><tr>";
+	$list_str .= "<th><a class ='head'>No.</a></th>";
+	$list_str .= "<th><a class ='head'>管理者ID</a></th>";
+	$list_str .= "<th><a class ='head'>編集</a></th>";
 	$list_str .= "</tr></thead>";
 	$list_str .= "<tbody>";
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
@@ -345,27 +348,15 @@ function selectUser(){
 		{
 			$id = "id = 'stripe'";
 		}
-		$list_str .= "<tr><td ".$id." class = 'td1' >".($limitstart + $counter)."</td>";
-		$list_str .= "<td ".$id."class = 'td2' >".$result_row['LUSERNAME']."</td>";
+		$list_str .= "<tr><td ".$id." class = 'td1' ><a class = 'itemname'>".($limitstart + $counter)."</a></td>";
+		$list_str .= "<td ".$id."class = 'td2' ><a class = 'itemname'>".$result_row['LUSERNAME']."</a></td>";
 		$list_str .= "<td ".$id." class = 'td3'><input type='submit' name='"
 					.$result_row['LUSERID']."_edit' value = '編集'></td></tr>";
 		$counter++;
 	}
 	$list_str .= "</tbody>";
 	$list_str .= "</table>";
-	$list_str .= "<div class = 'left'>";
-	$list_str .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_str .= " disabled='disabled'";
-	}
-	$list_str .= "></div><div class = 'left'>";
-	$list_str .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_str .= " disabled='disabled'";
-	}
-	$list_str .= "></div>";
+    $list_str .= "</div>";
 	$list_str .="<div style='clear:both;'></div>";
 
 	return($list_str);
@@ -545,8 +536,8 @@ function makeList($sql,$post){
 			$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
 		}
 	}
-	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
-	$sql[0] .= $limit.";";																									// LIMIT追加
+//	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
+//	$sql[0] .= $limit.";";																									// LIMIT追加
 	$result = $con->query($sql[0]) or ($judge = true);																		// クエリ発行
 	if($judge)
 	{
@@ -554,6 +545,7 @@ function makeList($sql,$post){
 		$judge = false;
 	}
 	$listcount = $result->num_rows;																						// 検索結果件数取得
+    $list_html .= "<div>";
 	if ($totalcount == $limitstart )
 	{
 		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
@@ -562,6 +554,8 @@ function makeList($sql,$post){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
+    $list_html .= "</div>";
+    $list_html .= "<div class='listScroll'>";
 	$list_html .= "<table class ='list'><thead><tr>";
 	if($isCheckBox == 1 )
 	{
@@ -718,34 +712,7 @@ function makeList($sql,$post){
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
-	$list_html .="<div style='display:inline-flex'>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div><div class = 'left'>";
-	$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .="<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
+    $list_html .= "</div>";
 	$list_html .="<div style='clear:both;'></div>";
 	return ($list_html);
 }
@@ -847,8 +814,8 @@ function makeList_Modal($sql,$post,$tablenum){
 			$_SESSION['Modal']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
 		}
 	}
-	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
-	$sql[0] .= $limit.";";																								// LIMIT追加
+//	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
+//	$sql[0] .= $limit.";";																								// LIMIT追加
 	$result = $con->query($sql[0]) or ($judge = true);																	// クエリ発行
 	if($judge)
 	{
@@ -856,7 +823,8 @@ function makeList_Modal($sql,$post,$tablenum){
 		$judge = false;
 	}
 	$listcount = $result->num_rows;																						// 検索結果件数取得
-	if ($totalcount == $limitstart )
+	$list_html .= "<div>";
+    if ($totalcount == $limitstart )
 	{
 		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
 	}
@@ -864,6 +832,8 @@ function makeList_Modal($sql,$post,$tablenum){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
+    $list_html .= "</div>";
+    $list_html .= "<div class='listScroll'>";
 	$list_html .= "<table class ='list'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
 	for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
@@ -942,33 +912,7 @@ function makeList_Modal($sql,$post,$tablenum){
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div><div class = 'left'>";
-	$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .="<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
+    $list_html .= "</div>";
 	$list_html .="<div style='clear:both;'></div>";
 
 	return ($list_html);
@@ -1289,7 +1233,7 @@ function insert($post){
                                         }
                                 }
                         }
-                }
+                    }
                 }
 		if($filename == 'SIZAIINFO_1')
 		{
@@ -3501,11 +3445,7 @@ function makeList_item($sql,$post){
 		}
 	}
 	$_SESSION['kobetu']['total'] = $totalcount;
-	if($filename != 'HENKYAKUINFO_2' && $filename != 'SYUKKAINFO_2' && $filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1' && $filename != 'EDABANINFO_2')
-	{
-		$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
-		$sql[0] .= $limit.";";																									// LIMIT追加
-	}
+
 	$result = $con->query($sql[0]) or ($judge = true);																		// クエリ発行
 	if($judge)
 	{
@@ -3513,7 +3453,8 @@ function makeList_item($sql,$post){
 		$judge = false;
 	}
 	$listcount = $result->num_rows;																						// 検索結果件数取得
-	if($filename != 'PJTOUROKU_1')
+	$list_html .= "<div>";
+    if($filename != 'PJTOUROKU_1')
         {
                 if ($totalcount == $limitstart )
                 {
@@ -3524,6 +3465,8 @@ function makeList_item($sql,$post){
                         $list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
                 }
         }
+    $list_html .= "</div>";
+    $list_html .= "<div class='listScroll'>";
 	$list_html .= "<table class ='list'";
         if($filename == "PJTOUROKU_1")
         {
@@ -3705,37 +3648,7 @@ function makeList_item($sql,$post){
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
-	if($filename != 'PJTOUROKU_2' && $filename != 'PJTOUROKU_1' && $filename != 'EDABANINFO_2')
-	{
-		$list_html .="<div style='display:inline-flex'>";
-		$list_html .= "<div class = 'left'>";
-		$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
-		if($limitstart == 0)
-		{
-			$list_html .= " disabled='disabled'";
-		}
-		$list_html .= "></div>";
-		$list_html .= "<div class = 'left'>";
-		$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
-		if($limitstart == 0)
-		{
-			$list_html .= " disabled='disabled'";
-		}
-		$list_html .= "></div><div class = 'left'>";
-		$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
-		if(($limitstart + $listcount) == $totalcount)
-		{
-			$list_html .= " disabled='disabled'";
-		}
-		$list_html .= "></div>";
-		$list_html .="<div class = 'left'>";
-		$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
-		if(($limitstart + $listcount) == $totalcount)
-		{
-			$list_html .= " disabled='disabled'";
-		}
-		$list_html .= "></div>";
-	}
+    $list_html .= "</div>";
 	$_SESSION['kobetu']['totalCharge'] = $total_charge;
 	return ($list_html);
 }
@@ -3960,8 +3873,8 @@ function makeList_radio($sql,$post,$tablenum){
 			}
 		}
 	}
-	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
-	$sql[0] .= $limit.";";																								// LIMIT追加
+//	$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
+//	$sql[0] .= $limit.";";																								// LIMIT追加
 	$result = $con->query($sql[0]) or ($judge = true);																	// クエリ発行
 	if($judge)
 	{
@@ -3969,7 +3882,8 @@ function makeList_radio($sql,$post,$tablenum){
 		$judge = false;
 	}
 	$listcount = $result->num_rows;																						// 検索結果件数取得
-	if ($totalcount == $limitstart )
+	$list_html .= "<div>";
+    if ($totalcount == $limitstart )
 	{
 		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
 	}
@@ -3977,6 +3891,8 @@ function makeList_radio($sql,$post,$tablenum){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
+    $list_html .= "</div>";
+    $list_html .= "<div class='listScroll'>";
 	$list_html .= "<table border='1' class ='list'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
 	for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
@@ -4070,34 +3986,7 @@ function makeList_radio($sql,$post,$tablenum){
 		$form_type = "";
 		$counter++;
 	}
-	$list_html .="</tbody></table>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .= "<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
-	if($limitstart == 0)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div><div class = 'left'>";
-	$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
-	$list_html .="<div class = 'left'>";
-	$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
-	if(($limitstart + $listcount) == $totalcount)
-	{
-		$list_html .= " disabled='disabled'";
-	}
-	$list_html .= "></div>";
+	$list_html .="</tbody></table></div>";
 	$list_html .="<div style='clear:both;'></div>";
 	return ($list_html);
 }
@@ -4186,21 +4075,6 @@ function makeList_check($sql,$post,$tablenum){
 				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
 			}
 		}
-		else if($filename == 'pjagain_5')
-		{
-			$totalcount = $result_row['COUNT(DISTINCT endpjinfo.PROJECTNUM,endpjinfo.EDABAN,endpjinfo.PJNAME,5CODE)'];
-			$quotient = floor($totalcount / $limit_num);
-			$remainder = $totalcount % $limit_num;
-			if($remainder != 0)
-			{
-				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
-			}
-			else
-			{
-				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
-			}
-
-		}
 		else
 		{
 			$totalcount = $result_row['COUNT(DISTINCT(5CODE),PROJECTNUM,EDABAN,PJNAME,CHARGE)'];
@@ -4216,8 +4090,6 @@ function makeList_check($sql,$post,$tablenum){
 			}
 		}
 	}
-	//$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
-	//$sql[0] .= $limit.";";																								// LIMIT追加
     
 	$result = $con->query($sql[0]) or ($judge = true);																	// クエリ発行
 	if($judge)
@@ -4242,19 +4114,15 @@ function makeList_check($sql,$post,$tablenum){
 	$list_html .= "<table border='1' class ='list'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
     
-    $resultcolumns_array_value = count($resultcolumns_array);
-	for($i = 0 ; $i < $resultcolumns_array_value ; ++$i)
+	for($i = 0 ; $i < count($resultcolumns_array) ; ++$i)
 	{
 		$title_name = $form_ini[$resultcolumns_array[$i]]['link_num'];
 		$list_html .="<th><a class ='head'>".$title_name."</a></th>";
 	}
     
-    //終了日付項目追加
-    $list_html .="<th><a class ='head'>終了日付</a></th>";
-        
-    //PJ詳細ボタン追加
-    $list_html .= "<th><a class = 'head'>詳細</a></th>";
-    
+    //項目追加
+    $list_html .="<th><a class ='head'>終了日付</a></th><th><a class = 'head'>詳細</a></th>";
+            
 	$list_html .="</tr></thead><tbody id ='endpjlist'>";
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
@@ -4284,8 +4152,7 @@ function makeList_check($sql,$post,$tablenum){
 			$form_type .= '9,';
 		}
         
-        $resultcolumns_array_count = count($resultcolumns_array);
-		for($i = 0 ; $i < $resultcolumns_array_count ; ++$i)
+		for($i = 0 ; $i < count($resultcolumns_array) ; ++$i)
 		{
 			$field_name = $form_ini[$resultcolumns_array[$i]]['column'];
 			$format = $form_ini[$resultcolumns_array[$i]]['format'];
@@ -4319,9 +4186,7 @@ function makeList_check($sql,$post,$tablenum){
 						.$value."</a></td>";
 		}
         
-        $columns_array_count = count($columns_array);
-        
-		for($i = 0 ; $i < $columns_array_count ; ++$i)
+		for($i = 0 ; $i < count($columns_array) ; ++$i)
 		{
 			$field_name = $form_ini[$columns_array[$i]]['column'];
 			$format = $form_ini[$columns_array[$i]]['format'];
@@ -4361,8 +4226,7 @@ function makeList_check($sql,$post,$tablenum){
 		$form_type = "";
 		$counter++;
 	}   
-	$list_html .="</tbody></table>";
-    $list_html .= "</div>";
+	$list_html .="</tbody></table></div>";
 
 	$list_html .="<div style='clear:both;'></div>";
 	return ($list_html);
@@ -6157,6 +6021,7 @@ function pjCheck($post){
 	{
 		for($i = 0; $i < count($pjid); $i++)
                 {
+                    $checkflg = false;
                     //進捗情報の有無
                     $sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
                             ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "

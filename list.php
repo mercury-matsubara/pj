@@ -135,7 +135,7 @@
 		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
 		$list = makeList_item($sql,$_SESSION['list']);
 	}
-	else
+	elseif($filename != "KOUTEIINFO_2")
 	{
 		$sql = joinSelectSQL($_SESSION['list'],$main_table);
 		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
