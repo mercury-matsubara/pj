@@ -51,12 +51,8 @@
 	require_once("f_DB.php");
 	$filename = $_SESSION['filename'];
 	echo "<left>";
-	echo "<form action='pageJump.php' method='post'><div class = 'left'>";
-	echo makebutton();
-	echo "</div>";
 	echo "<div style='clear:both;'></div>";
-	echo "</form>";
-	echo "</left>";
+	echo "</left><br>";
 	echo "<center>";
 	echo "<a class = 'title'>ä«óùé“àÍóó</a>";
 	echo "<br><br>";
@@ -145,6 +141,9 @@
 	echo "</form>";
 	echo "</div>";
 	echo "</left>";
+	echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 ?>
 </body>
 

@@ -62,9 +62,6 @@
 	$checkList = $_SESSION['check_column'];
 	$isLavel = $form_ini[$filename]['isLabel'];
 	$isMail = $form_ini[$filename]['isMail'];
-	echo "<form action='pageJump.php' method='post'>";
-	echo makebutton();
-	echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -111,6 +108,9 @@
         echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
         echo "</div></form>";
 	echo "</div>";
+	echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>

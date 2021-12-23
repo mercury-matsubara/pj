@@ -132,9 +132,6 @@
 	
 	$checkList = $_SESSION['check_column'];
         
-	echo "<form action='pageJump.php' method='post'>";
-	echo makebutton();
-	echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -163,6 +160,9 @@
 	echo "</tr></table>";
 	echo "</form>";
 	echo "</div>";
+	echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 ?>
 	
 </body>

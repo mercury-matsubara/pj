@@ -195,9 +195,6 @@
 				onClick = "click_mail();">';
 		echo "</div>";
 	}
-        echo "<form action='pageJump.php' method='post'>";
-	echo makebutton();
-	echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -256,6 +253,9 @@
 	}
 	echo "</div>";
 	echo "</div>";
+        echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 ?>
 </body>
 <script language="JavaScript">

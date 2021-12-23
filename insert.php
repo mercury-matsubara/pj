@@ -685,10 +685,6 @@
 	$checkList = $_SESSION['check_column'];
 	$notnullcolumns = $_SESSION['notnullcolumns'];
 	$notnulltype = $_SESSION['notnulltype'];
-	echo "<form action='pageJump.php' method='post'><div class='left'>";
-	echo makebutton();
-	echo "</div>";
-	echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
 				onsubmit = "return check(\''.$checkList.
@@ -714,6 +710,9 @@
 	echo '<input type="submit" name = "back" value = "–ß‚é" class="free" onClick ="isCancel = true;">';
 	echo "</form>";
 	echo "</div>";
+	echo "<form action='pageJump.php' method='post'>";
+	echo makebutton();
+	echo "</form>";
 ?>
 </body>
 </html>

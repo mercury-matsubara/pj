@@ -314,9 +314,6 @@
 	//$form_drop = makeformModal_set($damy_array,'readOnly','drop',$columns);
 	$form_drop = make_selectlist();
 	$checkList = $_SESSION['check_column'];
-        echo "<form action='pageJump.php' method='post'>";
-        echo makebutton();
-        echo "</form>";
 	echo "<div style='clear:both;'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -350,6 +347,9 @@
     echo "</div>";
 
     echo "</div>";
+    echo "<form action='pageJump.php' method='post'>";
+    echo makebutton();
+    echo "</form>";
 ?>
 
 </body>
