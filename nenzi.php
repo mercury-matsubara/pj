@@ -99,7 +99,7 @@
 		$post['period_0'] = getperiod($today[1],$today[0]) - 1;
 		echo '年次処理対象期 '.period_pulldown_set("period","",$post,"","","").'</td></tr></table>';
 		echo "<div style='display:inline-flex'>";
-		echo "<br><br><input type='submit' name='delete' value = '期またぎ' class='free'>";
+        echo "<br><br><input type='submit' name='delete' value = '期またぎ' class='free' disabled>";             //期またぎボタン無効化
 		echo "<input type='submit' name='push' value = '年次処理' class='free' onClick = 'return check();'>";
 		echo "</form>";
 		echo "<form action='download_csv.php' method='post'>";
