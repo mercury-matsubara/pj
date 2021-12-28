@@ -104,9 +104,9 @@
         table = document.getElementById("select_pj");
         var oncheck_num = 0;
         
-        for(let i = 0; i < checkbox.length; i++)
+        if(tabledata.rows.length == 1)
         {
-            if(checkbox[i].checked === true)
+            if(checkbox.checked === true)
             {
                 oncheck_num++;
                 //追加の処理
@@ -117,20 +117,42 @@
                 var cell2 = rows.insertCell(-1);
                 var cell3 = rows.insertCell(-1);
                 var cell4 = rows.insertCell(-1);
-                
+
                 cell1.innerHTML = oncheck_num;
-                cell2.innerHTML = tabledata.rows[i].cells[1].textContent;
-                cell3.innerHTML = tabledata.rows[i].cells[2].textContent;
-                cell4.innerHTML = tabledata.rows[i].cells[3].textContent;
-                
-                //背景色変更(偶数行の背景色を水色にする)
-                if(oncheck_num%2 == 0)
+                cell2.innerHTML = tabledata.rows[0].cells[1].textContent;
+                cell3.innerHTML = tabledata.rows[0].cells[2].textContent;
+                cell4.innerHTML = tabledata.rows[0].cells[3].textContent;
+            }
+        }
+        else
+        {
+            for(let i = 0; i < checkbox.length; i++)
+            {
+                if(checkbox[i].checked === true)
                 {
-                    rows.style.backgroundColor="#B0E0E6";
+                    oncheck_num++;
+                    //追加の処理
+                    var rows = table.insertRow(-1);
+
+                    // -1で列末尾に追加。インデックスで指定の位置に追加も可能
+                    var cell1 = rows.insertCell(-1);
+                    var cell2 = rows.insertCell(-1);
+                    var cell3 = rows.insertCell(-1);
+                    var cell4 = rows.insertCell(-1);
+
+                    cell1.innerHTML = oncheck_num;
+                    cell2.innerHTML = tabledata.rows[i].cells[1].textContent;
+                    cell3.innerHTML = tabledata.rows[i].cells[2].textContent;
+                    cell4.innerHTML = tabledata.rows[i].cells[3].textContent;
+
+                    //背景色変更(偶数行の背景色を水色にする)
+                    if(oncheck_num%2 == 0)
+                    {
+                        rows.style.backgroundColor="#B0E0E6";
+                    }
                 }
             }
         }
-        
         //選択メッセージ出力
         document.getElementById("selectmsg").innerText = oncheck_num + "件選択中";
     }
@@ -168,14 +190,24 @@
             var jadge = false;
             var tabledata = document.getElementById("endpjlist");
 
-            for(let i = 0; i < checkbox.length; i++)
+            if(tabledata.rows.length == 1)
             {
-                if(checkbox[i].checked === true)
+                if(checkbox.checked === true)
                 {
                     oncheckbox++;
                 }
             }
+            else
+            {
+                for(let i = 0; i < checkbox.length; i++)
+                {
+                    if(checkbox[i].checked === true)
+                    {
+                        oncheckbox++;
+                    }
+                }
 
+            }
             //PJ送信情報作成
             const code_array = new Array(oncheckbox);        
             const pjname_array = new Array(oncheckbox);
@@ -183,18 +215,31 @@
             const edabancode_array = new Array(oncheckbox);
             var count = 0;
 
-            for(let i = 0; i < checkbox.length; i++)
+            if(tabledata.rows.length == 1)
             {
-                if(checkbox[i].checked === true)
+                if(checkbox.checked === true)
                 {
-                    code_array[count] = checkbox[i].value;
-                    pjcode_array[count] = tabledata.rows[i].cells[1].textContent;
-                    edabancode_array[count] = tabledata.rows[i].cells[2].textContent;
-                    pjname_array[count] = tabledata.rows[i].cells[3].textContent;
+                    code_array[0] = checkbox.value;
+                    pjcode_array[0] = tabledata.rows[0].cells[1].textContent;
+                    edabancode_array[0] = tabledata.rows[0].cells[2].textContent;
+                    pjname_array[0] = tabledata.rows[0].cells[3].textContent;
                     count++;
                 }
             }
-
+            else
+            {
+                for(let i = 0; i < checkbox.length; i++)
+                {
+                    if(checkbox[i].checked === true)
+                    {
+                        code_array[count] = checkbox[i].value;
+                        pjcode_array[count] = tabledata.rows[i].cells[1].textContent;
+                        edabancode_array[count] = tabledata.rows[i].cells[2].textContent;
+                        pjname_array[count] = tabledata.rows[i].cells[3].textContent;
+                        count++;
+                    }
+                }
+            }
             console.log(code_array);
             console.log(pjcode_array);
             console.log(edabancode_array);
