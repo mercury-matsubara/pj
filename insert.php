@@ -3,6 +3,7 @@
 	header('Expires:-1'); 
 	header('Cache-Control:'); 
 	header('Pragma:'); 
+	header('Content-type: text/html; charset=Shift_JIS'); 
 	require_once("f_Construct.php");
 	start();
 ?>
@@ -690,7 +691,7 @@
 				onsubmit = "return check(\''.$checkList.
 				'\',\''.$notnullcolumns.
 				'\',\''.$notnulltype.'\');">';
-	echo "<div class = 'center'>";
+	echo "<div class = 'center'><br><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
 	echo "</div><br>";
 	echo $form;

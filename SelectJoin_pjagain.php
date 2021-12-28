@@ -1,5 +1,6 @@
 <?php
 	session_start();
+	header('Content-type: text/html; charset=Shift_JIS'); 
 /////////////////////////////////////////////////////////////////////////////////////
 //                                                                                 //
 //                                                                                 //

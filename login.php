@@ -3,6 +3,7 @@
 	header('Expires:-1'); 
 	header('Cache-Control:'); 
 	header('Pragma:'); 
+	header('Content-type: text/html; charset=Shift_JIS'); 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C/DTD HTML 4.01">
 <!-- saved from url(0013)about:internet -->
