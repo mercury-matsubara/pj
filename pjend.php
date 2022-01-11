@@ -155,6 +155,16 @@
         }
         //選択メッセージ出力
         document.getElementById("selectmsg").innerText = oncheck_num + "件選択中";
+        
+        //選択件数が0の場合はPJ終了ボタン無効化
+        if(oncheck_num == 0)
+        {
+            document.getElementById("endbutton").disabled = true;
+        }
+        else
+        {
+            document.getElementById("endbutton").disabled = false;
+        }
     }
     
 	function checkonradio()
@@ -185,6 +195,11 @@
         }
         else
         {
+            if(document.form.checkbox == null)
+            {
+                alert("終了するプロジェクトを選択してください。");
+                return false;
+            }
             const checkbox = document.form.checkbox;
             var oncheckbox = 0;
             var jadge = false;
@@ -387,8 +402,8 @@
         $pjstat = "1";
     }
     echo "<input type = 'hidden' name = 'pjstat_value' id = 'pjstat_value' value ='".$pjstat."'>";
-    echo '<table><tr><td><div id="selectmsg">0件選択中</div></td><td><input type="submit" name="end" class="button" value="ＰＪ終了" onclick="check_checkbox();"></td></tr></table>';
-    echo "<div class='listScroll'>";
+    echo '<table><tr><td><div id="selectmsg">0件選択中</div></td><td><input type="submit" name="end" class="button" value="ＰＪ終了" id="endbutton" onclick="check_checkbox();"></td></tr></table>';
+    echo "<div class='selectScroll'>";
 	echo $form_drop ;
     echo "</div>";
 
@@ -418,6 +433,9 @@
             //日付入力欄値
             document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
             document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
+        
+            //PJ終了ボタン無効化
+            document.getElementById("endbutton").disabled = true;
         }
         else
         {
@@ -434,6 +452,8 @@
             //日付入力欄値
             document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
             document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
+            
+            document.getElementById("endbutton").disabled = true;        
         }
     }
     

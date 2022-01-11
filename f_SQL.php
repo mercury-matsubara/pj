@@ -602,9 +602,19 @@ function joinSelectSQL($post,$tablenum){
             $item_ini = parse_ini_file('./ini/item.ini', true);
             $year = date_create('NOW');
             $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
             $startyear = $item_ini['period']['startyear'];
-            $period = $year - $startyear + 1;
-            
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
             $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
             $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
         }
@@ -629,7 +639,22 @@ function joinSelectSQL($post,$tablenum){
         }
         elseif($filename == "pjagain_5")
         {
-            $period = "15";
+            $item_ini = parse_ini_file('./ini/item.ini', true);
+            $year = date_create('NOW');
+            $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
+            $startyear = $item_ini['period']['startyear'];
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
             $select_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%'";
             $count_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%'";
         }
@@ -786,8 +811,19 @@ function joinSelectSQL($post,$tablenum){
             $item_ini = parse_ini_file('./ini/item.ini', true);
             $year = date_create('NOW');
             $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
             $startyear = $item_ini['period']['startyear'];
-            $period = $year - $startyear + 1;
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
 
             $select_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
             $count_SQL .= "projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
@@ -853,8 +889,19 @@ function joinSelectSQL($post,$tablenum){
             $item_ini = parse_ini_file('./ini/item.ini', true);
             $year = date_create('NOW');
             $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
             $startyear = $item_ini['period']['startyear'];
-            $period = $year - $startyear + 1;
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
 
             $select_SQL .= " WHERE projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
             $count_SQL .= " WHERE projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
@@ -882,8 +929,19 @@ function joinSelectSQL($post,$tablenum){
             $item_ini = parse_ini_file('./ini/item.ini', true);
             $year = date_create('NOW');
             $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
             $startyear = $item_ini['period']['startyear'];
-            $period = $year - $startyear + 1;        
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
             $select_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
             $count_SQL .= " AND projectnuminfo.PROJECTNUM LIKE '".$period."%' ";
         }        
@@ -1644,8 +1702,19 @@ function itemListSQL($post){
             $item_ini = parse_ini_file('./ini/item.ini', true);
             $year = date_create('NOW');
             $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
             $startyear = $item_ini['period']['startyear'];
-            $period = $year - $startyear + 1;
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
             $sql .= " WHERE PERIOD = ".$period." ";
         }
 //		$sql .= $SQL_ini[$serchkey]['group'];
@@ -1767,8 +1836,19 @@ function itemListSQL($post){
             $item_ini = parse_ini_file('./ini/item.ini', true);
             $year = date_create('NOW');
             $year = date_format($year, "Y");
+            $month = date_create('NOW');
+            $month = date_format($month, "n");
             $startyear = $item_ini['period']['startyear'];
-            $period = $year - $startyear + 1;
+            $startmonth = $item_ini['period']['startmonth'];
+            $period = $year - $startyear;
+            if($startmonth <= $month)
+            {
+                $period = $period + 1;
+            }
+            if($filename == 'nenzi_5')
+            {
+                $period = $period - 1;
+            }
             $sql .= " WHERE PROJECTNUM LIKE '".$period."%' ";
         }
 		$cntsql = $sql;

@@ -151,7 +151,8 @@
    
 		if(!empty($message))
 		{
-            echo ''.(count($message)).'件のPJが処理できません。PJ終了処理がキャンセルされました。';
+            echo ''.(count($message)).'件のPJが進捗登録がされていません。PJ終了処理がキャンセルされました。';
+            echo "<div class='listScroll'>";
             echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><th><a class ='head'>エラー内容</a></th></th><tr/></thead>";
 
             for($i = 0; $i < count($message); $i++){
@@ -177,9 +178,23 @@
 		}
 		else
 		{
+            echo "<div class='listScroll'>";
 			echo $list;
+            echo "</div>";
+            $list = "";
 		}
                 echo "</table>";
+                echo "</div>";
+        if(isset($list))
+        {
+            if($list != "")
+            {
+                echo "<br><br>";
+                echo "<div class='listScroll'>";
+                echo $list;
+                echo "</div>";
+            }
+        }
 		echo "</center></div><br><br>";
 		echo '<form action="pjendJump.php" method="post" >';
 		echo "<div class = 'center'>";

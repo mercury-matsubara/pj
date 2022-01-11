@@ -4784,29 +4784,29 @@ function pjend($post){
         {
             $pjid = explode(",",$post['5CODE']);
         }
-	
-	//------------------------//
-	//          変数          //
-	//------------------------//
-	$judge = false;
-	$time = array();
-	$teizi = 0;
-	$zangyou = 0;
-	$charge = 0;
-	$period = 0;
-	$upcode6 = "";
-	$errorcnt = 0;
-	$syaincnt = 0;
-	$error = array();
-	$syainArray = array();
-	$checkflg = false;
 
 	//------------------------//
 	//      定時チェック      //
 	//------------------------//
 	$con = dbconect();																									// db接続関数実行
 	for($o=0; $o < count($pjid); $o++)
-        {
+        {	
+            //------------------------//
+            //          変数          //
+            //------------------------//
+            $judge = false;
+            $time = array();
+            $teizi = 0;
+            $zangyou = 0;
+            $charge = 0;
+            $period = 0;
+            $upcode6 = "";
+            $errorcnt = 0;
+            $syaincnt = 0;
+            $error = array();
+            $syainArray = array();
+            $checkflg = false;
+        
             //プロジェクトの開始日と終了日取得
             $sql = "SELECT MIN(SAGYOUDATE),MAX(SAGYOUDATE) FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
                     ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
@@ -6021,7 +6021,16 @@ function pjCheck($post){
 	{
 		for($i = 0; $i < count($pjid); $i++)
                 {
+                    //------------------------//
+                    //          変数          //
+                    //------------------------//
+                    $judge = false;
+                    $time = array();
+                    $teizi = 0;
+                    $syaincnt = 0;
+                    $syainArray = array();
                     $checkflg = false;
+
                     //進捗情報の有無
                     $sql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) "
                             ."LEFT JOIN projectinfo USING(5CODE) LEFT JOIN projectnuminfo USING(1CODE) "
@@ -6069,7 +6078,7 @@ function pjCheck($post){
                             $syainArray[$syaincnt] = $result_row['4CODE'];
                             $syaincnt++;
                         }
-
+                        
                         //社員ごとに定時チェック
                         for($s = 0; $s < count($syainArray); $s++)
                         {
@@ -6161,6 +6170,25 @@ function pjCheck($post){
                         $_SESSION['message'][] = "<a class = 'error'>進捗情報が登録されていません。</a>";
                     }
                 }
+                
+                //同じ内容を削除する。
+                $tmperror = array();
+                $errorcount = count($error);
+                for($t = 0; $t < $errorcount; $t++)
+                {
+                    for($y = $t + 1;$y < $errorcount; $y++)
+                    {
+                        if(isset($error[$t]) && isset($error[$y]))
+                        {
+                            if($error[$t]["STAFFNAME"] == $error[$y]["STAFFNAME"] && $error[$t]["SAGYOUDATE"] == $error[$y]["SAGYOUDATE"])
+                            {
+                                unset($error[$y]);
+                            }
+                        }
+                    }
+                }
+                
+                $error = array_merge($error);
 	}
 
 /*
@@ -6274,6 +6302,7 @@ function pjCheck($post){
 		}
 	}
 */
+    
 	return($error);
 }
 /************************************************************************************************************
