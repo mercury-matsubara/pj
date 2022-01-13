@@ -151,7 +151,9 @@
    
 		if(!empty($message))
 		{
+            echo "<div>";
             echo ''.(count($message)).'件のPJが進捗登録がされていません。PJ終了処理がキャンセルされました。';
+            echo "</div>";
             echo "<div class='listScroll'>";
             echo "<table border='1' id = 'select_pj' class ='list' name ='formInsert'><thead><tr><th><a class ='head'>No</a></th><th><a class ='head'>プロジェクトコード</a></th><th><a class ='head'>枝番コード</a><th><a class ='head'>製番・案件名</a></th></th><th><a class ='head'>エラー内容</a></th></th><tr/></thead>";
 

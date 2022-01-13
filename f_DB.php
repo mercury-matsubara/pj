@@ -4015,10 +4015,6 @@ function makeList_check($sql,$post,$tablenum){
 	//------------------------//
 	$filename = $_SESSION['filename'];
 	$columns = $form_ini[$filename]['insert_form_tablenum'];
-	if($filename == "nenzi_5")
-	{
-		$columns = "102,202,203";
-	}
 	$columns_array = explode(',',$columns);
 	$main_table = $tablenum;
 	$limit_num = $form_ini[$filename]['limit'];
@@ -4061,34 +4057,17 @@ function makeList_check($sql,$post,$tablenum){
 	}
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
-		if($filename != 'pjagain_5' && $filename != 'nenzi_5')
-		{
-			$totalcount = $result_row['COUNT(*)'];
-			$quotient = floor($totalcount / $limit_num);
-			$remainder = $totalcount % $limit_num;
-			if($remainder != 0)
-			{
-				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
-			}
-			else
-			{
-				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
-			}
-		}
-		else
-		{
-			$totalcount = $result_row['COUNT(DISTINCT(5CODE),PROJECTNUM,EDABAN,PJNAME,CHARGE)'];
-			$quotient = floor($totalcount / $limit_num);
-			$remainder = $totalcount % $limit_num;
-			if($remainder != 0)
-			{
-				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
-			}
-			else
-			{
-				$_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
-			}
-		}
+        $totalcount = $result_row['COUNT(*)'];
+        $quotient = floor($totalcount / $limit_num);
+        $remainder = $totalcount % $limit_num;
+        if($remainder != 0)
+        {
+            $_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
+        }
+        else
+        {
+            $_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
+        }
 	}
     
 	$result = $con->query($sql[0]) or ($judge = true);																	// ÉNÉGÉäî≠çs
@@ -4136,22 +4115,11 @@ function makeList_check($sql,$post,$tablenum){
 			$id = "id = 'stripe'";
 		}
 		$list_html .= "<td ".$id." class = 'center'>";
-		if($filename === 'pjagain_5')
-		{
-			$column_value = $result_row['5CODE'].'#$';
-			$form_name = '5CODE,';
-			$form_type .= '9,';
-/*			$column_value .= $result_row['6CODE'].'#$';
-			$form_name .= '6CODE,';
-			$form_type .= '9,';
-*/		}
-		else
-		{
-			$column_value = $result_row[$tablenum.'CODE'].'#$';
-			$form_name = $tablenum.'CODE,';
-			$form_type .= '9,';
-		}
-        
+
+        $column_value = $result_row[$tablenum.'CODE'].'#$';
+        $form_name = $tablenum.'CODE,';
+        $form_type .= '9,';
+
 		for($i = 0 ; $i < count($resultcolumns_array) ; ++$i)
 		{
 			$field_name = $form_ini[$resultcolumns_array[$i]]['column'];
