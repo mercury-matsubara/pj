@@ -91,7 +91,7 @@
     function select_checkbox(value,name,type)
     {
         const checkbox = document.form.checkbox;
-        var tabledata = document.getElementById("endpjlist");
+        var tabledata = document.getElementById("checkboxlist");
         var table = document.getElementById("select_pj");
 
         //ëSçsçÌèú
@@ -203,7 +203,7 @@
             const checkbox = document.form.checkbox;
             var oncheckbox = 0;
             var jadge = false;
-            var tabledata = document.getElementById("endpjlist");
+            var tabledata = document.getElementById("checkboxlist");
 
             if(tabledata.rows.length == 1)
             {

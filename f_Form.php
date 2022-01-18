@@ -3574,6 +3574,99 @@ function month_pulldown_set($name,$over,$post,$ReadOnly,$formName,$isnotnull){
 	}
 	return $pulldown;
 }
+/************************************************************************************************************
+function make_teijicomplist($post)
 
+ˆø”	$post
 
+–ß‚è’l	$list_html
+************************************************************************************************************/
+function make_teijicomplist($post)
+{
+        //------------------------//
+	//        ‰Šúİ’è        //
+	//------------------------//
+	$form_ini = parse_ini_file('./ini/form.ini', true);
+	$SQL_ini = parse_ini_file('./ini/SQL.ini', true);
+        
+	//------------------------//
+	//          ’è”          //
+	//------------------------//
+        $totalcount = count($post);
+        $filename = $_SESSION['filename'];
+        $isNo = $form_ini[$filename]['isNo'];
+	$columns = $SQL_ini[$filename]['listcolums'];
+	$columns_array = explode(',',$columns);
+        $columnname = $SQL_ini[$filename]['clumname'];
+	$columnname_array = explode(',',$columnname);
+        $format = $SQL_ini[$filename]['format'];
+	$format_array = explode(',',$format);
+
+        //------------------------//
+	//          •Ï”          //
+	//------------------------//
+        $list_html = "";
+        $counter = 1;
+	$id = "";
+	$class = "";
+        $format1 = "";
+        
+        $list_html .= "<div>";
+        $list_html .= $totalcount."Œ’† 1Œ`".$totalcount."Œ •\¦’†";				// Œ”•\¦ì¬
+        $list_html .= "</div>";
+        $list_html .= "<div class='listScroll'>";
+        $list_html .= "<table class ='list'><thead><tr>";
+        
+        if($isNo == 1 )
+	{
+		$list_html .="<th><a class ='head'>No.</a></th>";
+	}
+	for($i = 0 ; $i < count($columnname_array) ; $i++)
+	{
+		$list_html .="<th><a class ='head'>".$columnname_array[$i]."</a></th>";
+	}
+        
+        $list_html .="</tr></thead><tbody>";
+        
+        for($i = 0 ; $i < $totalcount ; $i++)
+	{
+                $list_html .="<tr>";
+                if(($counter%2) == 1)
+		{
+			$id = "";
+		}
+		else
+		{
+			$id = "id = 'stripe'";
+		}
+                
+		if($isNo == 1)
+		{
+			$list_html .="<td ".$id." class = 'center'><a class='body'>".$counter."</a></td>";
+		}
+                
+                for($j = 0 ; $j < count($columns_array) ; $j++)
+		{
+			$field_name = $columns_array[$j];
+			$format1 = $format_array[$j];
+			$value = $post[$i][$field_name];
+                        
+                        if($format1 == 3)
+			{
+				$class = "class = 'right' ";
+			}
+			else
+			{
+				$class = "";
+			}
+                        
+                        $list_html .="<td ".$id." ".$class." ><a class ='body'>".
+                                        $value."</a></td>";
+                }
+                $list_html .= "</tr>";
+                $counter++;
+        }
+        $list_html .="</tbody></table></div>";
+        return ($list_html);
+}
 ?>

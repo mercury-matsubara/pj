@@ -4057,17 +4057,17 @@ function makeList_check($sql,$post,$tablenum){
 	}
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
-        $totalcount = $result_row['COUNT(*)'];
-        $quotient = floor($totalcount / $limit_num);
-        $remainder = $totalcount % $limit_num;
-        if($remainder != 0)
-        {
-            $_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
-        }
-        else
-        {
-            $_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
-        }
+                $totalcount = $result_row['COUNT(*)'];
+                $quotient = floor($totalcount / $limit_num);
+                $remainder = $totalcount % $limit_num;
+                if($remainder != 0)
+                {
+                    $_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num);
+                }
+                else
+                {
+                    $_SESSION['list']['max'] = ((floor($totalcount / $limit_num)) * $limit_num) - $limit_num;
+                }
 	}
     
 	$result = $con->query($sql[0]) or ($judge = true);																	// クエリ発行
@@ -4076,20 +4076,29 @@ function makeList_check($sql,$post,$tablenum){
 		error_log($con->error,0);
 		$judge = false;
 	}
+        
+        if($filename == "teiji_5" && $totalcount == 0)
+        {
+            //登録社員がいない場合
+            return false;
+        }
     
-    $list_html .= "<div>";
-	$listcount = $result->num_rows;																						// 検索結果件数取得
-	if ($totalcount == $limitstart )
-	{
-		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
-	}
-	else
-	{
-		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
-	}
+        $list_html .= "<div>";
+        if($filename != "teiji_5")
+        {
+                $listcount = $result->num_rows;																						// 検索結果件数取得
+                if ($totalcount == $limitstart )
+                {
+                        $list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
+                }
+                else
+                {
+                        $list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
+                }
+        }
     
-    $list_html .= "</div>";
-    $list_html .= "<div class='listScroll'>";
+        $list_html .= "</div>";
+        $list_html .= "<div class='listScroll'>";
 	$list_html .= "<table border='1' class ='list'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
     
@@ -4099,10 +4108,13 @@ function makeList_check($sql,$post,$tablenum){
 		$list_html .="<th><a class ='head'>".$title_name."</a></th>";
 	}
     
-    //項目追加
-    $list_html .="<th><a class ='head'>終了日付</a></th><th><a class = 'head'>詳細</a></th>";
-            
-	$list_html .="</tr></thead><tbody id ='endpjlist'>";
+        if($filename == "pjend_5")
+        {
+            //項目追加
+            $list_html .="<th><a class ='head'>終了日付</a></th><th><a class = 'head'>詳細</a></th>";
+        }
+        
+	$list_html .="</tr></thead><tbody id ='checkboxlist'>";
 	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
 	{
 		$list_html .="<tr>";
@@ -4116,9 +4128,9 @@ function makeList_check($sql,$post,$tablenum){
 		}
 		$list_html .= "<td ".$id." class = 'center'>";
 
-        $column_value = $result_row[$tablenum.'CODE'].'#$';
-        $form_name = $tablenum.'CODE,';
-        $form_type .= '9,';
+                $column_value = $result_row[$tablenum.'CODE'].'#$';
+                $form_name = $tablenum.'CODE,';
+                $form_type .= '9,';
 
 		for($i = 0 ; $i < count($resultcolumns_array) ; ++$i)
 		{
@@ -4165,26 +4177,48 @@ function makeList_check($sql,$post,$tablenum){
 			$column_value .= $form_value[1];
 			$form_type .=  $form_value[2];
 		}
-        //終了日付項目作成
-        $row .= "<td ".$id." ".$class." ><a class ='body'>"
-						.$result_row['5ENDDATE']."</a></td>";
-        
-        //詳細ボタン追加
-        $row .= '<td '.$id.' class = "center"><input type ="button" value = "詳細" onClick="syousai_open(\''.$result_row["5CODE"].'\')"></td>'; 
-        
+                
+                if($filename == "pjend_5")
+                {
+                        //終了日付項目作成
+                        $row .= "<td ".$id." ".$class." ><a class ='body'>"
+                                                                .$result_row['5ENDDATE']."</a></td>";
+
+                        //詳細ボタン追加
+                        $row .= '<td '.$id.' class = "center"><input type ="button" value = "詳細" onClick="syousai_open(\''.$result_row["5CODE"].'\')"></td>'; 
+                }
 		$form_name = substr($form_name,0,-1);
 		$column_value = substr($column_value,0,-2);
 		$form_type = substr($form_type,0,-1);
         
-        if($result_row["5PJSTAT"] === "2")
-        {
-            $list_html .= '済';           
-        }
-        else
-        {
-            $list_html .= '<input type ="checkbox" name = "checkbox" value = "'.$result_row["5CODE"].'" onClick="select_checkbox(\''
-                .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';           
-        }
+                if(isset($result_row["5PJSTAT"]) && $result_row["5PJSTAT"] === "2")
+                {
+                    $list_html .= '済';           
+                }
+                else if($filename == 'teiji_5')
+                {
+                    //チェックボックス
+                    $list_html .= '<input type ="checkbox" name = "checkbox[]" value = "'.$result_row["".$tablenum."CODE"].'" onClick="select_checkbox(\''
+                        .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')" '; 
+                    if(!empty($post))
+                    {
+                        for($i = 0; $i < count($post['checkbox']); $i++)
+                        {
+                            if($post['checkbox'][$i] == $result_row["".$tablenum."CODE"])
+                            {
+                                $list_html .= 'checked';
+                            }
+                        }
+                    }
+                    $list_html .= ' >';
+                }
+                else
+                {
+                    //チェックボックス
+                    $list_html .= '<input type ="checkbox" name = "checkbox" value = "'.$result_row["".$tablenum."CODE"].'" onClick="select_checkbox(\''
+                        .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">'; 
+                }
+                
 		$list_html .= "</td>";
 		$list_html .= $row;
 		$list_html .= "</tr>";
@@ -6840,5 +6874,110 @@ function syaget(){
 	}
 	$listrow = $lisstr."";
 	return($listrow);
+}
+/************************************************************************************************************
+//定時チェック3種類
+function teijicheck()
+
+引数	$post チェック条件データ
+
+戻り値	$error エラーのデータ
+************************************************************************************************************/
+function teijicheck($post)
+{
+        //------------------------//
+	//        初期設定        //
+	//------------------------//
+	$item_ini = parse_ini_file('./ini/item.ini', true);
+        
+	//------------------------//
+	//          定数          //
+	//------------------------//
+	$teijitime = (float)$item_ini['settime']['teijitime'];
+        $syainArray = $post['checkbox'];
+        $start = $post['startdate'];
+        $end = $post['enddate'];
+        
+        //------------------------//
+	//          変数          //
+	//------------------------//
+        $error = array();
+        $sql = "";
+        $judge = false;
+	$errorcnt = 0;
+        $kikan = "";
+        $errorflg = false;
+        
+	//------------------------//
+	//        検索処理        //
+	//------------------------//
+        $con = dbconect();
+        
+        //開始日付と終了日付が同じ場合は全期間を検索する
+        if($start != $end)
+        {
+            $kikan = "progressinfo.SAGYOUDATE BETWEEN '".$start."' AND '".$end."' AND";
+        }
+        
+        for($i = 0; $i < count($syainArray); $i++)
+        {             
+                //データのない社員も名前を取得するため
+                $sql="SELECT STAFFNAME FROM syaininfo WHERE 4CODE = ".$syainArray[$i]."";
+                $result = $con->query($sql) or ($judge = true);
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+                $result_row = $result->fetch_array(MYSQLI_ASSOC);
+                $_SESSION['teijicheck']['syain'][$i] = $result_row['STAFFNAME'];
+                
+                $sql2 = "SELECT SAGYOUDATE,sum(TEIZITIME)as TEIZITIME,sum(TEIZITIME+ZANGYOUTIME)as SAGYOUTIME,STAFFID,STAFFNAME FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE) 
+                    LEFT JOIN syaininfo USING(4CODE) WHERE ".$kikan." syaininfo.4CODE = ".$syainArray[$i]." GROUP BY SAGYOUDATE";
+                
+                $result2 = $con->query($sql2) or ($judge = true);																		// クエリ発行
+                if($judge)
+                {
+                    error_log($con->error,0);
+                    $judge = false;
+                }
+                
+                while($result2_row = $result2->fetch_array(MYSQLI_ASSOC))
+                {
+                    $errorflg = false;
+                    //確認1：一日の定時時間が7.75になっているか
+                    if($result2_row['TEIZITIME'] != $teijitime)
+                    {
+                            $error[$errorcnt]['STAFFID'] = $result2_row['STAFFID'];
+                            $error[$errorcnt]['STAFFNAME'] = $result2_row['STAFFNAME'];
+                            $error[$errorcnt]['SAGYOUDATE'] = $result2_row['SAGYOUDATE'];
+                            $error[$errorcnt]['TEIZITIME'] = $result2_row['TEIZITIME'];
+                            $error[$errorcnt]['SAGYOUTIME'] = $result2_row['SAGYOUTIME'];
+                            $error[$errorcnt]['GENIN'] = "1";
+                            $errorcnt++;
+                            $errorflg = true;
+                    }
+                    
+                    //確認2：一日の作業時間が24時間を超えていないか
+                    if($result2_row['SAGYOUTIME'] > 24)
+                    {
+                        if($errorflg == false)
+                        {
+                            $error[$errorcnt]['STAFFID'] = $result2_row['STAFFID'];
+                            $error[$errorcnt]['STAFFNAME'] = $result2_row['STAFFNAME'];
+                            $error[$errorcnt]['SAGYOUDATE'] = $result2_row['SAGYOUDATE'];
+                            $error[$errorcnt]['TEIZITIME'] = $result2_row['TEIZITIME'];
+                            $error[$errorcnt]['SAGYOUTIME'] = $result2_row['SAGYOUTIME'];
+                            $error[$errorcnt]['GENIN'] = "2";
+                            $errorcnt++;
+                        }
+                        else if($errorflg == true)
+                        {
+                            $error[$errorcnt-1]['GENIN'] .= ",2";
+                        }
+                    }
+                }
+        }
+        return($error);
 }
 ?>
