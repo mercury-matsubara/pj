@@ -212,8 +212,8 @@
 		var judge = '<?php echo $judge ?>';
 		if(judge == 1)
 		{
-			if(confirm("入力内容正常確認。\n情報削除しますがよろしいですか？\
-						\n再度確認する場合は「キャンセル」ボタンを押してください。"))
+			if(confirm("入力内容正常確認。\n情報削除しますがよろしいですか？" +
+                                            "\n再度確認する場合は「キャンセル」ボタンを押してください。"))
 			{
 				location.href = "./deleteComp.php";
 			}

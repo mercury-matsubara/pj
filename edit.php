@@ -340,6 +340,20 @@
 					document.getElementById('form_302_0').style.backgroundColor = '';
 					document.getElementById('form_303_0').style.backgroundColor = '';
 				}
+                                
+                                var teizi = document.getElementById('form_705_0').value * 100;
+                                var zangyou = document.getElementById('form_706_0').value * 100;
+                                if(teizi % 25 != 0)
+                                {
+                                        window.alert('’èŠÔ‚Í15•ª‚İ‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B');
+					judge = false;
+                                }
+                                if(zangyou % 25 != 0)
+                                {
+                                        window.alert('c‹ÆŠÔ‚Í15•ª‚İ‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B');
+					judge = false;
+                                }
+                                
 				var checkListArray = checkList.split(",");
 				var notNullArray = notnullcolumns.split(",");
 				var notNullTypeArray = notnulltype.split(",");
