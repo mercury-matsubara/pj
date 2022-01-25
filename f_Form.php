@@ -1274,68 +1274,6 @@ function makeformSerch_set($post,$formName){
 			$serch_str .= "</td></tr>";
 		}
 	}
-	if($orderby != '')
-	{
-		$serch_str .= "<tr><td><a class = 'itemname'>ソート条件</a></td>";
-		$serch_str .= "<td><select name='sort'>";
-		$serch_str .=  "<option value='0'";
-		if((isset ($post['sort'])))
-		{
-			if($post['sort'] == 0)
-			{
-				$serch_str .= " selected";
-			}
-		}
-		else
-		{
-			$serch_str .=  " selected";
-		}
-		$serch_str .=  ">---ソート条件を選択してください。---</option>";
-		$serch_str .= "<option value='1'";
-		if((isset ($post['sort'])))
-		{
-			if($post['sort'] == 1)
-			{
-				$serch_str .= " selected";
-			}
-		}
-		$serch_str .=  ">ソートなし</option>";
-		for($i = 0; $i < count($orderby_array) ; $i++)
-		{
-			$serch_str .= "<option value='".$orderby_array[$i]."'";
-			if((isset ($post['sort'])))
-			{
-				if($post['sort'] == $orderby_array[$i])
-				{
-					$serch_str .= " selected";
-				}
-			}
-			$serch_str .=  ">".$form_ini[$orderby_array[$i]]['item_name']."</option>";
-		}
-		$serch_str .= "</select><input name='radiobutton' type='radio' value='ASC'";
-		if((isset ($post['radiobutton'])))
-		{
-			if($post['radiobutton'] == 'ASC')
-			{
-				$serch_str .= " checked";
-			}
-		}
-		else
-		{
-			$serch_str .= "checked";
-		}
-		$serch_str .= ">昇順";
-		$serch_str .= "<input name='radiobutton' type='radio' value='DESC'";
-		if((isset ($post['radiobutton'])))
-		{
-			if($post['radiobutton'] == 'DESC')
-			{
-				$serch_str .= " checked";
-			}
-		}
-		$serch_str .= ">降順";
-		$serch_str .= "</td></tr>";
-	}
 	if($between != "")
 	{
 		$form_type = $form_ini[$filename]['form_type'];
@@ -1369,14 +1307,67 @@ function makeformSerch_set($post,$formName){
         $serch_str.= period_pulldown_set($form_name,$over,$post,"",$formName,0);
         $serch_str .= "</td><tr>";
     }
+    
+    //ソート条件作成(2022/01/19時点では2つ)
+    if($orderby != '')
+	{
+        for($j = 1; $j <= 2;$j++)
+        {
+            $serch_str .= "<tr><td><a class = 'itemname".$j."'>ソート条件".$j."</a></td>";
+            $serch_str .= "<td><select name='sort".$j."'>";
+            $serch_str .= "<option value='1'";
+            if((isset ($post['sort'.$j])))
+            {
+                if($post['sort'.$j] == 1)
+                {
+                    $serch_str .= " selected";
+                }
+            }
+            $serch_str .=  ">指定なし</option>";
+            for($i = 0; $i < count($orderby_array) ; $i++)
+            {
+                $serch_str .= "<option value='".$orderby_array[$i]."'";
+                if((isset ($post['sort'.$j])))
+                {
+                    if($post['sort'.$j] == $orderby_array[$i])
+                    {
+                        $serch_str .= " selected";
+                    }
+                }
+                $serch_str .=  ">".$form_ini[$orderby_array[$i]]['item_name']."</option>";
+            }
+            $serch_str .= "</select><input name='radiobutton".$j."' type='radio' value='ASC'";
+            if((isset ($post['radiobutton'.$j])))
+            {
+                if($post['radiobutton'.$j] == 'ASC' || $post['sort'.$j] == 1)
+                {
+                    $serch_str .= " checked";
+                }
+            }
+            else
+            {
+                $serch_str .= "checked";
+            }
+            $serch_str .= ">昇順";
+            $serch_str .= "<input name='radiobutton".$j."' type='radio' value='DESC'";
+            if((isset ($post['radiobutton'.$j])))
+            {
+                if($post['radiobutton'.$j] == 'DESC' && $post['sort'.$j] != 1)
+                {
+                    $serch_str .= " checked";
+                }
+            }
+            $serch_str .= ">降順";
+            $serch_str .= "</td></tr>";
+        }
+	}
+
 	$serch_str .= "</table>";
 	$check_column_str =  substr($check_column_str,0,-1);
 	$_SESSION['check_column'] = $check_column_str;
 	return ($serch_str);
 	
 }
-
-
 
 /************************************************************************************************************
 function pulldown_set($type,$name,$over,$post,$ReadOnly,$formName,$isnotnull)
@@ -1842,6 +1833,72 @@ function makeformModal_set($post,$isReadOnly,$form_Name,$columns){
             $form_str .= "";             
         }
     }
+    
+    //ソート条件作成 2022-01-19
+    if($filename == "pjagain_5" && $form_Name == "form")
+    {
+        $orderby = $form_ini[$filename]['orderby'];
+        $orderby_array = explode(',',$orderby);
+    }
+    else 
+    {
+        $orderby = "";
+        $orderby_array = "";
+    }
+
+    if($orderby != '')
+	{
+        for($j = 1; $j <= 2;$j++)
+        {
+            $form_str .= "<tr><td><a class = 'itemname".$j."'>ソート条件".$j."</a></td>";
+            $form_str .= "<td><select name='sort".$j."'>";
+            $form_str .= "<option value='1'";
+            if((isset ($post['sort'.$j])))
+            {
+                if($post['sort'.$j] == 1)
+                {
+                    $form_str .= " selected";
+                }
+            }
+            $form_str .=  ">指定なし</option>";
+            for($i = 0; $i < count($orderby_array) ; $i++)
+            {
+                $form_str .= "<option value='".$orderby_array[$i]."'";
+                if((isset ($post['sort'.$j])))
+                {
+                    if($post['sort'.$j] == $orderby_array[$i])
+                    {
+                        $form_str .= " selected";
+                    }
+                }
+                $form_str .=  ">".$form_ini[$orderby_array[$i]]['item_name']."</option>";
+            }
+            $form_str .= "</select><input name='radiobutton".$j."' type='radio' value='ASC'";
+            if((isset ($post['radiobutton'.$j])))
+            {
+                if($post['radiobutton'.$j] == 'ASC' || $post['sort'.$j] == 1)
+                {
+                    $form_str .= " checked";
+                }
+            }
+            else
+            {
+                $form_str .= "checked";
+            }
+            $form_str .= ">昇順";
+            $form_str .= "<input name='radiobutton".$j."' type='radio' value='DESC'";
+            if((isset ($post['radiobutton'.$j])))
+            {
+                if($post['radiobutton'.$j] == 'DESC' && $post['sort'.$j] != 1)
+                {
+                    $form_str .= " checked";
+                }
+            }
+            $form_str .= ">降順";
+            $form_str .= "</td></tr>";
+        }
+	}
+
 	$form_str .= "</table>";
 	$check_column_str =  substr($check_column_str,0,-1);
 	$_SESSION['check_column'] = $check_column_str;

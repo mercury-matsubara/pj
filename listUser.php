@@ -74,19 +74,6 @@
 	echo "<td id = 'item'>ソート条件</td>";
 	echo "<td>";
 	echo "<select name='sort'>";
-	echo "<option value='0'";
-	if((isset ($_SESSION['post']['sort'])))
-	{
-		if($_SESSION['post']['sort'] == 0)
-		{
-			echo "selected";
-		}
-	}
-	else
-	{
-		echo "selected";
-	}
-	echo ">---ソート条件を選択してください。---</option>";
 	echo "<option value='1'";
 	if((isset ($_SESSION['post']['sort'])))
 	{
@@ -95,7 +82,7 @@
 			echo "selected";
 		}
 	}
-	echo ">ソートなし</option>";
+	echo ">指定なし</option>";
 	echo "<option value='2'";
 	if((isset ($_SESSION['post']['sort'])))
 	{

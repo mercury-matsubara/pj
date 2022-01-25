@@ -1986,42 +1986,110 @@ function SQLsetOrderby($post,$tablenum,$sql){
 	//          èàóù          //
 	//------------------------//
 	
-	if($filename == 'ENDPJLIST_2' || $filename == 'pjagain_5' || $filename == 'pjend_5')
-	{
-		$sql[0] .= " ORDER BY projectnuminfo.PROJECTNUM DESC, edabaninfo.EDABAN DESC";
-		$sql[1] .= " ORDER BY projectnuminfo.PROJECTNUM DESC, edabaninfo.EDABAN DESC";
-	}
-	else
-	{
-		for($i = 0 ; $i < count($orderby_columns_array) ; $i++ )
-		{
-			if($orderby_columns == "")
-			{
-				break;
-			}
-			$orderby_column_name = $form_ini[$orderby_columns_array[$i]]['column'];
-			$sql[0] .= " ".$orderby." ".$orderby_column_name." ".$oderby_array[$orderby_type_array[$i]];
-			$sql[1] .= " ".$orderby." ".$orderby_column_name." ".$oderby_array[$orderby_type_array[$i]];
-			$orderby = " , ";
-		}
-	}
-	
-	
-	if(isset($post['sort']))
-	{
-		$orderby_column_num = $post['sort'];
-		if($orderby_column_num != 0 && $orderby_column_num != 1)
-		{
-			$orderby_table_num = $form_ini[$orderby_column_num]['table_num'];
-			$orderby_column_name = $form_ini[$orderby_column_num]['column'];
-			$orderby_table_name = $form_ini[$orderby_table_num]['table_name'];
-			$sql[0] .= " ".$orderby." ".$orderby_table_name.".".
-							$orderby_column_name." ".$post['radiobutton'];
-			$sql[1] .= " ".$orderby." ".$orderby_table_name.".".
-							$orderby_column_name." ".$post['radiobutton'];
-		}
-	}
-	
+    for($i = 1; $i <= 2; $i++)
+    {
+        if(isset($post['sort'.$i]))
+        {
+            $orderby_column_num = $post['sort'.$i];
+            if($orderby_column_num != 0 && $orderby_column_num != 1)
+            {
+                $orderby_table_num = $form_ini[$orderby_column_num]['table_num'];
+                $orderby_column_name = $form_ini[$orderby_column_num]['column'];
+                $orderby_table_name = $form_ini[$orderby_table_num]['table_name'];
+                if($filename == "PJLIST_2")
+                {
+                    if($orderby_column_name == "PROJECTNUM")
+                    {
+                        $sql[0] .= " ".$orderby." e.".
+                                        $orderby_column_name." ".$post['radiobutton'.$i];
+                        $orderby = " , ";
+                    }
+                    if($orderby_column_name == "EDABAN")
+                    {
+                        $sql[0] .= " ".$orderby." d.".
+                                        $orderby_column_name." ".$post['radiobutton'.$i];
+                        $orderby = " , ";
+                    }
+                    if($orderby_column_name == "STAFFID" || $orderby_column_name == "STAFFNAME" || $orderby_column_name == "KOUTEINAME" || $orderby_column_name == "SAGYOUDATE")
+                    {
+                        $sql[0] .= " ".$orderby." ".$orderby_column_name." ".$post['radiobutton'.$i];
+                        $orderby = " , ";                        
+                    }
+                    if($orderby_column_name == "PROJECTNAME")
+                    {
+                        $sql[0] .= " ".$orderby." PJNAME ".$post['radiobutton'.$i];
+                        $orderby = " , ";                                                
+                    }
+                    if($orderby_column_name == "total")
+                    {
+                        $sql[0] .= " ".$orderby." total ".$post['radiobutton'.$i];
+                        $orderby = " , "; 
+                    }
+                }
+                elseif($filename == "MONTHLIST_2")
+                {
+                    if($orderby_column_name == "PROJECTNUM" || $orderby_column_name == "EDABAN")
+                    {
+                        $sql[0] .= " ".$orderby." ".
+                                        $orderby_column_name." ".$post['radiobutton'.$i];
+                        $orderby = " , ";
+                    }
+                    if($orderby_column_name == "PROJECTNAME")
+                    {
+                        $sql[0] .= " ".$orderby." PJNAME ".$post['radiobutton'.$i];
+                        $orderby = " , ";                        
+                    }
+                    if($orderby_column_name == "STAFFNAME")
+                    {
+                        $sql[0] .= " ".$orderby." b.".
+                                        $orderby_column_name." ".$post['radiobutton'.$i];
+                        $orderby = " , ";                        
+                    }
+                }
+                elseif($filename == "ENDPJLIST_2")
+                {
+                    if($orderby_column_name == "8ENDDATE")
+                    {
+                        $sql[0] .= " ".$orderby." 5ENDDATE ".$post['radiobutton'.$i];
+                        $orderby = " , ";                        
+                    }
+                    else 
+                    {
+                        $sql[0] .= " ".$orderby." ".$orderby_table_name.".".
+                                        $orderby_column_name." ".$post['radiobutton'.$i];
+                        $orderby = " , ";                                                
+                    }
+                }
+                else
+                {
+                    $sql[0] .= " ".$orderby." ".$orderby_table_name.".".
+                                    $orderby_column_name." ".$post['radiobutton'.$i];
+                    $orderby = " , ";
+                }
+            }
+        }
+    }
+    
+    if((!isset($post['sort1']) && !isset($post['sort2'])) || ($post['sort1'] == 1 && $post['sort2'] == 1))
+    {
+        if($filename == 'ENDPJLIST_2' || $filename == 'pjagain_5' || $filename == 'pjend_5')
+        {
+            $sql[0] .= " ORDER BY projectnuminfo.PROJECTNUM ASC, edabaninfo.EDABAN ASC";
+        }
+        else
+        {
+            for($i = 0 ; $i < count($orderby_columns_array) ; $i++ )
+            {
+                if($orderby_columns == "")
+                {
+                    break;
+                }
+                $orderby_column_name = $form_ini[$orderby_columns_array[$i]]['column'];
+                $sql[0] .= " ".$orderby." ".$orderby_column_name." ".$oderby_array[$orderby_type_array[$i]];
+                $orderby = " , ";
+            }
+        }
+    }
 	$sql[0] .= " ;";
 	$sql[1] .= " ;";
 	return($sql);

@@ -160,7 +160,31 @@
 				$where .= "WHERE KOUTEINAME LIKE '%".$_SESSION['list']['form_303_0']."%'";
 			}
 		}
-		$sql[0] = "SELECT * FROM kouteiinfo ".$where." ORDER BY KOUTEIID;";
+        
+        //É\Å[Égèåè
+        if(!isset($_SESSION['list']['sort1']) && !isset($_SESSION['list']['sort2']))
+        {
+            $orderbysql = "ORDER BY KOUTEIID ASC";
+        }
+        elseif($_SESSION['list']['sort1'] == 1 && $_SESSION['list']['sort2'] == 1)
+        {
+            $orderbysql = "ORDER BY KOUTEIID ASC";
+        }
+        else
+        {
+            $orderby = "ORDER BY ";
+            $orderbysql = "";
+            for($i = 1; $i <= 2; $i++)
+            {
+                if($_SESSION['list']['sort'.$i] != 1)
+                {
+                    $orderby_column_name = $form_ini[$_SESSION['list']['sort'.$i]]['column'];
+                    $orderbysql .= "".$orderby." ".$orderby_column_name." ".$_SESSION['list']['radiobutton'.$i]."";
+                    $orderby = " , ";
+                }
+            }
+        }
+		$sql[0] = "SELECT * FROM kouteiinfo ".$where." ".$orderbysql.";";
 		$sql[1] = "SELECT COUNT(*) FROM kouteiinfo ".$where.";";
 		$list = makeList($sql,$_SESSION['list']);
 	}

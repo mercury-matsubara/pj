@@ -286,12 +286,12 @@ function selectUser(){
 	//------------------------//
 	require_once("f_DB.php");																							// DB関数呼び出し準備
 	
-	if(!isset($_SESSION['listUser']))
+	if(!isset($_SESSION['listUser']) || $_SESSION['listUser']['orderby'] == "")
 	{
 		$_SESSION['listUser']['limit'] = ' limit 0,10';
 		$_SESSION['listUser']['limitstart'] =0;
 		$_SESSION['listUser']['where'] ='';
-		$_SESSION['listUser']['orderby'] ='';
+		$_SESSION['listUser']['orderby'] ='ORDER BY LUSERNAME ASC';
 	}
 	
 	//------------------------//
@@ -589,7 +589,7 @@ function makeList($sql,$post){
     //終了PJ一覧画面（終了日付欄追加）
     if($filename == "ENDPJLIST_2")
     {
-        $list_html .= "<th><a class = 'head'>終了日付</a></th>";
+        $list_html .= "<th><a class = 'head'>ＰＪ終了日付</a></th>";
     }
     
 	$list_html .="<tbody>";
@@ -667,13 +667,12 @@ function makeList($sql,$post){
         {
             if(isset($_SESSION["enddate"][$counter]))
             {
-                $enddate = $_SESSION["enddate"][$counter];
-                $list_html .="<td ".$id." ".$class." ><a class ='body'>".$enddate."</a></td>";
+                $list_html .="<td ".$id." ".$class." ><a class ='body'>".$result_row['5ENDDATE']."</a></td>";
                 unset($_SESSION["enddate"][$counter]);
             }
-            elseif (isset($result_row["8ENDDATE"])) 
+            elseif (isset($result_row["5ENDDATE"])) 
             {
-                $_SESSION["enddate"][$counter] = $result_row["8ENDDATE"];
+                $_SESSION["enddate"][$counter] = $result_row["5ENDDATE"];
             }            
         }
 
@@ -4111,7 +4110,7 @@ function makeList_check($sql,$post,$tablenum){
         if($filename == "pjend_5")
         {
             //項目追加
-            $list_html .="<th><a class ='head'>終了日付</a></th><th><a class = 'head'>詳細</a></th>";
+            $list_html .="<th><a class ='head'>ＰＪ終了日付</a></th><th><a class = 'head'>詳細</a></th>";
         }
         
 	$list_html .="</tr></thead><tbody id ='checkboxlist'>";
