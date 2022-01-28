@@ -121,7 +121,7 @@ function InsertSQL($post,$tablenum,$over){
 				if(isset($post[$serch_str]))
 				{
 					$columnValue .= $post[$serch_str].$delimiter;
-				}
+				}                
 			}
 			$columnValue = rtrim($columnValue,$delimiter);
 			$fieldtype = $form_ini[$columns_array[$i]]['fieldtype'];
@@ -683,81 +683,133 @@ function joinSelectSQL($post,$tablenum){
 	}
 	
 	
-	
-	if($between != "")
-	{
+	//2022-01-26 日付入力欄をカレンダー表示に変更　start ----->>
+//	if($between != "")
+//	{
+//		$before_year = $form_ini[$filename]['before_year'];
+//		$after_year = $form_ini[$filename]['after_year'];
+//		$start_date = "";
+//		$end_date = "";
+//		$year = date_create('NOW');
+//		$year = date_format($year, "Y");
+//		if(isset($post['form_start_0']))
+//		{
+//			if($post['form_start_0'] == "")
+//			{
+//				$start_date = $before_year;
+//			}
+//			else
+//			{
+//				$start_date = $post['form_start_0'];
+//			}
+//		}
+//		if(isset($post['form_start_1']))
+//		{
+//			if($post['form_start_1'] == "")
+//			{
+//				$start_date .= "-1";
+//			}
+//			else
+//			{
+//				$start_date .= "-".$post['form_start_1'];
+//			}
+//		}
+//		if(isset($post['form_start_2']))
+//		{
+//			if($post['form_start_2'] == "")
+//			{
+//				$start_date .= "-1";
+//			}
+//			else
+//			{
+//				$start_date .= "-".$post['form_start_2'];
+//			}
+//		}
+//		if(isset($post['form_end_0']))
+//		{
+//			if($post['form_end_0'] == "")
+//			{
+//				$end_date = $year + $after_year;
+//			}
+//			else
+//			{
+//				$end_date = $post['form_end_0'];
+//			}
+//		}
+//		if(isset($post['form_end_1']))
+//		{
+//			if($post['form_end_1'] == "")
+//			{
+//				$end_date .= "-12";
+//			}
+//			else
+//			{
+//				$end_date .= "-".$post['form_end_1'];
+//			}
+//		}
+//		if(isset($post['form_end_2']))
+//		{
+//			if($post['form_end_2'] == "")
+//			{
+//				$end_date .= "-31";
+//			}
+//			else
+//			{
+//				$end_date .= "-".$post['form_end_2'];
+//			}
+//		}
+//		$tablenum_between = $form_ini[$between]['table_num'];
+//		$column_name_between = $form_ini[$between]['column'];
+//		$table_name_between = $form_ini[$tablenum_between]['table_name'];
+//		if($form_ini[$between]['fieldtype'] == 'DATETIME' && $start_date != '')
+//		{
+//			$start_date .= ' 00:00:00';
+//			$end_date .= ' 23:59:59';
+//		}
+//		if(strstr($select_SQL, ' WHERE ') == false && $start_date != '')
+//		{
+//			$select_SQL .= " WHERE ".$table_name_between.".".$column_name_between." BETWEEN '".$start_date."' AND '".$end_date."' ";
+//			$count_SQL .= " WHERE ".$table_name_between.".".$column_name_between." BETWEEN '".$start_date."' AND '".$end_date."' ";
+//		}
+//		else if($start_date != '')
+//		{
+//			$select_SQL .= " AND  ".$table_name_between.".".$column_name_between." BETWEEN '".$start_date."' AND '".$end_date."' ";
+//			$count_SQL .= " AND  ".$table_name_between.".".$column_name_between." BETWEEN '".$start_date."' AND '".$end_date."' ";
+//		}
+//	}
+    
+    if($between != "")
+    {
 		$before_year = $form_ini[$filename]['before_year'];
 		$after_year = $form_ini[$filename]['after_year'];
 		$start_date = "";
 		$end_date = "";
 		$year = date_create('NOW');
 		$year = date_format($year, "Y");
-		if(isset($post['form_start_0']))
-		{
-			if($post['form_start_0'] == "")
-			{
-				$start_date = $before_year;
-			}
-			else
-			{
-				$start_date = $post['form_start_0'];
-			}
-		}
-		if(isset($post['form_start_1']))
-		{
-			if($post['form_start_1'] == "")
-			{
-				$start_date .= "-1";
-			}
-			else
-			{
-				$start_date .= "-".$post['form_start_1'];
-			}
-		}
-		if(isset($post['form_start_2']))
-		{
-			if($post['form_start_2'] == "")
-			{
-				$start_date .= "-1";
-			}
-			else
-			{
-				$start_date .= "-".$post['form_start_2'];
-			}
-		}
-		if(isset($post['form_end_0']))
-		{
-			if($post['form_end_0'] == "")
-			{
-				$end_date = $year + $after_year;
-			}
-			else
-			{
-				$end_date = $post['form_end_0'];
-			}
-		}
-		if(isset($post['form_end_1']))
-		{
-			if($post['form_end_1'] == "")
-			{
-				$end_date .= "-12";
-			}
-			else
-			{
-				$end_date .= "-".$post['form_end_1'];
-			}
-		}
-		if(isset($post['form_end_2']))
-		{
-			if($post['form_end_2'] == "")
-			{
-				$end_date .= "-31";
-			}
-			else
-			{
-				$end_date .= "-".$post['form_end_2'];
-			}
-		}
+        
+        if(isset($post["form_start_0"]))
+        {
+            if($post["form_start_0"] != "")
+            {
+                $start_date = $post["form_start_0"];
+            }
+            else
+            {
+                $start_date = $before_year."-1-1";
+            }
+        }
+        if(isset($post["form_end_0"]))
+        {
+            if($post["form_end_0"] != "")
+            {
+                $end_date = $post["form_end_0"];
+            }
+            else
+            {
+                $end_date = $year."-12-31";
+            }
+        }
+        //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 		$tablenum_between = $form_ini[$between]['table_num'];
 		$column_name_between = $form_ini[$between]['column'];
 		$table_name_between = $form_ini[$tablenum_between]['table_name'];
@@ -775,8 +827,8 @@ function joinSelectSQL($post,$tablenum){
 		{
 			$select_SQL .= " AND  ".$table_name_between.".".$column_name_between." BETWEEN '".$start_date."' AND '".$end_date."' ";
 			$count_SQL .= " AND  ".$table_name_between.".".$column_name_between." BETWEEN '".$start_date."' AND '".$end_date."' ";
-		}
-	}
+		}        
+    }
     
     if($filename == "ENDPJLIST_2" && $tablenum == "8")
     {
@@ -1775,25 +1827,37 @@ function itemListSQL($post){
 				$sql .= " c.5PJSTAT = ".$post['form_708_0']." ";
 			}
 		}
-		if(!empty($post['form_start_0']) || !empty($post['form_start_1']) || !empty($post['form_start_2']))
-		{
-			$startY = $post['form_start_0'];
-			$startM = $post['form_start_1'];
-			$startD = $post['form_start_2'];
-			$startdate = "";
-			$endY = $post['form_end_0'];
-			$endM = $post['form_end_1'];
-			$endD = $post['form_end_2'];
-			$enddate = "";
-		}
-		if ( !empty($startY) && !empty($startM) && !empty($startD)){
-			$startdate = $startY."-".$startM."-".$startD;
-		}
-		
-		if (!empty($endY) && !empty($endM) && !empty($endD)){
-			$enddate = $endY."-".$endM."-".$endD;
-		}
-		
+        
+        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+//		if(!empty($post['form_start_0']) || !empty($post['form_start_1']) || !empty($post['form_start_2']))
+//		{
+//			$startY = $post['form_start_0'];
+//			$startM = $post['form_start_1'];
+//			$startD = $post['form_start_2'];
+//			$startdate = "";
+//			$endY = $post['form_end_0'];
+//			$endM = $post['form_end_1'];
+//			$endD = $post['form_end_2'];
+//			$enddate = "";
+//		}
+//		if ( !empty($startY) && !empty($startM) && !empty($startD)){
+//			$startdate = $startY."-".$startM."-".$startD;
+//		}
+//		
+//		if (!empty($endY) && !empty($endM) && !empty($endD)){
+//			$enddate = $endY."-".$endM."-".$endD;
+//		}
+		if(!empty($post['form_start_0']) || !empty($post['form_end_0']))
+        {
+            $startdate = $post['form_start_0'];
+            $enddate = $post['form_end_0'];
+        }
+        else
+        {
+            $startdate = "";
+            $enddate = "";
+        }
+		//2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 		if ( !empty($startdate) && !empty($enddate)) {
 			if($isone)
 			{

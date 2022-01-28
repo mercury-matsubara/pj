@@ -552,6 +552,22 @@
 									formelements.elements[j].style.backgroundColor = '';
 								}
 							}
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                            var id = formelements.elements[j].id;
+                            if(id == 'form_704_0')
+                            {
+                                if(formelements.elements[j].value == "")
+                                {
+									formelements.elements[j].style.backgroundColor = '#ff0000';
+									judge = false;
+									alert('値を選択して下さい');                                    
+                                }
+                                else
+								{
+									formelements.elements[j].style.backgroundColor = '';
+								}
+                            }
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                            
 						}
 					}
 				}
@@ -591,17 +607,33 @@
 									formelements.elements[j].style.backgroundColor = '';
 								}
 							}
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                            var id = formelements.elements[j].id;
+                            if(id == 'form_704_0')
+                            {
+                                if(formelements.elements[j].value == "")
+                                {
+									formelements.elements[j].style.backgroundColor = '#ff0000';
+									judge = false;
+									alert('値を選択して下さい');                                    
+                                }
+                                else
+								{
+									formelements.elements[j].style.backgroundColor = '';
+								}
+                            }
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                            
 						}
 					}
 				}
 			}
-                        if(filename == "PJTOUROKU_1")
-                        {
-                            if(!goukeiCheck())
-                            {
-                                judge = false;
-                            }
-                        }
+            if(filename == "PJTOUROKU_1")
+            {
+                if(!goukeiCheck())
+                {
+                    judge = false;
+                }
+            }
 		}
 		return judge;
 	}

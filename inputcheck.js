@@ -226,6 +226,23 @@ function notnullcheck(id,isnotnull)
 	}
 }
 
+function nullcheck(id,isnotnull)
+{
+    console.log("入力チェック");
+    if(isnotnull == 1)
+    {
+        if(document.getElementById(id).value == "")
+        {
+            document.getElementById(id).style.backgroundColor = '#ff0000';
+            judge = false;
+            window.alert('値を入力してください');
+        }
+        else
+        {
+            document.getElementById(id).style.backgroundColor = '';
+        }
+    }
+}
 
 function strlen(str) {
   var ret = 0;

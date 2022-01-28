@@ -291,25 +291,54 @@
 		{
 			if(filename == 'PROGRESSINFO_2')
 			{
+                
+                //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+				//月次チェック
+//				var endmonth = "<?php echo $endmonth; ?>";
+//				var endArray = endmonth.split(",");                
+//				var yr = document.getElementById("form_704_0").value;
+//				var mn = document.getElementById("form_704_1").value;
+//				var cnt = 0;
+//				
+//				while(cnt < endArray.length)
+//				{
+//					if(yr == endArray[cnt + 1] && mn == endArray[cnt + 2])
+//					{
+//						judge = false;
+//						break;
+//					}
+//					else
+//					{
+//						cnt = cnt + 3;
+//					}
+//				}
 				//月次チェック
 				var endmonth = "<?php echo $endmonth; ?>";
 				var endArray = endmonth.split(",");
-				var yr = document.getElementById("form_704_0").value;
-				var mn = document.getElementById("form_704_1").value;
-				var cnt = 0;
-				
-				while(cnt < endArray.length)
-				{
-					if(yr == endArray[cnt + 1] && mn == endArray[cnt + 2])
-					{
-						judge = false;
-						break;
-					}
-					else
-					{
-						cnt = cnt + 3;
-					}
-				}
+                var date = document.getElementById("form_704_0").value;
+                var dateArray = date.split('-');
+                var cnt = 0;
+                while(cnt < endArray.length)
+                {
+                    if(endArray[cnt + 2] <= 9)
+                    {
+                        var endmonth = "0" + endArray[cnt + 2];
+                    }
+                    else
+                    {
+                        var endmonth = endArray[cnt + 2];
+                    }
+                    if(dateArray[0] == endArray[cnt + 1] && dateArray[1] == endmonth)
+                    {
+                        judge = false;
+                        break;
+                    }
+                    else
+                    {
+                        cnt = cnt + 3;
+                    }
+                }
+                //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<
 				if(document.getElementById('form_102_0').value == "")
 				{
 					document.getElementById('form_102_0').style.backgroundColor = '#ff0000';
@@ -391,6 +420,22 @@
 									formelements.elements[j].style.backgroundColor = '';
 								}
 							}
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                            var id = formelements.elements[j].id;
+                            if(id == 'form_704_0')
+                            {
+                                if(formelements.elements[j].value == "")
+                                {
+									formelements.elements[j].style.backgroundColor = '#ff0000';
+									judge = false;
+									alert('値を選択して下さい');                                    
+                                }
+                                else
+								{
+									formelements.elements[j].style.backgroundColor = '';
+								}
+                            }
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<
 						}
 					}
 				}
@@ -430,6 +475,22 @@
 									formelements.elements[j].style.backgroundColor = '';
 								}
 							}
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                            var id = formelements.elements[j].id;
+                            if(id == 'form_704_0')
+                            {
+                                if(formelements.elements[j].value == "")
+                                {
+									formelements.elements[j].style.backgroundColor = '#ff0000';
+									judge = false;
+									alert('値を選択して下さい');                                    
+                                }
+                                else
+								{
+									formelements.elements[j].style.backgroundColor = '';
+								}
+                            }
+                            //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                                                        
 						}
 					}
 				}
@@ -558,20 +619,33 @@
 				$_SESSION['edit']['form_203_0'] = $result_row['PJNAME'];
 				$_SESSION['edit']['form_402_0'] = $result_row['STAFFID'];
 				$_SESSION['edit']['form_403_0'] = $result_row['STAFFNAME'];
-				$workday = explode('-',$result_row['SAGYOUDATE']);
-				$_SESSION['edit']['form_704_0'] = $workday[0];
-				$_SESSION['edit']['form_704_1'] = $workday[1];
-				$_SESSION['edit']['form_704_2'] = $workday[2];
+                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+//				$workday = explode('-',$result_row['SAGYOUDATE']);
+//				$_SESSION['edit']['form_704_0'] = $workday[0];
+//				$_SESSION['edit']['form_704_1'] = $workday[1];
+//				$_SESSION['edit']['form_704_2'] = $workday[2];
+				$_SESSION['edit']['form_704_0'] = $result_row['SAGYOUDATE'];
+                $workday = explode('-',$result_row['SAGYOUDATE']);
+                $_SESSION['edit']['workday_year'] = $workday[0];
+                $_SESSION['edit']['workday_month'] = $workday[1];
+                $_SESSION['edit']['workday_day'] = $workday[2];
+                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 			}
 			//麻野間 2017/11/29
 			//月次済チェック
 			$endjudge = true;
 			for($i = 0; $i < count($endMonth); $i = $i + 3)
 			{
-				if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['form_704_0'] == $endMonth[$i + 1]) && ($_SESSION['edit']['form_704_1'] == $endMonth[$i + 2]))
+                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+//				if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['form_704_0'] == $endMonth[$i + 1]) && ($_SESSION['edit']['form_704_1'] == $endMonth[$i + 2]))
+//				{
+//					$endjudge = false;
+//				}
+                if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['workday_year'] == $endMonth[$i + 1]) && ($_SESSION['edit']['workday_month'] == $endMonth[$i + 2]))
 				{
 					$endjudge = false;
 				}
+                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 			}
 		}
 		

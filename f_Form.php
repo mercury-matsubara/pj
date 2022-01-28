@@ -435,9 +435,22 @@ function makeformInsert_set($post,$out_column,$isReadOnly,$formName){
 					{
 						$over = $list_id[$list_count - 1];
 					}
-					$insert_str.= pulldownDate_set($form_format_type,$form_before_year,
-													$form_after_year,$form_name,$over,
-													$post,$ReadOnly,$formName,$isnotnull);
+                            
+                    //2022-01-26 日付入力欄（作業日）をカレンダー表示に変更　start ----->>
+
+//					$insert_str.= pulldownDate_set($form_format_type,$form_before_year,
+//													$form_after_year,$form_name,$over,
+//													$post,$ReadOnly,$formName,$isnotnull);
+                    if(isset($post[$form_name."_0"]))
+                    {
+                        $sagyoudate = $post[$form_name."_0"];
+                    }
+                    else
+                    {
+                        $sagyoudate = date("Y-m-d");
+                    }
+                    $insert_str .= "<input type='date' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");'>";
+                    //2022-01-26 日付入力欄（作業日）をカレンダー表示に変更　end -----<<                    
 					if($isonce)
 					{
 						$insert_str .="</td><td>";
@@ -1281,12 +1294,34 @@ function makeformSerch_set($post,$formName){
 		$after_year = $form_ini[$filename]['after_year'];
 		$over = "";
 		$serch_str.= "<tr><td>開始日付</td><td>";
-		$serch_str.= pulldownDate_set($form_type,$before_year,
-					$after_year,"form_start",$over,$post,"",$formName,0);
+        //2022-01-26 日付入力欄（開始日付）をカレンダー表示に変更　start ----->>
+//		$serch_str.= pulldownDate_set($form_type,$before_year,
+//					$after_year,"form_start",$over,$post,"",$formName,0);
+        if(isset($post["form_start_0"]))
+        {
+            $form_start_value = $post["form_start_0"];
+        }
+        else 
+        {
+            $form_start_value = date("Y-m-d");
+        }
+        $serch_str .= "<input type='date' name='form_start_0' id='form_start_0' value='".$form_start_value."' onChange='nullcheck(this.id,0);'>";
+        //2022-01-26 日付入力欄（開始日付）をカレンダー表示に変更　end -----<<
 		$serch_str.="</td></tr>";
 		$serch_str.= "<tr><td>終了日付</td><td>";
-		$serch_str.= pulldownDate_set($form_type,$before_year,
-					$after_year,"form_end",$over,$post,"",$formName,0);
+        //2022-01-26 日付入力欄（終了日付）をカレンダー表示に変更　start ----->>
+//		$serch_str.= pulldownDate_set($form_type,$before_year,
+//					$after_year,"form_end",$over,$post,"",$formName,0);
+        if(isset($post["form_end_0"]))
+        {
+            $form_end_value = $post["form_end_0"];
+        }
+        else
+        {
+            $form_end_value = date("Y-m-d");
+        }
+        $serch_str .= "<input type='date' name='form_end_0' id='form_end_0' value='".$form_end_value."' onChange='nullcheck(this.id,0);'>";
+        //2022-01-26 日付入力欄（終了日付）をカレンダー表示に変更　end -----<<
 		$serch_str.="</td></tr>";
 	}
 	
@@ -2636,9 +2671,21 @@ function makeformEdit_set($post,$out_column,$isReadOnly,$formName,$data){
 					{
 						$over = $list_id[$list_count - 1];
 					}
-					$insert_str.= pulldownDate_set($form_format_type,$form_before_year,
-													$form_after_year,$form_name,$over,
-													$post,$ReadOnly,$formName,$isnotnull);
+                    //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+//                    $insert_str.= pulldownDate_set($form_format_type,$form_before_year,
+//                                $form_after_year,$form_name,$over,
+//                                $post,$ReadOnly,$formName,$isnotnull);
+
+                    if(isset($post[$form_name."_0"]))
+                    {
+                        $sagyoudate = $post[$form_name."_0"];
+                    }
+                    else
+                    {
+                        $sagyoudate = date("Y-m-d");
+                    }
+                    $insert_str .= "<input type='date' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");'>";
+                    //2022-01-27 日付入力欄をカレンダー表示に変更　end -----<<
 					if($isonce)
 					{
 						$insert_str .="</td><td>";

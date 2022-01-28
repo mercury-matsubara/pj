@@ -155,30 +155,74 @@
 								formelements.elements[j].style.backgroundColor = '';
 							}
 						}
+                        //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                        var id = formelements.elements[j].id;
+                        if(id == 'form_704_0')
+                        {
+                            if(formelements.elements[j].value == "")
+                            {
+                                formelements.elements[j].style.backgroundColor = '#ff0000';
+                                judge = false;
+                                alert('値を選択して下さい');                                    
+                            }
+                            else
+                            {
+                                formelements.elements[j].style.backgroundColor = '';
+                            }
+                        }
+                        //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                                                    
 					}
 				}
 			}
 			if(filename == 'PROGRESSINFO_2')
 			{
+                //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
 				//月次チェック
+//				var endmonth = "<?php echo $endmonth; ?>";
+//				var endArray = endmonth.split(",");
+//				var yr = document.getElementById("form_704_0").value;
+//				var mn = document.getElementById("form_704_1").value;
+//				var cnt = 0;
+//				
+//				while(cnt < endArray.length)
+//				{
+//					if(yr == endArray[cnt + 1] && mn == endArray[I + 2])
+//					{
+//						judge = false;
+//						break;
+//					}
+//					else
+//					{
+//						cnt = cnt + 3;
+//					}
+//				}
+                //月次チェック
 				var endmonth = "<?php echo $endmonth; ?>";
 				var endArray = endmonth.split(",");
-				var yr = document.getElementById("form_704_0").value;
-				var mn = document.getElementById("form_704_1").value;
-				var cnt = 0;
-				
-				while(cnt < endArray.length)
-				{
-					if(yr == endArray[cnt + 1] && mn == endArray[I + 2])
-					{
-						judge = false;
-						break;
-					}
-					else
-					{
-						cnt = cnt + 3;
-					}
-				}
+                var date = document.getElementById("form_704_0").value;
+                var dateArray = date.split('-');
+                var cnt = 0;
+                while(cnt < endArray.length)
+                {
+                    if(endArray[cnt + 2] <= 9)
+                    {
+                        var endmonth = "0" + endArray[cnt + 2];
+                    }
+                    else
+                    {
+                        var endmonth = endArray[cnt + 2];
+                    }
+                    if(dateArray[0] == endArray[cnt + 1] && dateArray[1] == endmonth)
+                    {
+                        judge = false;
+                        break;
+                    }
+                    else
+                    {
+                        cnt = cnt + 3;
+                    }
+                }
+                //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<
 			}
 		}
 		return judge;
@@ -277,7 +321,11 @@
 	{
 		if($filename == 'PROGRESSINFO_2')
 		{
-			$errorinfo = endCheck($_SESSION['edit']['form_704_0'],$_SESSION['edit']['form_704_1']);
+            //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+//			$errorinfo = endCheck($_SESSION['edit']['form_704_0'],$_SESSION['edit']['form_704_1']);
+            $date = explode('-', $_SESSION['edit']['form_704_0']);
+            $errorinfo = endCheck($date[0], $date[1]);
+            //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 			if(count($errorinfo) == 1 && $errorinfo[0] == "" )
 			{
 				$judge = true;

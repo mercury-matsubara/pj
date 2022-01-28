@@ -196,6 +196,7 @@
 	function check(checkList,notnullcolumns,notnulltype)
 	{
 		var judge = true;
+        var filename = "<?php echo $filename; ?>";
 		if(isCancel == false)
 		{
 			var checkListArray = checkList.split(",");
@@ -231,13 +232,32 @@
 								formelements.elements[j].style.backgroundColor = '';
 							}
 						}
+                        //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                        var id = formelements.elements[j].id;
+                        if(id == 'form_704_0')
+                        {
+                            if(formelements.elements[j].value == "")
+                            {
+                                formelements.elements[j].style.backgroundColor = '#ff0000';
+                                judge = false;
+                                alert('値を選択して下さい');                                    
+                            }
+                            else
+                            {
+                                formelements.elements[j].style.backgroundColor = '';
+                            }
+                        }
+                        //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                        
 					}
 				}
 			}
-                        if(!goukeiCheck())
-                        {
-                            judge = false;
-                        }
+            if(filename == "PJTOUROKU_1")
+            {
+                if(!goukeiCheck())
+                {
+                    judge = false;
+                }
+            }
 		}
 		return judge;
 	}
@@ -340,8 +360,11 @@
 	{
 		if($filename == 'PROGRESSINFO_1')
 		{
-			
-			$errorinfo = endCheck($_SESSION['insert']['form_704_0'],$_SESSION['insert']['form_704_1']);
+			//2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+			//$errorinfo = endCheck($_SESSION['insert']['form_704_0'],$_SESSION['insert']['form_704_1']);
+            $date = explode('-', $_SESSION['insert']['form_704_0']);
+            $errorinfo = endCheck($date[0], $date[1]);
+            //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 		}
 		if(count($errorinfo) == 1 && $errorinfo[0] == '')
 		{
@@ -352,7 +375,11 @@
 	}
 	if($filename == 'PROGRESSINFO_2')
 	{
-		$errorinfo = endCheck($_SESSION['insert']['form_704_0'],$_SESSION['insert']['form_704_1']);
+        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+		//$errorinfo = endCheck($_SESSION['insert']['form_704_0'],$_SESSION['insert']['form_704_1']);
+        $date = explode('-', $_SESSION['insert']['form_704_0']);
+        $errorinfo = endCheck($date[0], $date[1]);
+        //2022-01-27 日付入力欄をカレンダー表示に変更　end -----<<
 		if(count($errorinfo) == 1 && $errorinfo[0] == "" )
 		{
 			$judge = true;
