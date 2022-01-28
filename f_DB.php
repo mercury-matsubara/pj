@@ -75,7 +75,7 @@ function login($userName,$userPass){
 	//------------------------//
 	//          定数          //
 	//------------------------//
-	$Loginsql = "select * from loginuserinfo where LUSERNAME = '".$userName."' AND LUSERPASS = '".$userPass."' ;";		// ログインSQL文
+	$Loginsql = "select * from syaininfo where LUSERNAME = '".$userName."' AND LUSERPASS = '".$userPass."' ;";		// ログインSQL文
 	
 	//------------------------//
 	//          変数          //
