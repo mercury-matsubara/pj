@@ -201,10 +201,14 @@ function UserCheck($userID,$userPass){
 	//------------------------//
 	//          定数          //
 	//------------------------//
-	$checksql1 = "select * from loginuserinfo where LUSERNAME ='".$userID."' OR LUSERPASS ='".$userPass."' ;";			// 既登録確認SQL文1
-	$checksql2 = "select * from loginuserinfo where LUSERNAME ='".$userID."' ;";										// 既登録確認SQL文2
-	$checksql3 = "select * from loginuserinfo where LUSERPASS ='".$userPass."' ;";										// 既登録確認SQL文3
+//	$checksql1 = "select * from loginuserinfo where LUSERNAME ='".$userID."' OR LUSERPASS ='".$userPass."' ;";			// 既登録確認SQL文1
+//	$checksql2 = "select * from loginuserinfo where LUSERNAME ='".$userID."' ;";										// 既登録確認SQL文2
+//	$checksql3 = "select * from loginuserinfo where LUSERPASS ='".$userPass."' ;";										// 既登録確認SQL文3
 	
+	$checksql1 = "select * from syaininfo where LUSERNAME ='".$userID."' OR LUSERPASS ='".$userPass."' ;";			// 既登録確認SQL文1
+	$checksql2 = "select * from syaininfo where LUSERNAME ='".$userID."' ;";										// 既登録確認SQL文2
+	$checksql3 = "select * from syaininfo where LUSERPASS ='".$userPass."' ;";										// 既登録確認SQL文3
+    
 	//------------------------//
 	//          変数          //
 	//------------------------//
@@ -259,8 +263,11 @@ function insertUser(){
 	//------------------------//
 	$userID = $_SESSION['insertUser']['uid'];
 	$userPass = $_SESSION['insertUser']['pass'];
-	$insertsql = "insert into loginuserinfo (LUSERNAME,LUSERPASS) value ('".$userID."','".$userPass."') ;";				// 既登録確認SQL文
-
+    $code4 = $_SESSION['insertUser']['4CODE'];
+    
+	//$insertsql = "insert into loginuserinfo (LUSERNAME,LUSERPASS) value ('".$userID."','".$userPass."') ;";				// 既登録確認SQL文
+    $insertsql = "update syaininfo set LUSERNAME = '".$userID."', LUSERPASS = '".$userPass."' where 4CODE = ".$code4.";";
+    
 	//------------------------//
 	//        登録処理        //
 	//------------------------//
@@ -286,13 +293,19 @@ function selectUser(){
 	//------------------------//
 	require_once("f_DB.php");																							// DB関数呼び出し準備
 	
-	if(!isset($_SESSION['listUser']) || $_SESSION['listUser']['orderby'] == "")
+	if(!isset($_SESSION['listUser']))
 	{
 		$_SESSION['listUser']['limit'] = ' limit 0,10';
 		$_SESSION['listUser']['limitstart'] =0;
-		$_SESSION['listUser']['where'] ='';
-		$_SESSION['listUser']['orderby'] ='ORDER BY LUSERNAME ASC';
+		$_SESSION['listUser']['where'] ='where LUSERNAME is not null AND LUSERPASS is not null ';
+		//$_SESSION['listUser']['orderby'] ='ORDER BY LUSERNAME ASC';
+        $_SESSION['listUser']['orderby'] ='ORDER BY STAFFID ASC';
 	}
+    
+    if($_SESSION['listUser']['orderby'] == "")
+    {
+        $_SESSION['listUser']['orderby'] ='ORDER BY STAFFID ASC';
+    }
 	
 	//------------------------//
 	//          定数          //
@@ -301,9 +314,11 @@ function selectUser(){
 	$limitstart = $_SESSION['listUser']['limitstart'];																	// limit開始位置
 	$where = $_SESSION['listUser']['where'];																			// 条件
 	$orderby = $_SESSION['listUser']['orderby'];																		// order by 条件
-	$totalSelectsql = "SELECT * from loginuserinfo ".$where." ;";														// 管理者全件取得SQL
-	$selectsql = "SELECT * from loginuserinfo ".$where.$orderby." ;";											// 管理者リスト分取得SQL文
-	
+//	$totalSelectsql = "SELECT * from loginuserinfo ".$where." ;";														// 管理者全件取得SQL
+//	$selectsql = "SELECT * from loginuserinfo ".$where.$orderby." ;";											// 管理者リスト分取得SQL文
+	$totalSelectsql = "SELECT * from syaininfo ".$where." ;";	
+    $selectsql = "SELECT * from syaininfo ".$where.$orderby." ;";
+    
 	//------------------------//
 	//          変数          //
 	//------------------------//
@@ -334,7 +349,8 @@ function selectUser(){
     $list_str .= "<div class='listScroll'>";
 	$list_str .= "<table class = 'list' border='1'><thead><tr>";
 	$list_str .= "<th><a class ='head'>No.</a></th>";
-	$list_str .= "<th><a class ='head'>管理者ID</a></th>";
+	$list_str .= "<th><a class ='head'>社員番号</a></th>";
+    $list_str .= "<th><a class ='head'>社員名</a></th>";
 	$list_str .= "<th><a class ='head'>編集</a></th>";
 	$list_str .= "</tr></thead>";
 	$list_str .= "<tbody>";
@@ -349,9 +365,10 @@ function selectUser(){
 			$id = "id = 'stripe'";
 		}
 		$list_str .= "<tr><td ".$id." class = 'td1' ><a class = 'itemname'>".($limitstart + $counter)."</a></td>";
-		$list_str .= "<td ".$id."class = 'td2' ><a class = 'itemname'>".$result_row['LUSERNAME']."</a></td>";
+		$list_str .= "<td ".$id."class = 'td2' ><a class = 'itemname'>".$result_row['STAFFID']."</a></td>";
+        $list_str .= "<td ".$id."class = 'td2' ><a class = 'itemname'>".$result_row['STAFFNAME']."</a></td>";
 		$list_str .= "<td ".$id." class = 'td3'><input type='submit' name='"
-					.$result_row['LUSERID']."_edit' value = '編集'></td></tr>";
+					.$result_row['4CODE']."_edit' value = '編集'></td></tr>";
 		$counter++;
 	}
 	$list_str .= "</tbody>";
@@ -382,7 +399,8 @@ function selectID($id){
 	//------------------------//
 	//          定数          //
 	//------------------------//
-	$selectidsql = "SELECT * FROM loginuserinfo where LUSERID = ".$id." ;";
+	//$selectidsql = "SELECT * FROM loginuserinfo where LUSERID = ".$id." ;";
+    $selectidsql = "SELECT * FROM syaininfo where 4CODE = ".$id." ;";
 	
 	//------------------------//
 	//          変数          //
@@ -424,8 +442,11 @@ function updateUser(){
 	$userID = $_SESSION['editUser']['uid'];
 	$userPass = $_SESSION['editUser']['newpass'];
 	$id = $_SESSION['listUser']['id'];
-	$updatesql = "UPDATE loginuserinfo SET LUSERNAME ='"
-				.$userID."', LUSERPASS = '".$userPass."' where LUSERID = ".$id." ;";									// 更新SQL文
+//	$updatesql = "UPDATE loginuserinfo SET LUSERNAME ='"
+//				.$userID."', LUSERPASS = '".$userPass."' where LUSERID = ".$id." ;";									// 更新SQL文
+
+	$updatesql = "UPDATE syaininfo SET LUSERNAME ='"
+				.$userID."', LUSERPASS = '".$userPass."' where 4CODE = ".$id." ;";									// 更新SQL文
 
 	//------------------------//
 	//        更新処理        //
@@ -453,8 +474,11 @@ function deleteUser(){
 	//------------------------//
 	//          定数          //
 	//------------------------//
-	$id = $_SESSION['result_array']['LUSERID'];
-	$deletesql = "DELETE FROM loginuserinfo where LUSERID = ".$id." ;";													// 更新SQL文
+	//$id = $_SESSION['result_array']['LUSERID'];
+    $id = $_SESSION['result_array']['4CODE'];
+	//$deletesql = "DELETE FROM loginuserinfo where LUSERID = ".$id." ;";													// 更新SQL文
+
+    $deletesql = "UPDATE syaininfo SET LUSERNAME = null , LUSERPASS = null where 4CODE = ".$id." ;";									// 更新SQL文
 
 	//------------------------//
 	//        更新処理        //
@@ -3319,8 +3343,9 @@ function countLoginUser(){
 	//------------------------//
 	//          定数          //
 	//------------------------//
-	$sql = "SELECT COUNT(*) FROM loginuserinfo ;";
-	
+	//$sql = "SELECT COUNT(*) FROM loginuserinfo ;";
+	$sql = "SELECT COUNT(*) FROM syaininfo ;";
+    
 	//------------------------//
 	//          変数          //
 	//------------------------//

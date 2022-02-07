@@ -50,9 +50,9 @@
 			}
 			$password = null;
 			echo "<div = class='center'>";
-			echo "<a class = 'title'>管理者更新完了</a>";
+			echo "<a class = 'title'>ユーザー更新完了</a>";
 			echo "</div><br><br>";
-			echo "<table><tr><td class = 'space'></td><td class = 'one'>管理者ID</td>";
+			echo "<table><tr><td class = 'space'></td><td class = 'one'>ユーザーID</td>";
 			echo "<td class = 'two'>";
 			echo $userName;
 			echo "</td>";
@@ -64,15 +64,20 @@
 			echo "<br>";
 			echo '<form action="listUserJump.php" method="post">';
 			echo "<div class = 'center'>";
-			echo "<input type='submit' name='cancel' class ='free'
+			echo "<input type='submit' name='cancel' id='cancel' class ='free'
 					 value = '一覧に戻る' >";
 			echo "</div>";
 			echo "</form>";
+            
+            //自動的に一覧画面に遷移させる
+            echo '<script type = "text/javascript">';
+            echo "document.getElementById('cancel').click();";
+            echo '</script>';
 		}
 		else
 		{
 			echo "<div = class='center'>";
-			echo "<a class = 'title'>管理者更新不可</a>";
+			echo "<a class = 'title'>ユーザー更新不可</a>";
 			echo "</div><br><br>";
 			echo "<div class ='center'>
 					<a class ='error'>他の端末ですでにデータが削除されているため、更新できません。</a>
@@ -105,7 +110,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>管理者更新完了</title>
+<title>ユーザー更新完了</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -147,6 +152,16 @@
 		});
 		set_button_size();
 	});
+    
+    //ブラウザバック防止
+    window.addEventListener('pageshow', function() { 
+        if (event.persisted) {
+            window.location.href = 'retry.php';
+        } else {
+            
+        }    
+      });
+
 --></script>
 </head>
 <body>

@@ -19,7 +19,7 @@
 ?>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>管理削除確認</title>
+<title>ユーザー削除確認</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -36,6 +36,16 @@
 		});
 		set_button_size();
 	});
+    
+    //ブラウザバック防止
+    window.addEventListener('pageshow', function() {
+        if (event.persisted) {
+            window.location.href = 'retry.php';
+        } else {
+            
+        }    
+      });
+
 --></script>
 </head>
 
@@ -63,12 +73,17 @@
 	if($isexist)
 	{
 		echo "<center>";
-		echo "<a class = 'title'>管理削除確認</a>";
+		echo "<a class = 'title'>ユーザー削除確認</a>";
 		echo "<br><br>";
 		$_SESSION['pre_post'] = $_SESSION['post'] ;
 		$_SESSION['post']['true'] = true;
 		echo '<form action="listUserJump.php" method="post">';
-		echo "<table><tr><td id = 'item'>管理者ID</td>";
+		echo "<table>";
+        echo "<tr><td id = 'item'>社員番号</td>";
+        echo "<td>".$_SESSION['result_array']['STAFFID']."</td></tr>";
+        echo "<tr><td id = 'item'>社員名</td>";
+        echo "<td>".$_SESSION['result_array']['STAFFNAME']."</td></tr>";        
+        echo "<tr><td id = 'item'>ユーザーID</td>";
 		echo "<td>".$_SESSION['result_array']['LUSERNAME']."</td>";
 		echo "</tr><tr><td id = 'item'>パスワード</td>";
 		echo "<td>".$pass."</td>";
@@ -84,7 +99,7 @@
 	else
 	{
 		echo "<div = class='center'>";
-		echo "<a class = 'title'>管理者更新不可</a>";
+		echo "<a class = 'title'>ユーザー削除不可</a>";
 		echo "</div><br><br>";
 		echo "<div class ='center'>
 				<a class ='error'>他の端末ですでにデータが削除されているため、更新できません。</a>
@@ -104,7 +119,7 @@
 		var judge_go = '<?php echo $isexist ; ?>';
 		if(judge_go)
 		{
-			if(confirm("入力内容正常確認。\n情報更新しますがよろしいですか？" +
+			if(confirm("入力内容正常確認。\n情報削除しますがよろしいですか？" +
 				"\n再度確認する場合は「キャンセル」ボタンを押してください。"))
 			{
 				location.href = "./deleteUserComp.php";

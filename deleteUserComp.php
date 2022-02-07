@@ -43,9 +43,9 @@
 			}
 			$password = null;
 			echo "<center>";
-			echo "<a class = 'title'>管理者削除完了</a>";
+			echo "<a class = 'title'>ユーザー削除完了</a>";
 			echo "<br><br>";
-			echo "<table><tr><td id = 'item'>管理者ID</td>";
+			echo "<table><tr><td id = 'item'>ユーザーID</td>";
 			echo '<td>';
 			echo $userName;
 			echo '</td>';
@@ -56,16 +56,22 @@
 			echo "</tr></table>";
 			echo "<br>";
 			echo '<form action="listUserJump.php" method="post">';
-			echo "<input type='submit' name='cancel' value = '一覧に戻る' class='free'>";
+			echo "<input type='submit' name='cancel' id='cancel' value = '一覧に戻る' class='free'>";
 			echo "</form>";
 			echo "</center>";
+            
+            //自動的に一覧画面に遷移させる
+            echo '<script type = "text/javascript">';
+            echo "document.getElementById('cancel').click();";
+            echo '</script>';
+
 		}
 		else
 		{
 			echo "<center>";
-			echo "<a class = 'title'>管理者削除不可</a>";
+			echo "<a class = 'title'>ユーザー削除不可</a>";
 			echo "<br><br>";
-			echo "<a class ='error'>管理者が残り１つのため削除できません。</a>";
+			echo "<a class ='error'>ユーザーが残り１つのため削除できません。</a>";
 			echo "<br>";
 			echo '<form action="listUserJump.php" method="post">';
 			echo "<input type='submit' name='cancel' value = '一覧に戻る' class='free'>";
@@ -93,7 +99,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>管理者削除完了</title>
+<title>ユーザー削除完了</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -110,6 +116,16 @@
 		});
 		set_button_size();
 	});
+    
+    //ブラウザバック防止
+    window.addEventListener('pageshow', function() {
+        if (event.persisted) {
+            window.location.href = 'retry.php';
+        } else {
+            
+        }    
+      });
+    
 --></script>
 </head>
 <body>

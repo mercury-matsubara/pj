@@ -30,14 +30,16 @@
 			$pass .="●";
 		}
 		$password = null;
-		echo "<form action='pageJump.php' method='post'><div class = 'left'>";
+        //自動的に一覧画面に戻るための変更
+		//echo "<form action='pageJump.php' method='post'><div class = 'left'>";
+        echo "<form action='listUserJump.php' method='post'><div class = 'left'>";
 		echo makebutton();
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "<div class = 'center'>";
-		echo "<a class = 'title'>管理者登録完了</a>";
+		echo "<a class = 'title'>ユーザー登録完了</a>";
 		echo "</div><br><br>";
-		echo "<table><tr><td class = 'space'></td><td class = 'one'>管理者ID</td>";
+		echo "<table><tr><td class = 'space'></td><td class = 'one'>ユーザーID</td>";
 		echo "<td class = 'two'>";
 		echo $userName;
 		echo '</td>';
@@ -50,8 +52,16 @@
 		echo "<div class = 'center'>";
 		echo "<input type='submit' name='insertUser_5_button' 
 				class='free' value = '登録画面に戻る'>";
+        echo "<input type='submit' name='cancel' id='cancel'
+                class='free' value = '一覧に戻る'>";
 		echo "</div>";
 		echo "</form>";
+        
+        //自動的に一覧画面に遷移する。
+        echo '<script type = "text/javascript">';
+        echo "document.getElementById('cancel').click();";
+        echo '</script>';
+
 	}
 	else
 	{
@@ -73,7 +83,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>管理者登録完了</title>
+<title>ユーザー登録完了</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.flatshadow.js'></script>
@@ -115,6 +125,16 @@
 		});
 		set_button_size();
 	});
+    
+    //ブラウザバック防止
+    window.addEventListener('pageshow', function() { 
+        if (event.persisted) {
+            window.location.href = 'retry.php';
+        } else {
+            
+        }    
+    });
+
 --></script>
 </head>
 <body>

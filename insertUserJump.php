@@ -20,24 +20,30 @@
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/insertUserCheck.php");
 		}
 		if($key == 'cancel')
-		{	$_SESSION['insertUser'] = null;
-			$_SESSION['pre_post'] = array();
-			$_SESSION['pre_post'][$key] = $_POST[$key];
+		{
+            $_SESSION['insertUser'] = null;
+            
+            //ŒŸõðŒ•ÛŽ
+//			$_SESSION['pre_post'] = array();
+//			$_SESSION['pre_post'][$key] = $_POST[$key];
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/insertUser.php");
 		}
-                if($key == 'back')
-                {
-                        $_SESSION['editUser'] = null;
+        if($key == 'back')
+        {
+            $_SESSION['editUser'] = null;
 			$_SESSION['result_array'] = null;
 			unset($_SESSION['listUser']['id']);
 			if(isset($_SESSION['pre_post']['true']))
 			{
 				unset($_SESSION['pre_post']['true']);
 			}
+            
+			$_SESSION['filename'] = "listUser_5";
+
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/listUser.php");
-                }
+        }
 	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C/DTD HTML 4.01">

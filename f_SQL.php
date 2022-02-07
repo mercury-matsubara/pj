@@ -660,13 +660,25 @@ function joinSelectSQL($post,$tablenum){
         }
 	}
 	//佐竹
-
+	
+    //在籍社員のみリストに表示するSQL作成
+	if($tablenum == 4 && $filename != "insertUser_5" && $filename != "SYAINNINFO_2")
+    {
+        $select_SQL .= " LUSERNAME is not null AND LUSERPASS is not null ";
+        $count_SQL .= " LUSERNAME is not null AND LUSERPASS is not null ";
+    }
+    
+    //ユーザー登録画面　IDが未登録の社員のみリストに表示するSQL作成
+    if($filename == "insertUser_5")
+    {
+        $select_SQL .= " LUSERNAME is null ";
+        $count_SQL .= " LUSERNAME is null ";
+    }
 	$select_SQL = rtrim($select_SQL,'WHERE');
 	$select_SQL = rtrim($select_SQL,'AND');
 	$count_SQL = rtrim($count_SQL,'WHERE');
 	$count_SQL = rtrim($count_SQL,'AND');
-	
-	
+    
 	if($filename == 'genbaend_5')
 	{
 		

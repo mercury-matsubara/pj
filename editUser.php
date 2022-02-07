@@ -4,8 +4,6 @@
 	header('Cache-Control:'); 
 	header('Pragma:');
 	header('Content-type: text/html; charset=Shift_JIS');  
-	require_once("f_Construct.php");
-	start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C/DTD HTML 4.01">
 <!-- saved from url(0013)about:internet -->
@@ -20,7 +18,8 @@
  -->
 
 <?php
-
+	require_once("f_Construct.php");
+	start();
 	require_once("f_DB.php");
 	$isexist = true;
 	$pass ="";
@@ -37,7 +36,7 @@
 ?>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>管理者編集</title>
+<title>ユーザー編集</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -139,6 +138,15 @@
 	{
 		button = buttonName;
 	}
+    
+    //ブラウザバック防止
+    window.addEventListener('pageshow', function() {
+        if (event.persisted) {
+            window.location.href = 'retry.php';
+        } else {
+            
+        }    
+      });    
 --></script>
 </head>
 
@@ -160,11 +168,17 @@
 	if($isexist)
 	{
 		echo "<div class= 'center'>";
-		echo "<a class = 'title'>管理者更新</a>";
+		echo "<a class = 'title'>ユーザー更新</a>";
 		echo "</div><br><br>";
 		echo '<form action="listUserJump.php" method="post" 
 				onsubmit = "return check(\''.$checkList.'\')">';
-		echo "<table><tr><td class = 'space'></td><td class = 'one'>管理者ID</td>";
+        echo "<input type ='hidden' name ='4CODE'  value ='".$_SESSION['result_array']['4CODE']."' >";
+        echo "<table>";        
+        echo "<tr><td class = 'space'></td><td class='one'>社員番号</td>";
+        echo "<td><input type ='text' name='form_402_0' id='form_402_0'  value ='".$_SESSION['result_array']['STAFFID']."' readonly class='readOnly' size='20px' onchange='return inputcheck('form_402_0',6,4,false,2);'></td></tr>";
+		echo "<tr><td class = 'space'></td><td class='one'>社員名</td>";
+        echo "<td><input type ='text' name ='form_403_0' id='form_403_0' value ='".$_SESSION['result_array']['STAFFNAME']."' readonly class='readOnly' size='60px' onchange='return inputcheck('form_403_0',6,4,false,2);'></td></tr>";
+        echo "<tr><td class = 'space'></td><td class = 'one'>ユーザーID</td>";
 		echo '<td class = "two"><input type = "text" size = "30" 
 				name = "uid"  id="uid" value = "'
 				.$_SESSION['result_array']['LUSERNAME'].'" 
@@ -193,7 +207,7 @@
 	else
 	{
 		echo "<div = class='center'>";
-		echo "<a class = 'title'>管理者更新不可</a>";
+		echo "<a class = 'title'>ユーザー更新不可</a>";
 		echo "</div><br><br>";
 		echo "<div class ='center'>
 				<a class ='error'>他の端末ですでにデータが削除されているため、更新できません。</a>

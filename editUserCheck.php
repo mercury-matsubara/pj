@@ -25,7 +25,7 @@
 </style>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>管理者更新再入力</title>
+<title>ユーザー更新再入力</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -118,6 +118,10 @@
 			result = true;
 		}
 		
+        if(button == 'clear')
+        {
+            result = true;
+        }
 		return result;
 	}
 	
@@ -125,6 +129,16 @@
 	{
 		button = buttonName;
 	}
+    
+    //ブラウザバック防止
+    window.addEventListener('pageshow', function() {
+        if (event.persisted) {
+            window.location.href = 'retry.php';
+        } else {
+            
+        }    
+    });
+
 --></script>
 </head>
 
@@ -159,11 +173,17 @@
 	if($isexist)
 	{
 		echo "<div class = 'center'>";
-		echo "<a class = 'title'>管理者更新再入力</a>";
+		echo "<a class = 'title'>ユーザー更新再入力</a>";
 		echo "</div><br><br>";
 		echo '<form action="listUserJump.php" method="post" 
 				onsubmit = "return check(\''.$checkList.'\');">';
-		echo "<table><tr><td class = 'space'></td><td class = 'one'>管理者ID</td>";
+        echo "<input type ='hidden' name ='4CODE'  value ='".$_SESSION['editUser']['4CODE']."' >";
+		echo "<table>";
+        echo "<tr><td class = 'space'></td><td class='one'>社員番号</td>";
+        echo "<td><input type ='text' name='form_402_0' id='form_402_0'  value ='".$_SESSION['editUser']['form_402_0']."' readonly class='readOnly' size='20px' onchange='return inputcheck('form_402_0',6,4,false,2);'></td></tr>";
+		echo "<tr><td class = 'space'></td><td class='one'>社員名</td>";
+        echo "<td><input type ='text' name ='form_403_0' id='form_403_0' value ='".$_SESSION['editUser']['form_403_0']."' readonly class='readOnly' size='60px' onchange='return inputcheck('form_403_0',6,4,false,2);'></td></tr>";        
+        echo "<tr><td class = 'space'></td><td class = 'one'>ユーザーID</td>";
 		echo '<td class = "two"><input type = "text" size = "30"  name = "uid"  id="uid" value = "'
 				.$_SESSION['editUser']['uid'].'" 
 				onchange ="return inputcheck(\'uid\',20,3);"></td>';
@@ -197,13 +217,18 @@
 		echo "<div class = 'center'>";
 		echo '<input type="submit" name = "change" value = "更新" 
 				class = "free" onClick="set_button(\'change\');">';
+        echo '<input type="submit" name="clear" value = "クリア" class="free"
+                onClick="set_button(\'clear\');">';
+        echo '<input type="submit" name = "cancel" value = "一覧に戻る" 
+				class = "free" onClick="set_button(\'cancel\');">';
+
 		echo "</div>";
 	}
 	else
 	{
 		$judge == false;
 		echo "<div = class='center'>";
-		echo "<a class = 'title'>管理者更新不可</a>";
+		echo "<a class = 'title'>ユーザー更新不可</a>";
 		echo "</div><br><br>";
 		echo "<div class ='center'>
 				<a class ='error'>他の端末ですでにデータが削除されているため、更新できません。</a>
