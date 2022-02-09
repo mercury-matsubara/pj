@@ -28,12 +28,14 @@
 		startJump($_POST);
 		$tablenum = $_POST['tablenum'];
 		$form_name = $_POST['form'];
+                $row = $_POST['row'];
 	}
 	else if(count($_GET) != 0)
 	{
 		startJump($_GET);
 		$form_name = $_GET['form'];
 		$tablenum = $_GET['tablenum'];
+                $row = $_GET['row'];
 		$_POST = array();
 	}
 	else
@@ -206,6 +208,8 @@
 	
 	function toMainWin()
 	{
+                var filename = "<?php echo $filename; ?>";
+                var row = "<?php echo $row; ?>";
 //		var opener = window.dialogArguments;
                 var opener = window.opener;
 		var columnum = "<?php echo $columns_num; ?>";
@@ -226,12 +230,25 @@
 			{
 				for( j = 0; j <form_num[i]; j++ )
 				{
-					var name = "form_"+array[i]+"_"+(j);
-					var obj1 = document.getElementsByName(name)[(document.getElementsByName(name).length-1)];
-					var obj2 = opener_form.getElementsByName(name)[(opener_form.getElementsByName(name).length-1)];
-					var el = obj1.value;
-					obj2.value = el;
-					obj2.style.backgroundColor = '';
+                                        if(filename == 'TOP_1')
+                                        {
+                                            var name1 = "form_"+array[i]+"_"+(j);
+                                            var name2 = "form_"+array[i]+"_"+(j)+"_"+row;
+                                            var obj1 = document.getElementsByName(name1)[(document.getElementsByName(name1).length-1)];
+                                            var obj2 = opener_form.getElementsByName(name2)[(opener_form.getElementsByName(name2).length-1)];
+                                            var el = obj1.value;
+                                            obj2.value = el;
+                                            obj2.style.backgroundColor = '';
+                                        }
+                                        else
+                                        {
+                                            var name = "form_"+array[i]+"_"+(j);
+                                            var obj1 = document.getElementsByName(name)[(document.getElementsByName(name).length-1)];
+                                            var obj2 = opener_form.getElementsByName(name)[(opener_form.getElementsByName(name).length-1)];
+                                            var el = obj1.value;
+                                            obj2.value = el;
+                                            obj2.style.backgroundColor = '';
+                                        }
 				}
 			}
 			else
@@ -277,6 +294,12 @@
 	{
 		$_POST['form_607_0'] = "1";
 	}
+        if($filename == 'TOP_1')
+	{
+		$_POST['form_607_0'] = "1";
+                $_POST['form_402_0'] = $_SESSION['user']['STAFFID'];
+                $_POST['form_403_0'] = $_SESSION['user']['STAFFNAME'];
+	}
 	if($filename == 'PROGRESSINFO_2' && $tablenum == '6')
 	{
 		$_POST['form_607_0'] = "1";
@@ -308,7 +331,7 @@
 	//2018-1-12
 	
 	//2017-12-26
-	if(($filename == 'PROGRESSINFO_1' || $filename == 'PROGRESSINFO_2') && $tablenum == '3')
+	if(($filename == 'PROGRESSINFO_1' || $filename == 'PROGRESSINFO_2' || $filename == 'TOP_1') && $tablenum == '3')
 	{
 		$sql[0] = "select * from kouteiinfo";
 		$sql[1] = "select COUNT(*) from kouteiinfo";
@@ -361,6 +384,10 @@
 	echo '<form name ="form" action="Modal.php"  target = "Modal" method="post">';
 	echo "<input type = 'hidden' name = 'tablenum' value = '".$tablenum."'>";
 	echo "<input type = 'hidden' name = 'form' value = '".$form_name."'>";
+        if($filename == 'TOP_1')
+        {
+            echo "<input type = 'hidden' name = 'row' value = '".$row."'>";
+        }
 	echo "<table><tr><td>";
 	echo "<fieldset><legend>åüçıèåè</legend>";
 	echo $form;

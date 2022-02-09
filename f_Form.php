@@ -295,7 +295,10 @@ function makeformInsert_set($post,$out_column,$isReadOnly,$formName){
 							$ReadOnly = "readOnly";
 						}
 						
-						
+						if($filename == 'TOP_1')
+						{
+							$ReadOnly = "readOnly";
+						}
 						
 						if($filename == 'EDABANINFO_1' && ($form_name == 'form_102_0' || $form_name == 'form_103_0'))
 						{
@@ -449,7 +452,16 @@ function makeformInsert_set($post,$out_column,$isReadOnly,$formName){
                     {
                         $sagyoudate = date("Y-m-d");
                     }
-                    $insert_str .= "<input type='date' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");'>";
+                    
+                    if($filename == 'TOP_1')
+                    {
+                        $ReadOnly = "readOnly";
+                        $insert_str .= "<input type='text' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");' class = '".$ReadOnly."' >";
+                    }
+                    else
+                    {
+                        $insert_str .= "<input type='date' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");'>";
+                    }
                     //2022-01-26 日付入力欄（作業日）をカレンダー表示に変更　end -----<<                    
 					if($isonce)
 					{
@@ -1800,6 +1812,10 @@ function makeformModal_set($post,$isReadOnly,$form_Name,$columns){
 				}
 				else
 				{
+                                        if($filename == 'TOP_1' && ($form_name == 'form_402_0' || $form_name == 'form_403_0'))
+                                        {
+                                            $isReadOnly = 'readOnly';
+                                        }
 					$form_str .= $form_delimiter.'<input type ="'.$input_type.'" name = "'
 									.$form_name.'" id = "'.$form_id.'" 
 									 class ="'.$isReadOnly.'" value = "'.$form_value.
@@ -3772,5 +3788,86 @@ function make_teijicomplist($post)
         }
         $list_html .="</tbody></table></div>";
         return ($list_html);
+}
+
+function makePROGRESSlist()
+{
+    //------------------------//
+    //        初期設定        //
+    //------------------------//
+    $form_ini = parse_ini_file('./ini/form.ini', true);
+    $SQL_ini = parse_ini_file('./ini/SQL.ini', true);
+        
+    //------------------------//
+    //          定数          //
+    //------------------------//
+    $filename = $_SESSION['filename'];
+    $isNo = $form_ini[$filename]['isNo'];
+    $columnname = $SQL_ini[$filename]['clumname'];
+    $columnname_array = explode(',',$columnname);
+    
+    //------------------------//
+    //          変数          //
+    //------------------------//
+    $list_html = "";
+    $counter = 1;
+    
+    //------------------------//
+    //          処理          //
+    //------------------------//
+    $list_html .= "<table class ='list'>";
+    $list_html .= "<thead><tr>";
+    if($isNo == 1 )
+    {
+            $list_html .="<th><a class ='head'>No.</a></th>";
+    }
+    for($i = 0 ; $i < count($columnname_array) ; $i++)
+    {
+            $list_html .="<th><a class ='head'>".$columnname_array[$i]."</a></th>";
+    }
+    $list_html .="</tr></thead><tbody>";
+    for($i = 0 ; $i < 10 ; $i++)
+    {
+            $list_html .="<tr>";
+            if(($counter%2) == 1)
+            {
+                    $id = "";
+            }
+            else
+            {
+                    $id = "id = 'stripe'";
+            }
+            if($isNo == 1)
+            {
+                    $list_html .="<td ".$id." class = 'center'><a class='body'>".$counter."</a></td>";
+            }
+    
+            $list_html .="<td ".$id." ><a class ='body'><input type='button' value='PJ詳細選択' "
+                    . "onclick='popup_modal(\"6_".$i."\")'></a></td>";
+            $list_html .= "<input type ='hidden' name ='6CODE'  value ='' >";
+            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_102_0_".$i."'></a></td>";
+            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_202_0_".$i."'></a></td>";
+            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_203_0_".$i."'></a></td>";
+            $list_html .= "<input type ='hidden' name ='form_402_0_".$i."'  value ='' >";
+            $list_html .= "<input type ='hidden' name ='form_403_0_".$i."'  value ='' >";
+            $list_html .="<td ".$id." ><a class='body'><input type='button' value='工程選択' "
+                    . "onclick='popup_modal(\"3_".$i."\")'></a></td>";
+            $list_html .= "<input type ='hidden' name ='3CODE'  value ='' >";
+            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_302_0_".$i."'></a></td>";
+            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_303_0_".$i."'></a></td>";
+            $list_html .="<td ".$id." ><a class='body'><input type='text'></a></td>";
+            $list_html .="<td ".$id." ><a class='body'><input type='text'></a></td>";
+            $list_html .="<td ".$id." ><a class='body'>"
+                    . "<button type='button' title='行をコピー' onclick='copyRow(".$counter.");'><i class='far fa-copy faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='コピーデータを貼り付け' onclick='pasteRow(".$counter.");'><i class='fas fa-paint-brush faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='行を削除' onclick='removeRow(".$counter.");'><i class='far fa-minus-square faa-tada animated-hover'></i></button></td>"
+                    . "</a></td>";
+            $list_html .= "</tr>";
+            $counter++;
+    }
+    
+    $list_html .="</tbody></table>";
+    
+    return ($list_html);
 }
 ?>

@@ -13,7 +13,7 @@
 	$url = 'retry';
 	foreach($keyarray as $key)
 	{
-		if($key == 'fileinsert')
+		if($key == 'teijicheck')
 		{
 			foreach($_FILES as $form => $value)
 			{
@@ -35,23 +35,7 @@
 			$_SESSION['files'] = $_FILES;
 			$_SESSION['insert'] = $_POST;
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
-					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/FileinsertComp.php");
-		}
-		if($key == 'cancel')
-		{
-			if(isset($_SESSION['upload']) == true)
-			{
-				foreach($_SESSION['upload'] as $delete => $file)
-				{
-					unlink($file);
-				}
-			}
-			unset($_SESSION['files']);
-			unset($_SESSION['insert']);
-			unset($_SESSION['upload']);
-			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
-					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/Fileinsert.php");
-			
+					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/teijiComp.php");
 		}
 		if($key == 'back')
 		{
@@ -77,23 +61,12 @@
                             $filename_array = explode('_',$filename);
                             $_SESSION['filename'] = $filename_array[0]."_2";
                             header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
-                                            .$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/list.php");
+                                            .$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/teiji.php");
                         }
 		}
 		
 	}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C/DTD HTML 4.01">
-<!-- saved from url(0013)about:internet -->
-<!-- 
-*------------------------------------------------------------------------------------------------------------*
-*                                                                                                            *
-*                                                                                                            *
-*                                          ver 1.0.0  2014/05/09      ì¬                                   *
-*                                                                                                            *
-*                                                                                                            *
-*------------------------------------------------------------------------------------------------------------*
- -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">

@@ -28,7 +28,14 @@
 	require_once ("f_SQL.php");
 	$form_ini = parse_ini_file('./ini/form.ini', true);
 	$SQL_ini = parse_ini_file('./ini/SQL.ini', true);
-	
+        
+        if($_SESSION['filename'] == 'TOP_1')
+        {
+                $_POST['form_704_0'] = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_1_button'].'日';
+                $_POST['form_402_0'] = $_SESSION['user']['STAFFID'];
+                $_POST['form_403_0'] = $_SESSION['user']['STAFFNAME'];
+        }
+        
 	if(isset($_POST))
 	{
 		$_SESSION['insert'] = $_POST;
@@ -78,11 +85,16 @@
 		$list = makeList_item($sql,$_SESSION['list']);
                 $syain_total = $_SESSION['kobetu']['total']; 
 	}
+        if($filename == 'TOP_1')
+        {
+                $list = makePROGRESSlist();
+        }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
+<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./inputcheck.js'></script>
 <script src='./generate_date.js'></script>
@@ -644,7 +656,16 @@
 		var h = screen.availHeight;
 		w = (w * 0.8);
 		h = (h * 0.8);
-		url = 'Modal.php?tablenum='+GET+'&form=insert';
+                var filename = "<?php echo $filename; ?>";
+                if(filename == 'TOP_1')
+                {
+                    var getArray = GET.split('_')
+                    url = 'Modal.php?tablenum='+getArray[0]+'&form=insert&row='+getArray[1];
+                }
+                else
+                {
+                    url = 'Modal.php?tablenum='+GET+'&form=insert';
+                }
 //		n = showModalDialog(
 //			url,
 //			this,
@@ -752,8 +773,15 @@
         echo "</td></tr></table>";
 	}
 	echo "<div class='center'>";
+        if($filename == 'TOP_1')
+        {
+            echo $list;
+        }
 	echo '<input type="submit" name = "insert" value = "登録" class="free">';
-	echo '<input type="submit" name = "cancel" value = "クリア" class="free" onClick ="isCancel = true;">';
+        if($filename != 'TOP_1')
+        {
+            echo '<input type="submit" name = "cancel" value = "クリア" class="free" onClick ="isCancel = true;">';
+        }
 	echo '<input type="submit" name = "back" value = "戻る" class="free" onClick ="isCancel = true;">';
 	echo "</form>";
 	echo "</div>";

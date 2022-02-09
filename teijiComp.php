@@ -9,6 +9,8 @@
         require_once ("f_Form.php");
         require_once ("f_Button.php");
 	require_once ("f_DB.php");
+        $_SESSION['post'] = $_SESSION['pre_post'];
+        $_SESSION['pre_post'] = null;
         $form_ini = parse_ini_file('./ini/form.ini', true);
         $filename = $_SESSION['filename'];
         $title1 = $form_ini[$filename]['title'];
@@ -108,8 +110,8 @@
             echo $list;
             echo "<br>";
             echo $message3;
-            echo "<form action='teiji.php' method='post'>";
-            echo "<input type ='submit' name = 'cancel' class='free' value = '–ß‚é'>";
+            echo "<form action='teijiJump.php' method='post'>";
+            echo "<input type ='submit' name = 'back' class='free' value = '–ß‚é'>";
             echo "</form>";
             echo "</div>";
             echo "<form action='pageJump.php' method='post'>";

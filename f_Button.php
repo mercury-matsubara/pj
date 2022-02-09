@@ -32,6 +32,7 @@ function makebutton(){
 	//------------------------//
         
         $button_html = '<nav><ul>';
+        $button_html .= '<li class="has-child"><a href="TOPexe.php?mainmenu="><span class="line">TOP</span></a></li>';
         foreach($mainbutton_num_array as $mainbutton_num)
         {
             $mainbutton_value = $button_ini_array[$mainbutton_num]['value'];    //ボタン文字
@@ -47,12 +48,12 @@ function makebutton(){
                 $subbutton_name = $button_ini_array[$subbutton_num]['button_name'];   //ボタン名称
                 
                 $button_html .= '<li>';
-                $button_html .= '<input type = "submit" class = "menu" name = "'.$subbutton_name.'" value = "'.$subbutton_value.'"';
+                $button_html .= '<input type = "submit" class = "menu" name = "'.$subbutton_name.'" value = "'.$subbutton_value.'">';
                 $button_html .= '</li>';
             }
             $button_html .= '</ul></li>';
         }
-        $button_html .= '<li class="has-child"><a href="login.php"><span class="line">ログアウト</span></a>';
+        $button_html .= '<li class="has-child"><a href="login.php"><span class="line">ログアウト</span></a></li>';
         $button_html .= '</ul></nav>';
 	return ($button_html);
 }

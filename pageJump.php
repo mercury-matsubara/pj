@@ -7,13 +7,13 @@
 	require_once("f_Construct.php");
 	startJump($_POST);
 	session_regenerate_id();
-	$name = $_SESSION['userName'];
+	$user = $_SESSION['user'];
 //----2018/01/18 €”Ô38 satake ŒŸõğŒ‹L‰¯‘Î‰ start ----->>
 	$listArray = $_SESSION['list'];
 	$filename = $_SESSION['filename'];
 //----2018/01/18 €”Ô38 satake ŒŸõğŒ‹L‰¯‘Î‰ end -----<<
 	$_SESSION = array();
-	$_SESSION['userName'] = $name;
+	$_SESSION['user'] = $user;
 	$_SESSION['pre_post'] = $_POST;
 	$_SESSION['files'] = $_FILES;
 	$keyarray = array_keys($_POST);
@@ -58,15 +58,19 @@
 			else if($pre_url[1] == 5)
 			{
 				$url = $pre_url[0];
-				$_SESSION['filename'] = $pre_url[0]."_".$pre_url[1];
+        				$_SESSION['filename'] = $pre_url[0]."_".$pre_url[1];
 			}
 			else if($pre_url[1] == 6)
-			{
+    			{
 				$url = 'Fileinsert';
 				$_SESSION['filename'] = $pre_url[0]."_6";
                                 if( empty($listArray) !== FLASE){
 					$_SESSION['list'] = $listArray;
 				}
+                                if(isset($pre_url[3]))
+                                {
+                                    $_SESSION['history'] = 'TOP_4';
+                                }
 			}
 			else if($pre_url[1] == 'MENU')
 			{

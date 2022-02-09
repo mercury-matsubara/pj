@@ -383,7 +383,7 @@ function joinSelectSQL($post,$tablenum){
 			$select_SQL .= " 7PJSTAT = 1";
 			$count_SQL .= " 7PJSTAT = 1";
 	}
-	if($filename == 'PROGRESSINFO_1' && $tablenum == '6')
+	if(($filename == 'PROGRESSINFO_1' || $filename == 'TOP_1') && $tablenum == '6')
 	{
 			$select_SQL .= " 6PJSTAT = 1 AND";
 			$count_SQL .= " 6PJSTAT = 1 AND";
@@ -972,7 +972,7 @@ function joinSelectSQL($post,$tablenum){
         }
     }
     
-    if(($filename == "PROGRESSINFO_2" || $filename == "PROGRESSINFO_1") && $tablenum == "6")
+    if(($filename == "PROGRESSINFO_2" || $filename == "PROGRESSINFO_1" || $filename == 'TOP_1') && $tablenum == "6")
     {
         if(isset($post["period_0"]))
         {

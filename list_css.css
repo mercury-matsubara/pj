@@ -403,3 +403,115 @@ input.menu:hover{
         color: #fff;
 }
 
+/*カレンダーCSS*/
+.container {
+    font-family: 'Noto Sans JP', sans-serif;
+    width: 80%;
+    margin-left: 12%;
+    height: 100vh;
+}
+h3 {
+    margin-top: 10%;
+    margin-bottom: 1%;
+}
+.month{
+    float: left;
+}
+/*テーブル背景色*/
+.container table {
+    background-color: white;
+}
+/*カレンダー枠線*/
+.container table,.container td,.container th {
+    border-collapse: collapse;
+    border: 3px solid white;
+}
+/*カレンダー大きさ*/
+.calendar{
+    width: 100%;
+}
+
+tr.youbi{
+    background-color: #b0c4de;
+}
+th.youbiColor {
+    width: 10%;
+    height: 30px;
+    text-align: center;
+}
+td.day {
+    height: 100px;
+    background-color: #eaeff7;
+}
+/*本日背景色*/
+.today {
+    background: #dce5f4;;
+    height: 100px;
+}
+th.youbiColor:nth-of-type(1), td.day:nth-of-type(1) {
+    color: red;
+}
+th.youbiColor:nth-of-type(7), td.day:nth-of-type(7) {
+    color: blue;
+}
+
+/*日にち*/
+span.dayof {
+   font-weight: bold;
+   margin-left: 5%;
+   font-size: 18px;
+}
+/*勤務時間、残業時間*/
+span.worktime,span.overtime{
+    display: block;
+    border-bottom: 1px solid #b8b8b8;
+    height: 25%;
+    text-align: right;
+    margin: 0% 4% 0% 4%;
+    padding-top: 4%;
+    color: black;
+}
+button.copybtn
+{
+    float: right;
+    margin: 0 6px 0 0;
+    height: 27px;
+    width: 27px;
+}
+#dgl
+{
+    border: black 0px solid;
+    width: 270px;
+    height: 160px;
+    padding: 10px 10px;
+    box-shadow: 0 3px 10px #00000052;
+}
+.dlgtitle
+{
+    text-align: center;
+    margin: 0px 0 5% 0px;
+    padding: 12px 10px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #aacaeb;
+    border-radius: 11px;
+    height: 20px;
+    font-size: 17px;
+}
+.dlgtable
+{
+    margin: auto;
+}
+.dlgbtn
+{
+    width: 90px;
+}
+.monthbtn
+{
+    background: none;
+    border: none;
+    font-size: 20px;
+    height: auto;
+    width: 35px;
+    padding: 0 0;
+}

@@ -2,13 +2,15 @@
     session_start();
     header('Content-type: text/html; charset=Shift_JIS'); 
     require_once("f_Construct.php");
+    require_once ("f_Form.php");
+    require_once ("f_Button.php");
+    require_once ("f_SQL.php");
     start();
+    $_SESSION['post'] = $_SESSION['pre_post'];
+    $_SESSION['pre_post'] = null;
 ?>
 <html>
     <?php
-        require_once ("f_Form.php");
-        require_once ("f_Button.php");
-        require_once ("f_SQL.php");
         $form_ini = parse_ini_file('./ini/form.ini', true);
         $filename = $_SESSION['filename'];
         $title1 = $form_ini[$filename]['title'];
@@ -88,7 +90,7 @@
             $list = makeList_check($sql,$_SESSION['teijicheck'],$main_table);
             echo "<div class = 'center'><br>";
             echo "<a class = 'title'>".$title1.$title2."</a>";
-            echo "<form action='teijiComp.php' method='post' onsubmit='return check()'>";
+            echo "<form action='teijiJump.php' method='post' onsubmit='return check()'>";
             echo "<br>";
             echo "<table style='margin:auto;'><tbody>";
             echo "<tr><td style='width:80px'>ŠJŽn“ú•t</td><td><input type='date' id='startdate' name='startdate'></td></tr>";
