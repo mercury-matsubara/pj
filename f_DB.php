@@ -7085,7 +7085,7 @@ function makeCalendar()
         {
             // ¡“ú‚Ì“ú•t‚Ìê‡‚ÍAclass="today"‚ğ‚Â‚¯‚é
 //            $week .= '<td id="popup" class="today"><span class="dayof" onclick="openinsert()">' . $day . '</span>';
-            $week .= '<td id="popup" class="today"><input type="submit" name="TOP_1_button" value="' . $day . '">';
+            $week .= '<td id="popup" class="today"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
         } 
         else if($today > $date)
         {
@@ -7097,7 +7097,7 @@ function makeCalendar()
             else
             {
 //                $week .= '<td id="popup" class="day"><span class="dayof" onclick="openinsert()">' . $day . '</span>';
-                $week .= '<td id="popup" class="day"><input type="submit" name="TOP_1_button" value="' . $day . '">';
+                $week .= '<td id="popup" class="day"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
             }
         }
         else if($today < $date)

@@ -476,6 +476,13 @@ span.dayof {
    margin-left: 5%;
    font-size: 18px;
 }
+input.dayof
+{
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+}
 /*‹Î–±ŠÔAc‹ÆŠÔ*/
 span.worktime,span.overtime{
     display: block;
