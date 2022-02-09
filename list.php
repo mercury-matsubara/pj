@@ -53,6 +53,16 @@
 	default:
 		$title2 = '';
 	}
+    
+    if($filename == "PROGRESSINFO_2" || $filename == "PJTOUROKU_2")
+    {
+        $title2 = "“o˜^/•ÒW";
+    }
+    
+    if($filename == "PROJECTNUMINFO_2" || $filename == "EDABANINFO_2" || $filename == "KOUTEIINFO_2" || $filename == "SYAINNINFO_2")
+    {
+        $title2 = "ƒƒ“ƒeƒiƒ“ƒX";
+    }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>

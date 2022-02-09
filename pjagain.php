@@ -39,6 +39,7 @@
 	$isMaster = false;
 ?>
 <head>
+<title><?php echo $title1.$title2 ; ?></title>>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>

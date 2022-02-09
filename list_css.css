@@ -124,9 +124,24 @@ a.error {
 	padding: 15px;
 }
 
-#pop
+#pop input[id="form_103_0"]
 {
-    zoom: 70%;
+    width: 98%!important;
+}
+
+#pop input[id="form_203_0"]
+{
+    width: 98%!important;
+}
+
+#pop input[id="form_303_0"]
+{
+    width: 98%!important;
+}
+
+#pop input[id="form_403_0"]
+{
+    width: 98%!important;
 }
 .readOnly
 {

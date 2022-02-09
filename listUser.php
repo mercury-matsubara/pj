@@ -23,7 +23,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/css; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
-<title>ユーザー一覧</title>
+<title>ユーザー管理</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -85,7 +85,7 @@
 	echo "<div style='clear:both;'></div>";
 	echo "</left><br>";
 	echo "<center>";
-	echo "<a class = 'title'>ユーザー一覧</a>";
+	echo "<a class = 'title'>ユーザー管理</a>";
 	echo "<br><br>";
 	echo "</center>";
 	echo "<left>";

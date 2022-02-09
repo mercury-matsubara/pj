@@ -29,7 +29,7 @@
 ?>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>履歴削除</title>
+<title>PJデータ削除</title>
 <link rel="stylesheet" type="text/css" href="./list_css.css">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
@@ -60,11 +60,11 @@
 	echo "</form>";
 	echo "</left>";
 	echo "<center>";
-	echo "<a class = 'title'>履歴削除</a>";
+	echo "<a class = 'title'>PJデータ削除</a>";
 	echo "<br><br>";
 	echo ("最終削除日: ".Delete_rireki()."<br><br>");
 	echo '<form action="deleterirekiJump.php" method="post">';
-	echo "<input type='submit' name='delete' value = '履歴削除' class='free'>";
+	echo "<input type='submit' name='delete' value = 'PJデータ削除' class='free'>";
 	echo "</form>";
 	echo "</center>";
 ?>

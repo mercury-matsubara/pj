@@ -14,7 +14,7 @@
         $form_ini = parse_ini_file('./ini/form.ini', true);
         $filename = $_SESSION['filename'];
         $title1 = $form_ini[$filename]['title'];
-	$title2 = '';
+        $title2 = 'èàóù';
         $main_table = $form_ini[$filename]['use_maintable_num'];
         if(isset($_SESSION['list']['limit']) == false)
 	{
