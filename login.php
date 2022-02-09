@@ -60,10 +60,9 @@
 			$login_result = login($userName,$userPass);
 			if($login_result == true)
 			{
-				$_SESSION['userName'] = $userName;
 				$_SESSION['pre_post'] = $_POST;
 //				$_SESSION['filename'] = 'MENU_4';
-                                $_SESSION['filename'] = 'PROGRESSINFO_2';
+                                $_SESSION['filename'] = 'TOP_4';
 				if($result[0] == 2)
 				{
 					limit_mail($result[1]);
@@ -75,7 +74,7 @@
 //				echo '</script>';
                                 echo '<script type="text/javascript">';
 				echo "<!--\n";
-				echo 'location.href = "./list.php";';
+				echo 'location.href = "./TOP.php";';
 				echo '// -->';
 				echo '</script>';
 			}

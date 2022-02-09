@@ -89,7 +89,11 @@ function login($userName,$userPass){
 	$con = dbconect();																									// db接続関数実行
 	$result = $con->query($Loginsql);																					// クエリ発行
 	$rownums = $result->num_rows;																						// 検索結果件数取得
-	
+	$result_row = $result->fetch_array(MYSQLI_ASSOC);
+        $_SESSION['user']['4CODE'] = $result_row['4CODE'];
+        $_SESSION['user']['STAFFID'] = $result_row['STAFFID'];
+        $_SESSION['user']['STAFFNAME'] = $result_row['STAFFNAME'];
+        
 	//------------------------//
 	//    ログイン判断処理    //
 	//------------------------//
@@ -6573,10 +6577,10 @@ function endMonth(){
 	$con = dbconect();																									// db接続関数実行
 	$sql = "SELECT * FROM endmonthinfo;";
 	$result = $con->query($sql);
-	while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-	{
-		$endmonth .= $result_row['PERIOD'].",".$result_row['YEAR'].",".$result_row['MONTH'].",";
-	}
+        while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+                $endmonth .= $result_row['PERIOD'].",".$result_row['YEAR'].",".$result_row['MONTH'].",";
+        }
 	return ($endmonth);
 }
 /************************************************************************************************************
@@ -7003,5 +7007,256 @@ function teijicheck($post)
                 }
         }
         return($error);
+}
+
+
+/**
+* カレンダー作成
+*/
+function makeCalendar()
+{
+    $ym = "";
+    // タイムゾーンを設定
+    date_default_timezone_set('Asia/Tokyo');
+
+    // 前月・次月リンクが押された場合は、GETパラメーターから年月を取得
+    if (isset($_SESSION['TOP_4'])) 
+    {
+        $ym = $_SESSION['TOP_4'];
+    } 
+    if($ym === "")
+    {
+        $ym = date('Y-m');
+    }
+
+    // タイムスタンプを作成し、フォーマットをチェックする
+    $timestamp = strtotime($ym . '-01');
+    if ($timestamp === false) 
+    {
+        $ym = date('Y-m');
+        $timestamp = strtotime($ym . '-01');
+    }
+
+    // 今日の日付 フォーマット　例）2018-07-3
+//    $today = date('Y-m-j');
+    $today = new DateTime('today');
+
+    // カレンダーのタイトルを作成　例）2017年7月
+    $_SESSION['month'] = date('Y', $timestamp)."年".date('n月', $timestamp);
+    // 前月・次月の年月を取得
+    $_SESSION['prev'] = date('Y-m', mktime(0, 0, 0, date('m', $timestamp) - 1, 1, date('Y', $timestamp)));
+    $_SESSION['next'] = date('Y-m', mktime(0, 0, 0, date('m', $timestamp) + 1, 1, date('Y', $timestamp)));
+
+    // 該当月の日数を取得
+    $day_count = date('t', $timestamp);
+
+    // １日が何曜日か　0:日 1:月 2:火 ... 6:土
+    $youbi = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
+
+    // カレンダー作成の準備
+    $weeks = [];
+    $week = '';
+
+    // 第１週目：空のセルを追加
+    // 例）１日が水曜日だった場合、日曜日から火曜日の３つ分の空セルを追加する
+    $week .= str_repeat('<td class="day"></td>', $youbi);
+    // データ取得
+    $workDate = getProjectData($ym);
+
+    //月次処理済の月を取得
+    $YM = explode('-', $ym);
+    $year = $YM[0];
+    $month = ltrim($YM[1], "0");
+    $endmonthjudge = endMonthcheck($year,$month);
+    
+    $week .= '<input type="hidden" name="ym" value="'.$year.'年'.$month.'月">';
+    
+    for ($day = 1; $day <= $day_count; $day++, $youbi++) 
+    {
+        // yyyy-mm-dd
+        $date = new DateTime($ym . '-' . $day);
+        $date2 = $ym . '-' . $day;
+        
+        // 0埋め行う
+        $dayCcount = str_pad($day, 2, 0, STR_PAD_LEFT);
+        $time = $ym . '-' . $dayCcount;
+
+        if ($today == $date) 
+        {
+            // 今日の日付の場合は、class="today"をつける
+//            $week .= '<td id="popup" class="today"><span class="dayof" onclick="openinsert()">' . $day . '</span>';
+            $week .= '<td id="popup" class="today"><input type="submit" name="TOP_1_button" value="' . $day . '">';
+        } 
+        else if($today > $date)
+        {
+            if($endmonthjudge)
+            {
+                //締め処理済の場合工数登録できない
+                $week .= '<td id="popup" class="day"><span class="dayof">' . $day . '</span>';
+            }
+            else
+            {
+//                $week .= '<td id="popup" class="day"><span class="dayof" onclick="openinsert()">' . $day . '</span>';
+                $week .= '<td id="popup" class="day"><input type="submit" name="TOP_1_button" value="' . $day . '">';
+            }
+        }
+        else if($today < $date)
+        {
+            //未来の工数は登録できない
+            $week .= '<td id="popup" class="day" ><span class="dayof">' . $day . '</span>';
+        }
+        if(!isset($workDate[$time]))
+        {
+            $week .= '<span class="worktime"></span><span class="overtime"></span></td>';
+        }
+        else
+        {
+            if($workDate[$time]['TEIZITIME'] == '7.75')
+            {
+                $week .= '<button class="copybtn" type="button" title="コピー" onclick="showdialog('."'$date2'".')">'
+                        . '<i class="far fa-copy faa-tada animated-hover"></i></button>';
+            }
+            $week .= createWorkTd($workDate[$time]);
+        }
+
+
+        // 週終わり、または、月終わりの場合
+        if ($youbi % 7 == 6 || $day == $day_count) 
+        {
+
+            if ($day == $day_count) 
+            {
+                // 月の最終日の場合、空セルを追加
+                // 例）最終日が木曜日の場合、金・土曜日の空セルを追加
+                $week .= str_repeat('<td class="day"></td>', 6 - ($youbi % 7));
+            }
+
+            // weeks配列にtrと$weekを追加する
+            $weeks[] = '<tr>' . $week . '</tr>';
+
+            // weekをリセット
+            $week = '';
+        }
+    }
+    return $weeks;
+}
+
+/**
+* プロジェクト進捗データ取得
+*/
+function getProjectData($month) 
+{
+    // db接続関数実行
+    $con = dbconect();
+
+    $sql = "SELECT SAGYOUDATE, Sum(TEIZITIME) as TEIZITIME, Sum(ZANGYOUTIME) as ZANGYOUTIME FROM progressinfo 
+            LEFT JOIN kouteiinfo USING (3CODE ) 
+            LEFT JOIN projectditealinfo USING (6CODE ) 
+            LEFT JOIN syaininfo USING (4CODE ) 
+            WHERE syaininfo.4CODE = '".$_SESSION['user']['4CODE']."'  
+            AND  SAGYOUDATE Like '%".$month."%' group by SAGYOUDATE ";
+
+    // SQL実行
+    $result = $con->query($sql);																	// クエリ発行
+    if(!$result)
+    {
+            error_log($con->error,0);
+            exit();
+    }
+    $workDate = array();
+    // 取得データ配列へ
+    while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+    {
+        $workDate[$result_row['SAGYOUDATE']]['TEIZITIME'] = $result_row['TEIZITIME'];
+        $workDate[$result_row['SAGYOUDATE']]['ZANGYOUTIME'] = $result_row['ZANGYOUTIME'];
+    }
+
+    return $workDate;
+}
+
+/**
+ * 作業時間、残業時間作成
+ */
+function createWorkTd($workDate) 
+{
+    if($workDate['TEIZITIME'] != '7.75')
+    {
+        $work = "<span class='worktime' style='color:red;'>";
+        $work .= $workDate['TEIZITIME'];
+        $work .= "</span>";
+    }
+    else
+    {
+        $work = "<span class='worktime'>";
+        $work .= $workDate['TEIZITIME'];
+        $work .= "</span>";
+    }
+    $work .= "<span class='overtime'>";
+    $work .= $workDate['ZANGYOUTIME'];
+    $work .= "</span></td>";
+    return $work;
+}
+/************************************************************************************************************
+function endMonthcheck()
+
+引数1		$year							
+引数2		$month				
+		
+戻り値		$judge		true:引数の年月は締め処理済				
+************************************************************************************************************/
+function endMonthcheck($year,$month)
+{																						// SQL関数呼び出し準備
+	//------------------------//
+	//          定数          //
+	//------------------------//
+	$filename = $_SESSION['filename'];
+
+	//------------------------//
+	//          変数          //
+	//------------------------//
+	$sql = "";
+	$judge = false;
+	
+	//------------------------//
+	//          処理          //
+	//------------------------//
+	$con = dbconect();																									// db接続関数実行
+	$sql = "SELECT count(*) FROM pj_old.endmonthinfo "
+                . "where YEAR='".$year."' AND MONTH='".$month."';";
+	$result = $con->query($sql);
+        $result_row = $result->fetch_array(MYSQLI_ASSOC);
+        if($result_row['count(*)'] != 0)
+        {
+            $judge = true;
+        }
+	return ($judge);
+}
+
+function lastEndMonth()
+{
+    //------------------------//
+    //          処理          //
+    //------------------------//
+    $con = dbconect();	
+    $sql = "SELECT * FROM endmonthinfo ORDER BY 10code DESC LIMIT 1;";
+    $result = $con->query($sql);
+    $result_row = $result->fetch_array(MYSQLI_ASSOC);
+    $lastEndmonth = $result_row['YEAR']."-";
+    $m =(int)$result_row['MONTH'];
+    if($m == 12)
+    {
+        $lastEndmonth .= "01-01";
+    }
+    else if($m == 10 || $m == 11)
+    {
+        $m++;
+        $lastEndmonth .= $m."-01"; 
+    }
+    else
+    {
+        $m++;
+        $lastEndmonth .= "0".$m."-01"; 
+    }
+    return ($lastEndmonth);
 }
 ?>
