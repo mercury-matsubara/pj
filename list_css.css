@@ -459,19 +459,23 @@ td.day {
     background-color: #eaeff7;
 }
 /*本日背景色*/
-.today {
+.today 
+{
     background: #dce5f4;;
     height: 100px;
 }
-th.youbiColor:nth-of-type(1), td.day:nth-of-type(1) {
+th.youbiColor:nth-of-type(1), td.day:nth-of-type(1) 
+{
     color: red;
 }
-th.youbiColor:nth-of-type(7), td.day:nth-of-type(7) {
+th.youbiColor:nth-of-type(7), td.day:nth-of-type(7) 
+{
     color: blue;
 }
 
 /*日にち*/
-span.dayof {
+span.dayof 
+{
    font-weight: bold;
    margin-left: 5%;
    font-size: 18px;
@@ -482,6 +486,21 @@ input.dayof
     border: none;
     font-size: 18px;
     font-weight: bold;
+}
+input.dayofSUN
+{
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+}input.dayofSAT
+{
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: blue;
 }
 /*勤務時間、残業時間*/
 span.worktime,span.overtime{

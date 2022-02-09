@@ -7056,10 +7056,12 @@ function makeCalendar()
     // カレンダー作成の準備
     $weeks = [];
     $week = '';
+    $weekcount = 0;
 
     // 第１週目：空のセルを追加
     // 例）１日が水曜日だった場合、日曜日から火曜日の３つ分の空セルを追加する
     $week .= str_repeat('<td class="day"></td>', $youbi);
+    $weekcount += $youbi;
     // データ取得
     $workDate = getProjectData($ym);
 
@@ -7073,6 +7075,8 @@ function makeCalendar()
     
     for ($day = 1; $day <= $day_count; $day++, $youbi++) 
     {
+        $weekcount++;
+        
         // yyyy-mm-dd
         $date = new DateTime($ym . '-' . $day);
         $date2 = $ym . '-' . $day;
@@ -7084,8 +7088,19 @@ function makeCalendar()
         if ($today == $date) 
         {
             // 今日の日付の場合は、class="today"をつける
-//            $week .= '<td id="popup" class="today"><span class="dayof" onclick="openinsert()">' . $day . '</span>';
-            $week .= '<td id="popup" class="today"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
+            switch($weekcount)
+            {
+                case 1:
+                    $week .= '<td id="popup" class="today"><input type="submit" class="dayofSUN" name="TOP_1_button" value="' . $day . '">';
+                    break;
+                
+                case 7:
+                    $week .= '<td id="popup" class="today"><input type="submit" class="dayofSAT" name="TOP_1_button" value="' . $day . '">';
+                    break;
+                
+                default :
+                    $week .= '<td id="popup" class="today"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
+            }
         } 
         else if($today > $date)
         {
@@ -7096,8 +7111,19 @@ function makeCalendar()
             }
             else
             {
-//                $week .= '<td id="popup" class="day"><span class="dayof" onclick="openinsert()">' . $day . '</span>';
-                $week .= '<td id="popup" class="day"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
+                switch($weekcount)
+                {
+                    case 1:
+                        $week .= '<td id="popup" class="day"><input type="submit" class="dayofSUN" name="TOP_1_button" value="' . $day . '">';
+                        break;
+
+                    case 7:
+                        $week .= '<td id="popup" class="day"><input type="submit" class="dayofSAT" name="TOP_1_button" value="' . $day . '">';
+                        break;
+
+                    default :
+                        $week .= '<td id="popup" class="day"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
+                }
             }
         }
         else if($today < $date)
@@ -7136,6 +7162,11 @@ function makeCalendar()
 
             // weekをリセット
             $week = '';
+        }
+        
+        if($weekcount == 7)
+        {
+            $weekcount = 0;
         }
     }
     return $weeks;
