@@ -7221,7 +7221,7 @@ function endMonthcheck($year,$month)
 	//          ˆ—          //
 	//------------------------//
 	$con = dbconect();																									// dbÚ‘±ŠÖ”ŽÀs
-	$sql = "SELECT count(*) FROM pj_old.endmonthinfo "
+	$sql = "SELECT count(*) FROM endmonthinfo "
                 . "where YEAR='".$year."' AND MONTH='".$month."';";
 	$result = $con->query($sql);
         $result_row = $result->fetch_array(MYSQLI_ASSOC);
