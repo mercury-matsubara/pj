@@ -90,6 +90,53 @@
         
         function copy()
         {
+            var judge = true;
+            var startdate = document.getElementById("startdate").value;
+            var enddate = document.getElementById("enddate").value;
+            
+            //開始日付、終了日付の未入力チェック
+            if(startdate == "" || enddate == "")
+            {
+                judge = false;
+                window.alert("項目を入力してください。");
+            }
+            
+            //開始日付、終了日付の入力内容チェック
+            if(judge)
+            {
+                //開始日付、終了日付が未来の日付でないかチェック
+                var day = new Date();
+                day.setDate(day.getDate());
+                var yyyy = day.getFullYear();
+                var mm = ("0"+(day.getMonth()+1)).slice(-2);
+                var dd = ("0"+day.getDate()).slice(-2);
+                var today = yyyy+'-'+mm+'-'+dd;
+
+                if(startdate > today || enddate > today)
+                {
+                    judge = false;
+                    window.alert("未来の日付が入力されています。");
+                }
+
+                //開始日付と終了日付が前後しているとき
+                if(startdate > enddate)
+                {
+                    judge = false;
+                    window.alert("開始日付に終了日付より過去の日付が入力されています。");
+                }
+                
+                //月次処理済みのチェック
+                var mindate = document.getElementById("startdate").min;
+                if(startdate < mindate || enddate < mindate)
+                {
+                    judge = false;
+                    window.alert("月次処理済みの日付が入力されています。");
+                }                
+            }
+            
+            //工数コピー処理
+            if(judge)
+            {            
                 jQuery.ajax({
                     type: 'post',
                     url: 'TOPexe.php',
@@ -102,6 +149,8 @@
                     }
 
                 });
+            }
+            
         }
 --></script>
 </head>
