@@ -11,6 +11,13 @@
 	$form_ini = parse_ini_file('./ini/form.ini', true);
         $filename = 'TOP_4';
 	$title = $form_ini[$filename]['title'];
+    
+    //H”‚ª“o˜^‚³‚ê‚Ä‚¢‚é“ú•tæ“¾
+    require_once("f_DB.php");
+    $ym = "";
+    $workDate = getProjectData($ym);
+    $workDate_keys = array_keys($workDate);
+    $workDate_keys = json_encode($workDate_keys);
 ?>
 <head>
 <title><?php echo $title; ?></title>
@@ -134,6 +141,39 @@
                 }                
             }
             
+            //H”“o˜^Ï‚İ‚©ƒ`ƒFƒbƒN
+            if(judge)
+            {
+                let worklist = <?php echo $workDate_keys; ?>;
+                var tourokucheck = false;
+                var startDate = new Date(startdate);
+                var endDate = new Date(enddate);
+                var dateList = new Array();
+
+                for(var d = startDate; d <= endDate; d.setDate(d.getDate()+1)) 
+                {
+                    for(var i = 0; i < worklist.length ; i++)
+                    {
+                        var date = new Date(worklist[i]);
+                        if(d.getTime() == date.getTime())
+                        {
+                            tourokucheck = true;
+                        }
+                    }
+                }
+
+                if(tourokucheck)
+                {
+                    if(confirm("H”“o˜^Ï‚İ‚Ì“ú•t‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚·B\n" + "ã‘‚«‚µ‚Ä‚à‚æ‚ë‚µ‚¢‚Å‚µ‚å‚¤‚©H") ) {
+                        judge = true;
+                    }
+                    else
+                    {
+                        judge = false;
+                    }
+                }
+            }
+
             //H”ƒRƒs[ˆ—
             if(judge)
             {            

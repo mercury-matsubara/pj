@@ -32,9 +32,12 @@
                 // db接続関数実行
                 $con = dbconect();
 
-                $selecrSQL = "SELECT 3CODE,6CODE,TEIZITIME,ZANGYOUTIME,7ENDDATE,7PJSTAT FROM progressinfo "
-                        . "LEFT JOIN syaininfo ON 4CODE WHERE SAGYOUDATE='".$_POST['copydate']."' AND 4CODE='".$_SESSION['user']['4CODE']."';";
+//                $selecrSQL = "SELECT 3CODE,6CODE,TEIZITIME,ZANGYOUTIME,7ENDDATE,7PJSTAT FROM progressinfo "
+//                        . "LEFT JOIN syaininfo ON 4CODE WHERE SAGYOUDATE='".$_POST['copydate']."' AND 4CODE='".$_SESSION['user']['4CODE']."';";
 
+                $selecrSQL = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo using (6CODE) "
+                        . "where SAGYOUDATE = '".$_POST['copydate']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
+                
                 // SQL実行
                 $result = $con->query($selecrSQL);																	// クエリ発行
                 if(!$result)
@@ -53,6 +56,37 @@
                     $a++;
                 }
 
+                //削除する工数を検索
+                $delete_selectsql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo using (6CODE) "
+                        . "where SAGYOUDATE BETWEEN '".$_POST['pasteStart']."' AND '".$_POST['pasteEnd']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
+                
+                $result = $con->query($delete_selectsql);																	// クエリ発行
+                if(!$result)
+                {
+                        error_log($con->error,0);
+                        exit();
+                }
+                
+                $a = 0;
+                while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+                {
+                    $deletecode[$a] = $result_row['7CODE'];
+                    $a++;
+                }
+                
+                //工数削除
+                for($i = 0; $i < count($deletecode); $i++)
+                {
+                    $deletesql = "DELETE FROM progressinfo WHERE 7CODE = '".$deletecode[$i]."';";
+                    $result = $con->query($deletesql);																	// クエリ発行
+                    if(!$result)
+                    {
+                            error_log($con->error,0);
+                            exit();
+                    }
+                }
+                
+                //工数追加
                 $insertSQL = "INSERT INTO progressinfo (3CODE,6CODE,TEIZITIME,ZANGYOUTIME,7PJSTAT,SAGYOUDATE) VALUES ";
                 for($i = 0; $i  < count($dates); $i ++)
                 {
