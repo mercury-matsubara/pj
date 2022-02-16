@@ -67,11 +67,16 @@
 		$list = makeList_item($sql,$_SESSION['insert']);
                 $syain_total = $_SESSION['kobetu']['total'];
 	}
+        if($filename == 'TOP_1')
+        { 
+                $list = makePROGRESSlist($_SESSION['insert']);
+        }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script src='./inputcheck.js'></script>
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./generate_date.js'></script>
@@ -80,6 +85,7 @@
 <script src='./jquery.flatshadow.js'></script>
 <script src='./button_size.js'></script>
 <script src='./saiban.js'></script>
+<script src="./progress.js"></script>
 <script language="JavaScript"><!--
 	history.forward();
 	
@@ -269,7 +275,16 @@
 		var h = screen.availHeight;
 		w = (w * 0.8);
 		h = (h * 0.8);
-		url = 'Modal.php?tablenum='+GET+'&form=insert';
+                var filename = "<?php echo $filename; ?>";
+                if(filename == 'TOP_1')
+                {
+                    var getArray = GET.split('_')
+                    url = 'Modal.php?tablenum='+getArray[0]+'&form=insert&row='+getArray[1];
+                }
+                else
+                {
+                    url = 'Modal.php?tablenum='+GET+'&form=insert';
+                }
 //		n = showModalDialog(
 //			url,
 //			this,
@@ -355,6 +370,10 @@
 	$judge = false;
 	$_SESSION['post'] = $_SESSION['pre_post'];
 	$_SESSION['pre_post'] = null;
+        if($filename == 'TOP_1')
+        {
+            $_SESSION['insert'] = datasetting($_SESSION['insert']);
+        }
 	$errorinfo = existCheck($_SESSION['insert'],$main_table,1);
 	if(count($errorinfo) == 1 && $errorinfo[0] == "")
 	{
@@ -362,9 +381,9 @@
 		{
 			//2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
 			//$errorinfo = endCheck($_SESSION['insert']['form_704_0'],$_SESSION['insert']['form_704_1']);
-            $date = explode('-', $_SESSION['insert']['form_704_0']);
-            $errorinfo = endCheck($date[0], $date[1]);
-            //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
+                        $date = explode('-', $_SESSION['insert']['form_704_0']);
+                        $errorinfo = endCheck($date[0], $date[1]);
+                        //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
 		}
 		if(count($errorinfo) == 1 && $errorinfo[0] == '')
 		{
@@ -375,11 +394,11 @@
 	}
 	if($filename == 'PROGRESSINFO_2')
 	{
-        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
 		//$errorinfo = endCheck($_SESSION['insert']['form_704_0'],$_SESSION['insert']['form_704_1']);
-        $date = explode('-', $_SESSION['insert']['form_704_0']);
-        $errorinfo = endCheck($date[0], $date[1]);
-        //2022-01-27 日付入力欄をカレンダー表示に変更　end -----<<
+                $date = explode('-', $_SESSION['insert']['form_704_0']);
+                $errorinfo = endCheck($date[0], $date[1]);
+                //2022-01-27 日付入力欄をカレンダー表示に変更　end -----<<
 		if(count($errorinfo) == 1 && $errorinfo[0] == "" )
 		{
 			$judge = true;
@@ -403,10 +422,18 @@
 //	echo "<input type ='submit' value = '戻る' name = 'back' class = 'free'>";
 //	echo "</div></form>";
 	echo "<div style='clear:both;'></div>";
-	echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
-				onsubmit = "return check(\''.$checkList.
-				'\',\''.$notnullcolumns.
-				'\',\''.$notnulltype.'\');">';
+        if($filename == 'TOP_1')
+        {
+            echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
+                                    onsubmit = "return PROGRESScheck();">';
+        }
+        else
+        {
+            echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
+                                    onsubmit = "return check(\''.$checkList.
+                                    '\',\''.$notnullcolumns.
+                                    '\',\''.$notnulltype.'\');">';
+        }
 	echo "<div class = 'center'><br><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
 	echo "</div>";
@@ -428,7 +455,11 @@
 		echo "</td></tr></table>";
                 echo $list;
 	}
-	echo "<div class = 'center'>";
+	echo "<div class = 'center'>";        
+        if($filename == 'TOP_1')
+        {
+                echo $list;
+        }
 	echo '<input type="submit" name = "insert" value = "登録" class="free" ';
 	if(isset($errorinfo[1]) && $errorinfo[1] != "")
 	{
@@ -438,7 +469,10 @@
 	{
 		echo '>';
 	}
-	echo '<input type="submit" name = "cancel" value = "クリア" class="free" onClick ="isCancel = true;">';
+        if($filename != 'TOP_1')
+        {
+                echo '<input type="submit" name = "cancel" value = "クリア" class="free" onClick ="isCancel = true;">';
+        }
 	echo '<input type="submit" name = "back" value = "戻る" class="free" onClick ="isCancel = true;">';
 	echo "</form>";
 	echo "</div>";

@@ -1596,6 +1596,7 @@ function FileReadInsert(){
             $readBody[$countrow]['zangyo'] = (float)mb_convert_encoding($text, "SJIS", "SJIS");			//Žc‹ÆŽžŠÔ
             $readBody[$countrow]['judge'] = "OK";
             $readBody[$countrow]['message'] = "";
+            $teizicheck[$staffnum][$day] = "";
             $teizicheck[$staffnum][$day] += $teizi;                                                                            //teizicheck”z—ñ‚Ö“ú•t‚²‚Æ‚É’èŽžŽžŠÔ‚ð‰ÁŽZ
             $countrow++;
         }

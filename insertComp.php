@@ -46,7 +46,15 @@
 	default:
 		$title2 = '';
 	}
-	if($judge)
+        if($judge && $filename == 'TOP_1')
+        {
+            require_once("f_DB.php");
+            insert($_SESSION['insert']);
+            $_SESSION['pre_post'] = $_SESSION['post'];
+            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+            exit();
+        }
+	else if($judge)
 	{
 		require_once("f_Button.php");
 		$filename = $_SESSION['filename'];

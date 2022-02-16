@@ -1082,30 +1082,64 @@ function existCheck($post,$tablenum,$type){
 			}
 		}
 	}
-	for($k = 0 ; $k < count($master_tablenum_array) ; $k++ )
-	{
-		if($master_tablenum == '')
-		{
-			break;
-		}
-		$table_title = $form_ini[$master_tablenum_array[$k]]['table_title'];
-		$code = $master_tablenum_array[$k].'CODE';
-		$codeValue = $post[$code];
-		$sql = idSelectSQL($codeValue,$master_tablenum_array[$k],$code);
-		$result = $con->query($sql) or ($judge = true);																	// クエリ発行
-		if($judge)
-		{
-			error_log($con->error,0);
-			$judge = false;
-		}
-		if($result->num_rows == 0 )
-		{
-			$errorinfo[$counter] = "<div class = 'center'><a class = 'error'>".
-									$table_title."情報が削除されているため".
-									$syorimei."できません。</a></div><br>";
-			$counter++;
-		}
-	}
+	if($filename == 'TOP_1')
+        {
+            for($date = 0; $date < $post['datas']; $date++)
+            {
+                for($k = 0 ; $k < count($master_tablenum_array) ; $k++ )
+                {
+                    if($master_tablenum == '')
+                    {
+                        break;
+                    }
+                    $table_title = $form_ini[$master_tablenum_array[$k]]['table_title'];
+
+                    $code = $master_tablenum_array[$k].'CODE';
+                    $codeValue = $post[$date][$code];
+                    $sql = idSelectSQL($codeValue,$master_tablenum_array[$k],$code);
+                    $result = $con->query($sql) or ($judge = true);																	// クエリ発行
+                    if($judge)
+                    {
+                            error_log($con->error,0);
+                            $judge = false;
+                    }
+                    if($result->num_rows == 0 )
+                    {
+                            $errorinfo[$counter] = "<div class = 'center'><a class = 'error'>".
+                                                                            $table_title."情報が削除されているため".
+                                                                            $syorimei."できません。</a></div><br>";
+                            $counter++;
+                    }
+                }
+            } 
+        }
+        else
+        {
+            for($k = 0 ; $k < count($master_tablenum_array) ; $k++ )
+            {
+                if($master_tablenum == '')
+                {
+                        break;
+                }
+                $table_title = $form_ini[$master_tablenum_array[$k]]['table_title'];
+                $code = $master_tablenum_array[$k].'CODE';
+                $codeValue = $post[$code];
+                $sql = idSelectSQL($codeValue,$master_tablenum_array[$k],$code);
+                $result = $con->query($sql) or ($judge = true);																	// クエリ発行
+                if($judge)
+                {
+                        error_log($con->error,0);
+                        $judge = false;
+                }
+                if($result->num_rows == 0 )
+                {
+                        $errorinfo[$counter] = "<div class = 'center'><a class = 'error'>".
+                                                                        $table_title."情報が削除されているため".
+                                                                        $syorimei."できません。</a></div><br>";
+                        $counter++;
+                }
+            }
+        }
 	return ($errorinfo);
 }
 /************************************************************************************************************
@@ -1200,11 +1234,20 @@ function insert($post){
 	//          処理          //
 	//------------------------//
 	$con = dbconect();																									// db接続関数実行
-	if($filename == 'PROGRESSINFO_2')
+	if($filename == 'TOP_1')
 	{
-		
+            for($i = 0; $i < $post['datas']; $i++)
+            {
+		$sql = InsertSQL($post[$i],$tablenum,"");
+		$result = $con->query($sql) or ($judge = true);																		// クエリ発行
+		if($judge)
+		{
+			error_log($con->error,0);
+			$judge =false;
+		}
+            }
 	}
-	if(!$endjudge)
+	else if(!$endjudge)
 	{
 		$sql = InsertSQL($post,$tablenum,"");
 		$result = $con->query($sql) or ($judge = true);																		// クエリ発行
@@ -7076,6 +7119,12 @@ function makeCalendar()
     for ($day = 1; $day <= $day_count; $day++, $youbi++) 
     {
         $weekcount++;
+        $td_class = "";
+        $input_class = "dayof";
+        $name = "";
+        $span = "";
+        $input = "";
+        $worktime = "";
         
         // yyyy-mm-dd
         $date = new DateTime($ym . '-' . $day);
@@ -7084,67 +7133,53 @@ function makeCalendar()
         // 0埋め行う
         $dayCcount = str_pad($day, 2, 0, STR_PAD_LEFT);
         $time = $ym . '-' . $dayCcount;
-
+        
         if ($today == $date) 
         {
-            // 今日の日付の場合は、class="today"をつける
-            switch($weekcount)
-            {
-                case 1:
-                    $week .= '<td id="popup" class="today"><input type="submit" class="dayofSUN" name="TOP_1_button" value="' . $day . '">';
-                    break;
-                
-                case 7:
-                    $week .= '<td id="popup" class="today"><input type="submit" class="dayofSAT" name="TOP_1_button" value="' . $day . '">';
-                    break;
-                
-                default :
-                    $week .= '<td id="popup" class="today"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
-            }
-        } 
-        else if($today > $date)
-        {
-            if($endmonthjudge)
-            {
-                //締め処理済の場合工数登録できない
-                $week .= '<td id="popup" class="day"><span class="dayof">' . $day . '</span>';
-            }
-            else
-            {
-                switch($weekcount)
-                {
-                    case 1:
-                        $week .= '<td id="popup" class="day"><input type="submit" class="dayofSUN" name="TOP_1_button" value="' . $day . '">';
-                        break;
-
-                    case 7:
-                        $week .= '<td id="popup" class="day"><input type="submit" class="dayofSAT" name="TOP_1_button" value="' . $day . '">';
-                        break;
-
-                    default :
-                        $week .= '<td id="popup" class="day"><input type="submit" class="dayof" name="TOP_1_button" value="' . $day . '">';
-                }
-            }
-        }
-        else if($today < $date)
-        {
-            //未来の工数は登録できない
-            $week .= '<td id="popup" class="day" ><span class="dayof">' . $day . '</span>';
-        }
-        if(!isset($workDate[$time]))
-        {
-            $week .= '<span class="worktime"></span><span class="overtime"></span></td>';
+            $td_class = 'today';    // 今日の日付の場合は、class="today"をつける
         }
         else
         {
+            $td_class = 'day';
+        }
+        
+        switch($weekcount)
+        {
+            case 1:
+                $input_class .= 'SUN';
+                break;
+
+            case 7:
+                $input_class .= 'SAT';
+                break;
+        }
+        
+        if(isset($workDate[$time]))
+        {
+            $name = 'TOP_3_button';
             if($workDate[$time]['TEIZITIME'] == '7.75')
             {
-                $week .= '<button class="copybtn" type="button" title="コピー" onclick="showdialog('."'$date2'".')">'
+                $worktime = '<button class="copybtn" type="button" title="コピー" onclick="showdialog('."'$date2'".')">'
                         . '<i class="far fa-copy faa-tada animated-hover"></i></button>';
             }
-            $week .= createWorkTd($workDate[$time]);
+            $worktime = createWorkTd($workDate[$time]);
         }
-
+        else
+        {
+            $name = 'TOP_1_button';
+            $worktime = '<span class="worktime"></span><span class="overtime"></span></td>';
+        }
+        
+        if($endmonthjudge || $today < $date)
+        {
+            $span = '<span class="dayof">'.$day.'</span>';  //締め処理済、未来の日付は工数登録できない
+        }
+        else
+        {
+            $input = '<input type="submit" class="'.$input_class.'" name="'.$name.'" value="'.$day.'">';
+        }
+        
+        $week .= '<td id="popup" class="'.$td_class.'">'.$span.$input.$worktime;
 
         // 週終わり、または、月終わりの場合
         if ($youbi % 7 == 6 || $day == $day_count) 
@@ -7289,5 +7324,77 @@ function lastEndMonth()
         $lastEndmonth .= "0".$m."-01"; 
     }
     return ($lastEndmonth);
+}
+
+function datasetting($post)
+{
+    $data_array['datas'] = 0;
+    $data_array['form_704_0'] = $post['form_704_0'];
+    $data_array['form_402_0'] = $_SESSION['user']['STAFFID'];
+    $data_array['form_403_0'] = $_SESSION['user']['STAFFNAME'];
+    
+    // str_replace() で置換
+    $post['form_704_0'] = str_replace('日', '', $post['form_704_0']);  // "日"を空文字に置換する
+    $post['form_704_0'] = str_replace('年', '-', $post['form_704_0']); // "年"を"-"に置換する
+    $post['form_704_0'] = str_replace('月', '-', $post['form_704_0']); // "月"を"-"に置換する
+    //現在の日時を指定する
+    $date = new DateTime($post['form_704_0']);
+    //指定した書式で日時を取得する
+    $sagyoudate = $date->format('Y-m-d');
+    
+    for($i = 0; $i < 10; $i++)
+    {
+        if($post['6CODE_'.$i] == "")
+        {
+            continue;
+        }
+        
+        $data_array[$i]['6CODE'] = $post['6CODE_'.$i];
+        $data_array[$i]['3CODE'] = $post['3CODE_'.$i];
+        $data_array[$i]['form_704_0'] = $sagyoudate;
+        $data_array[$i]['form_705_0'] = $post['form_705_0_'.$i];
+        $data_array[$i]['form_706_0'] = $post['form_706_0_'.$i];
+        $data_array['datas'] ++ ;
+    }
+
+    return $data_array;
+}
+
+function get7code($code4,$date)
+{
+    $param_ini = parse_ini_file('./ini/param.ini', true);
+    
+    $code_array = array();
+    $i = 0;
+    
+    $code_array['form_704_0'] = $date;
+    $code_array['form_402_0'] = $_SESSION['user']['STAFFID'];
+    $code_array['form_403_0'] = $_SESSION['user']['STAFFNAME'];
+    
+    // str_replace() で置換
+    $date = str_replace('日', '', $date);  // "日"を空文字に置換する
+    $date = str_replace('年', '-', $date); // "年"を"-"に置換する
+    $date = str_replace('月', '-', $date); // "月"を"-"に置換する
+    //現在の日時を指定する
+    $date = new DateTime($date);
+    //指定した書式で日時を取得する
+    $sagyoudate = $date->format('Y-m-d');
+    
+    $con = dbconect();	
+    $sql = "SELECT 6CODE,PROJECTNUM,PJNAME,EDABAN,3CODE,KOUTEIID,KOUTEINAME,TEIZITIME,ZANGYOUTIME FROM progressinfo 
+        LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) 
+        LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) 
+        LEFT JOIN kouteiinfo USING(3CODE) WHERE SAGYOUDATE = '".$sagyoudate."' AND 4CODE = '".$code4."'";
+    $result = $con->query($sql);
+    while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+    {
+        foreach($result_row as $key => $value)
+        {
+            $header = $param_ini[$key]['column_num'];
+            $code_array['form_'.$header.'_0_'.$i] = $result_row[$key];
+        }
+        $i++;
+    }
+    return $code_array;
 }
 ?>

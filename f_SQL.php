@@ -43,6 +43,10 @@ function InsertSQL($post,$tablenum,$over){
 	{
 		$columns = "202,203";
 	}
+        if($filename == 'TOP_1')
+        {
+                $columns = "6,3,704,705,706";
+        }
 	$columns_array = explode(',',$columns);
 	$tableName = $form_ini[$tablenum]['table_name'];
 	$mastertablenum = $form_ini[$tablenum]['seen_table_num'];
@@ -383,7 +387,7 @@ function joinSelectSQL($post,$tablenum){
 			$select_SQL .= " 7PJSTAT = 1";
 			$count_SQL .= " 7PJSTAT = 1";
 	}
-	if(($filename == 'PROGRESSINFO_1' || $filename == 'TOP_1') && $tablenum == '6')
+	if(($filename == 'PROGRESSINFO_1' || $filename == 'TOP_1' || $filename == 'TOP_3') && $tablenum == '6')
 	{
 			$select_SQL .= " 6PJSTAT = 1 AND";
 			$count_SQL .= " 6PJSTAT = 1 AND";

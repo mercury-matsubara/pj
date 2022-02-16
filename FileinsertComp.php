@@ -102,7 +102,7 @@
 <body>
 
 <?php
-	if($judge)
+        if($judge)
 	{
 		require_once("f_Button.php");
 		require_once("f_File.php");
@@ -110,6 +110,15 @@
 		require_once("f_DB.php");
 		unset($_SESSION['upload']);
 		$form = FileReadInsert();
+                if(isset($_SESSION['history']))
+                {
+                    if($_SESSION['fileinsert']['judge'])
+                    {
+                        header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
+                                    .$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+                        unset($_SESSION['history']);
+                    }
+                }
 		echo "<table border='0' WIDTH=100%><tr>";
 		echo "<form action='pageJump.php' method='post'><div>";
 		echo makebutton();
@@ -143,21 +152,34 @@
 		{
 			echo "<a class = 'title'>".$title1."“o˜^ƒGƒ‰[</a>";
 		}
-		//----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ end -----<<
-		echo "<center>";
-		echo "<br><br>";
-		echo $form;
-		//----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ start ----->>
-		echo "<br><br>";
-                echo "<div style='display:inline-flex'>";
-                echo "<form action='FileinsertJump.php' method='post'>";
-                echo "<input type ='submit' value = 'ˆê——‚É–ß‚é' name = 'back' class = 'free'>";
-                echo "</form>";
-		echo "<form action='pageJump.php' method='post'>";
-		echo "<input type ='submit' value = 'æ‰æ–Ê‚É–ß‚é' class = 'free' name = 'PROGRESSINFO_6_button'>";
-		echo "</form></div></div>";
-		//----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ end -----<<
-		echo "</center>";
+		
+                //----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ end -----<<
+                echo "<center>";
+                echo "<br><br>";
+                echo $form;
+                
+                if(isset($_SESSION['history']))
+                {
+                    echo "<br><br>";
+                    echo "<div style='display:inline-flex'>";
+                    echo "<form action='FileinsertJump.php' method='post'>";
+                    echo "<input type ='submit' value = 'TOP‚É–ß‚é' name = 'back' class = 'free'>";
+                    echo "</form></div></div>";
+                }
+                else
+                {
+                    //----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ start ----->>
+                    echo "<br><br>";
+                    echo "<div style='display:inline-flex'>";
+                    echo "<form action='FileinsertJump.php' method='post'>";
+                    echo "<input type ='submit' value = 'ˆê——‚É–ß‚é' name = 'back' class = 'free'>";
+                    echo "</form>";
+                    echo "<form action='pageJump.php' method='post'>";
+                    echo "<input type ='submit' value = 'æ‰æ–Ê‚É–ß‚é' class = 'free' name = 'PROGRESSINFO_6_button'>";
+                    echo "</form></div></div>";
+                    //----2018/01/18 €”Ô32 asanoma æ‚İŠ®—¹‚Ì‰æ–Ê‘JˆÚ‘Î‰ end -----<<
+                }
+                echo "</center>";
 		$_SESSION['insert'] = null;
 	}
 	else

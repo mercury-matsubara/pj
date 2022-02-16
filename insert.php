@@ -29,8 +29,10 @@
 	$form_ini = parse_ini_file('./ini/form.ini', true);
 	$SQL_ini = parse_ini_file('./ini/SQL.ini', true);
         
-        if($_SESSION['filename'] == 'TOP_1')
-        {
+	$filename = $_SESSION['filename'];
+        
+        if($filename == 'TOP_1')
+        { 
                 $_POST['form_704_0'] = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_1_button'].'ì˙';
                 $_POST['form_402_0'] = $_SESSION['user']['STAFFID'];
                 $_POST['form_403_0'] = $_SESSION['user']['STAFFNAME'];
@@ -47,7 +49,6 @@
 	
 	$_SESSION['post'] = $_SESSION['pre_post'];
 	
-	$filename = $_SESSION['filename'];
 	$main_table = $form_ini[$filename]['use_maintable_num'];
 	$title1 = $form_ini[$filename]['title'];
 	$title2 = '';
@@ -86,7 +87,7 @@
                 $syain_total = $_SESSION['kobetu']['total']; 
 	}
         if($filename == 'TOP_1')
-        {
+        { 
                 $list = makePROGRESSlist();
         }
 ?>
@@ -94,7 +95,7 @@
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
-<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./inputcheck.js'></script>
 <script src='./generate_date.js'></script>
@@ -103,6 +104,7 @@
 <script src='./jquery.flatshadow.js'></script>
 <script src='./button_size.js'></script>
 <script src='./saiban.js'></script>
+<script src="./progress.js"></script>
 <script language="JavaScript"><!--
 	history.forward();
 	
@@ -754,10 +756,18 @@
 	$notnullcolumns = $_SESSION['notnullcolumns'];
 	$notnulltype = $_SESSION['notnulltype'];
 	echo "<div style='clear:both;'></div>";
-	echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
-				onsubmit = "return check(\''.$checkList.
-				'\',\''.$notnullcolumns.
-				'\',\''.$notnulltype.'\');">';
+        if($filename == 'TOP_1')
+        {
+            echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
+                                    onsubmit = "return PROGRESScheck();">';
+        }
+        else
+        {
+            echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
+                                    onsubmit = "return check(\''.$checkList.
+                                    '\',\''.$notnullcolumns.
+                                    '\',\''.$notnulltype.'\');">';
+        }
 	echo "<div class = 'center'><br><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
 	echo "</div><br>";
@@ -765,12 +775,12 @@
 	echo "</tr></table>";
         if($filename == 'PJTOUROKU_1')
 	{
-                echo "<table><tr><td class='space' style='width: 137px;'></td><td class='one' style='width: 154px;'><a class='itemname'>çáåvã‡äz : </a></td>";
-		echo "<td class='two'><input type = 'text' value = '".$_SESSION['kobetu']['totalCharge']."' id = 'chage' name = 'chage' class = 'readOnly' size = 49 readonly >";
-		echo "</td></tr></table>";
-        echo "<table><tr><td class='space' style='width: 137px;'></td><td style='width: 1000px;'>";
-        echo $list;
-        echo "</td></tr></table>";
+            echo "<table><tr><td class='space' style='width: 137px;'></td><td class='one' style='width: 154px;'><a class='itemname'>çáåvã‡äz : </a></td>";
+            echo "<td class='two'><input type = 'text' value = '".$_SESSION['kobetu']['totalCharge']."' id = 'chage' name = 'chage' class = 'readOnly' size = 49 readonly >";
+            echo "</td></tr></table>";
+            echo "<table><tr><td class='space' style='width: 137px;'></td><td style='width: 1000px;'>";
+            echo $list;
+            echo "</td></tr></table>";
 	}
 	echo "<div class='center'>";
         if($filename == 'TOP_1')

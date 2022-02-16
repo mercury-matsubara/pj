@@ -1812,7 +1812,7 @@ function makeformModal_set($post,$isReadOnly,$form_Name,$columns){
 				}
 				else
 				{
-                                        if($filename == 'TOP_1' && ($form_name == 'form_402_0' || $form_name == 'form_403_0'))
+                                        if(($filename == 'TOP_1' || $filename == 'TOP_3') && ($form_name == 'form_402_0' || $form_name == 'form_403_0'))
                                         {
                                             $isReadOnly = 'readOnly';
                                         }
@@ -2700,7 +2700,15 @@ function makeformEdit_set($post,$out_column,$isReadOnly,$formName,$data){
                     {
                         $sagyoudate = date("Y-m-d");
                     }
-                    $insert_str .= "<input type='date' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");'>";
+                    
+                    if($filename == 'TOP_3')
+                    {
+                        $insert_str .= "<input type='text' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");' class='readOnly' readonly>";
+                    }
+                    else
+                    {
+                        $insert_str .= "<input type='date' name='".$form_name."_0' id = '".$form_name."_0' value='".$sagyoudate."' onChange='nullcheck(this.id,".$isnotnull.");'>";
+                    }                    
                     //2022-01-27 日付入力欄をカレンダー表示に変更　end -----<<
 					if($isonce)
 					{
@@ -2743,17 +2751,19 @@ function makeformEdit_set($post,$out_column,$isReadOnly,$formName,$data){
 	
 	$insert_str .= "</table>";
 	
-	$masters = $form_ini[$maintable]['seen_table_num'];
-	$masters_array = explode(',',$masters);
-	for ($i = 0 ; $i < count($masters_array) ; $i++)
-	{
-		if(!in_array($masters_array[$i],$columns_array) && $masters_array[$i] != "")
-		{
-			$insert_str .= "<input type='hidden' name = '".$masters_array[$i]."CODE' value ='".
-						$post[$masters_array[$i].'CODE']."' >";
-		}
-	}
-	
+        if($filename != 'TOP_3')
+        {
+                $masters = $form_ini[$maintable]['seen_table_num'];
+                $masters_array = explode(',',$masters);
+                for ($i = 0 ; $i < count($masters_array) ; $i++)
+                {
+                        if(!in_array($masters_array[$i],$columns_array) && $masters_array[$i] != "")
+                        {
+                                $insert_str .= "<input type='hidden' name = '".$masters_array[$i]."CODE' value ='".
+                                                        $post[$masters_array[$i].'CODE']."' >";
+                        }
+                }
+        }
 	
 	
 	
@@ -3790,7 +3800,7 @@ function make_teijicomplist($post)
         return ($list_html);
 }
 
-function makePROGRESSlist()
+function makePROGRESSlist($post="")
 {
     //------------------------//
     //        初期設定        //
@@ -3805,17 +3815,24 @@ function makePROGRESSlist()
     $isNo = $form_ini[$filename]['isNo'];
     $columnname = $SQL_ini[$filename]['clumname'];
     $columnname_array = explode(',',$columnname);
+    if($filename == 'TOP_1' || $filename == 'TOP_3')
+    {
+        $forms = '6,102,202,203,3,302,303,705,706';
+        $form_array = explode(',',$forms);
+    }
     
     //------------------------//
     //          変数          //
     //------------------------//
     $list_html = "";
     $counter = 1;
+    $teijisum = 0;
+    $zangyousum = 0;
     
     //------------------------//
     //          処理          //
     //------------------------//
-    $list_html .= "<table class ='list'>";
+    $list_html .= "<table class ='list' style='margin:auto;'>";
     $list_html .= "<thead><tr>";
     if($isNo == 1 )
     {
@@ -3841,32 +3858,101 @@ function makePROGRESSlist()
             {
                     $list_html .="<td ".$id." class = 'center'><a class='body'>".$counter."</a></td>";
             }
-    
-            $list_html .="<td ".$id." ><a class ='body'><input type='button' value='PJ詳細選択' "
-                    . "onclick='popup_modal(\"6_".$i."\")'></a></td>";
-            $list_html .= "<input type ='hidden' name ='6CODE'  value ='' >";
-            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_102_0_".$i."'></a></td>";
-            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_202_0_".$i."'></a></td>";
-            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_203_0_".$i."'></a></td>";
-            $list_html .= "<input type ='hidden' name ='form_402_0_".$i."'  value ='' >";
-            $list_html .= "<input type ='hidden' name ='form_403_0_".$i."'  value ='' >";
-            $list_html .="<td ".$id." ><a class='body'><input type='button' value='工程選択' "
-                    . "onclick='popup_modal(\"3_".$i."\")'></a></td>";
-            $list_html .= "<input type ='hidden' name ='3CODE'  value ='' >";
-            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_302_0_".$i."'></a></td>";
-            $list_html .="<td ".$id." ><a class='body'><input type='text' name='form_303_0_".$i."'></a></td>";
-            $list_html .="<td ".$id." ><a class='body'><input type='text'></a></td>";
-            $list_html .="<td ".$id." ><a class='body'><input type='text'></a></td>";
+            
+            if(isset($post['form_802_0_'.$i]))
+            {
+                $list_html .= "<input type ='hidden' name ='6CODE_".$i."'' id ='6CODE_".$i."'' value ='".$post['form_802_0_'.$i]."' >";
+                $list_html .= "<input type ='hidden' name ='3CODE_".$i."'' id ='3CODE_".$i."'' value ='".$post['form_702_0_'.$i]."' >";
+                $teijisum += (int)$post['form_705_0_'.$i];
+                $zangyousum += (int)$post['form_706_0_'.$i];
+            }
+            else
+            {
+                $list_html .= "<input type ='hidden' name ='6CODE_".$i."'' id ='6CODE_".$i."'' value ='' >";
+                $list_html .= "<input type ='hidden' name ='3CODE_".$i."'' id ='3CODE_".$i."'' value ='' >";
+            }
+            
+            foreach($form_array as $form)
+            {
+                $type = "";
+                $value = "";
+                $on = "";
+                $name = "";
+                $readonly = "";
+                $style = "";
+                if(strlen($form) == 1)
+                {
+                    $type = "button";
+                    switch($form)
+                    {
+                        case 3:
+                            $value = "工程選択";
+                            $on = "onclick='popup_modal(\"3_".$i."\")'";
+                            break;
+                        case 6:
+                            $value = "PJ詳細選択";
+                            $on = "onclick='popup_modal(\"6_".$i."\")'";
+                            break;
+                    }
+                }
+                else
+                {
+                    $type = "text";
+                    $name = "form_".$form."_0_".$i;
+                    if($form != "705" && $form != "706")
+                    {
+                        $readonly = "class='readOnly' readonly";
+                    }
+                    else
+                    {
+                        $on = "onchange='totalTime()'";
+                    }
+                    
+                    if($form != "203" && $form != "303")
+                    {
+                        $style = "style='width:75px;'";
+                    }
+                    
+                    if(isset($post[$name]))
+                    {
+                        if($post[$name] == '0.00')
+                        {
+                            $value = '0';
+                        }
+                        else
+                        {
+                            $value = $post[$name];
+                        }
+                    }
+                    else if($form == '706')
+                    {
+                        $value = '0';
+                    }
+                }
+                
+                $list_html .= "<td ".$id." ><a class ='body'>";
+                $list_html .= "<input type='".$type."' value='".$value."' name='".$name."' id='".$name."' ".$on." ".$readonly." ".$style.">";
+                $list_html .= "</a></td>";
+            }
+            $list_html .= "<input type ='hidden' name ='form_402_0_".$i."' id ='form_402_0_".$i."' value='".$_SESSION['user']['STAFFID']."'>";
+            $list_html .= "<input type ='hidden' name ='form_403_0_".$i."' id ='form_403_0_".$i."' value='".$_SESSION['user']['STAFFNAME']."'>";
             $list_html .="<td ".$id." ><a class='body'>"
-                    . "<button type='button' title='行をコピー' onclick='copyRow(".$counter.");'><i class='far fa-copy faa-tada animated-hover'></i></button>"
-                    . "<button type='button' title='コピーデータを貼り付け' onclick='pasteRow(".$counter.");'><i class='fas fa-paint-brush faa-tada animated-hover'></i></button>"
-                    . "<button type='button' title='行を削除' onclick='removeRow(".$counter.");'><i class='far fa-minus-square faa-tada animated-hover'></i></button></td>"
+                    . "<button type='button' title='行をコピー' onclick='copyRow(".$i.");'><i class='far fa-copy faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='コピーデータを貼り付け' onclick='pasteRow(".$i.");'><i class='fas fa-paint-brush faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='行を削除' onclick='removeRow(".$i.");'><i class='far fa-minus-square faa-tada animated-hover'></i></button>"
                     . "</a></td>";
             $list_html .= "</tr>";
+            
             $counter++;
     }
-    
     $list_html .="</tbody></table>";
+    
+    $list_html .= "<table style='margin:auto;'><tr><td style='width:670px;'></td>"
+            . "<td style='width:100px;'>合計</td>"
+            . "<td><input class='readOnly' readonly id='teizitotal' style='width:85px;' value='".$teijisum."'></td>"
+            . "<td><input class='readOnly' readonly id='zangyoutotal' style='width:85px;' value='".$zangyousum."'></td>"
+            . "<td></td>"
+            . "</tr></table>";
     
     return ($list_html);
 }
