@@ -25,6 +25,8 @@
 	require_once("f_Button.php");
 	require_once("f_File.php");
 	require_once("f_Form.php");	
+        
+        $_SESSION['post'] = $_SESSION['pre_post'];
 ?>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
