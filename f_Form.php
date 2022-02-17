@@ -3905,7 +3905,7 @@ function makePROGRESSlist($post="")
                     }
                     else
                     {
-                        $on = "onchange='totalTime()'";
+                        $on = "onchange='totalTime()' autocomplete='off'";
                     }
                     
                     if($form != "203" && $form != "303")
