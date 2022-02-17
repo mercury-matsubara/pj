@@ -179,7 +179,7 @@
 			echo "<form action='listJump.php' method='post'>";
 			echo "<input type='submit' name = 'delete' value='íœ'
 					class='button' style = 'height:30px;'>";
-			echo "<input type='submit' name = 'cancel' value='ˆê——‚É–ß‚é'
+			echo "<input type='submit' name = 'cancel' value='–ß‚é'
 					class='button' style = 'height:30px;'>";
 			echo "</form></div>";
 		}
@@ -205,7 +205,7 @@
 				echo "<input type='submit' name = 'delete' value='íœ'
 						class='button' style = 'height:30px;'>";
 			}
-			echo "<input type='submit' name = 'cancel' value='ˆê——‚É–ß‚é'
+			echo "<input type='submit' name = 'cancel' value='–ß‚é'
 					class='button' style = 'height:30px;'>";
 			echo "</form></div>";
 		}

@@ -77,7 +77,7 @@
 			unset($_SESSION['upload']);
 			$filename = $_SESSION['filename'];
 			$filename_array = explode('_',$filename);
-                        if($filename = 'TOP_1')
+                        if($filename == 'TOP_1')
                         {
                             $_SESSION['filename'] = $filename_array[0]."_4";
                             header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")

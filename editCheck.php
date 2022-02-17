@@ -246,7 +246,16 @@
 		var h = screen.availHeight;
 		w = (w * 0.8);
 		h = (h * 0.8);
-		url = 'Modal.php?tablenum='+GET+'&form=edit';
+                var filename = "<?php echo $filename; ?>";
+                if(filename == 'TOP_3')
+                {
+                    var getArray = GET.split('_')
+                    url = 'Modal.php?tablenum='+getArray[0]+'&form=edit&row='+getArray[1];
+                }
+                else
+                {
+                    url = 'Modal.php?tablenum='+GET+'&form=edit';
+                }
 //		n = showModalDialog(
 //			url,
 //			this,

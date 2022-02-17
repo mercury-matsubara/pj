@@ -129,7 +129,7 @@
 				unset($_SESSION['pre_post']['true']);
 			}
                        
-                        if($filename = 'TOP_3')
+                        if($filename == 'TOP_3')
                         {
                             $_SESSION['filename'] = $filename_array[0]."_4";
                             header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
