@@ -22,6 +22,7 @@
 	require_once ("f_SQL.php");
 	require_once("f_Construct.php");
 	$tablenum = "";
+        $row="";
 	
 	if(count($_POST) != 0)
 	{
@@ -41,10 +42,6 @@
                 if(isset($_GET['row']))                     
                 {
                     $row = $_GET['row'];
-                }
-                else
-                {
-                    $row = "";
                 }
 		$_POST = array();
 	}
