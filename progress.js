@@ -187,19 +187,19 @@ function PROGRESScheck()
         {
             judge = false;
         }
-    }
-    
-    if(!judge)
-    {
-        alert('入力内容に誤りがあります。');
-    }
-    else if(document.getElementById('teizitotal').value < 7.75)
-    {
-        var result = window.confirm('定時時間が7.75未満ですが、このまま登録しますか？');
         
-        if(!result)
+        if(!judge)
         {
-            judge = false;
+            alert('入力内容に誤りがあります。');
+        }
+        else if(document.getElementById('teizitotal').value < 7.75)
+        {
+            var result = window.confirm('定時時間が7.75未満ですが、このまま登録しますか？');
+
+            if(!result)
+            {
+                judge = false;
+            }
         }
     }
     return judge;

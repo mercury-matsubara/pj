@@ -79,6 +79,10 @@
 			$filename_array = explode('_',$filename);
                         if($filename == 'TOP_1')
                         {
+                            $date = str_replace('”N', '-', $_SESSION['pre_post']['ym']);
+                            $date = str_replace('ŒŽ', '', $date); 
+                            $date = new DateTime($date);
+                            $_SESSION['TOP_4'] = $date->format('Y-m');
                             $_SESSION['filename'] = $filename_array[0]."_4";
                             header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
                             		.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
