@@ -7162,12 +7162,22 @@ function makeCalendar()
                 $worktime = '<button class="copybtn" type="button" title="コピー" onclick="showdialog('."'$date2'".')">'
                         . '<i class="far fa-copy faa-tada animated-hover"></i></button>';
             }
-            $worktime .= createWorkTd($workDate[$time]);
+            $worktime .= createWorkTd($workDate[$time],$day);
         }
         else
         {
             $name = 'TOP_1_button';
-            $worktime = '<span class="worktime"></span><span class="overtime"></span></td>';
+            if($day == 1)
+            {
+                $teizi_hyozi = "<a style='float: left;'>[定]</a>";
+                $zangyo_hyozi = "<a style='float: left;'>[残]</a>";
+            }
+            else
+            {
+                $teizi_hyozi = "";
+                $zangyo_hyozi = "";
+            }
+            $worktime = '<span class="worktime">'.$teizi_hyozi.'</span><span class="overtime">'.$zangyo_hyozi.'</span></td>';
         }
         
         if($endmonthjudge || $today < $date)
@@ -7243,21 +7253,31 @@ function getProjectData($month)
 /**
  * 作業時間、残業時間作成
  */
-function createWorkTd($workDate) 
+function createWorkTd($workDate,$day) 
 {
+    if($day == 1)
+    {
+        $teizi_hyouzi = "<a style='float: left;'>[定]</a>";
+        $zangyo_hyouzi = "<a style='float: left;'>[残]</a>";
+    }
+    else
+    {
+        $teizi_hyouzi = "";
+        $zangyo_hyouzi = "";
+    }
     if($workDate['TEIZITIME'] != '7.75')
     {
-        $work = "<span class='worktime' style='color:red;'>";
+        $work = "<span class='worktime' style='color:red;'>".$teizi_hyouzi."";
         $work .= $workDate['TEIZITIME'];
         $work .= "</span>";
     }
     else
     {
-        $work = "<span class='worktime'>";
+        $work = "<span class='worktime'>".$teizi_hyouzi."";
         $work .= $workDate['TEIZITIME'];
         $work .= "</span>";
     }
-    $work .= "<span class='overtime'>";
+    $work .= "<span class='overtime'>".$zangyo_hyouzi."";
     $work .= $workDate['ZANGYOUTIME'];
     $work .= "</span></td>";
     return $work;
