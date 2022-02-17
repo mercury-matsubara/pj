@@ -7178,8 +7178,8 @@ function makeCalendar()
             $name = 'TOP_1_button';
             if($day == 1)
             {
-                $teizi_hyozi = "<a style='float: left;'>[定]</a>";
-                $zangyo_hyozi = "<a style='float: left;'>[残]</a>";
+                $teizi_hyozi = "<a style='float: left; color: black;'>[定]</a>";
+                $zangyo_hyozi = "<a style='float: left; color: black;'>[残]</a>";
             }
             else
             {
@@ -7266,8 +7266,8 @@ function createWorkTd($workDate,$day)
 {
     if($day == 1)
     {
-        $teizi_hyouzi = "<a style='float: left;'>[定]</a>";
-        $zangyo_hyouzi = "<a style='float: left;'>[残]</a>";
+        $teizi_hyouzi = "<a style='float: left; color: black;'>[定]</a>";
+        $zangyo_hyouzi = "<a style='float: left; color: black;'>[残]</a>";
     }
     else
     {
