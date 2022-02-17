@@ -1116,7 +1116,7 @@ function existCheck($post,$tablenum,$type){
                 }
             } 
             
-            if($filename == 'TOP_3' || $counter == 1)
+            if($filename == 'TOP_3' && $counter == 1)
             {
                     $errorinfo[$counter] = "";
                     $counter++;
