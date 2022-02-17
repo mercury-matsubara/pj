@@ -42,6 +42,10 @@
                 {
                     $row = $_GET['row'];
                 }
+                else
+                {
+                    $row = "";
+                }
 		$_POST = array();
 	}
 	else
