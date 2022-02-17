@@ -1,8 +1,11 @@
 
 var row_copy = { CODE6:'', PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', CODE3:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'0' };//コピー用
-var row_init = { PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'0' };//クリア用
+var row_init = { CODE6:'', PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', CODE3:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'0' };//クリア用
+var color_copy = { CODE6:'', PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', CODE3:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'' };//カラーコピー用
+var color_init = { CODE6:'#fff', PJNUM:'#fff', EDABAN:'#fff', PJNAME:'#fff', STAFFID:'#fff', STAFFNAME:'#fff', CODE3:'#fff', KOUTEIID:'#fff', KOUTEINAME:'#fff', TEIZI:'#fff', ZANGYOU:'#fff' };//カラークリア用
 //行のデータを連想配列に入れて返す
-function getRowData(pos){
+function getRowData(pos)
+{
 	var row = {};
 	row.CODE6 = $('#6CODE_'+pos).val();	
 	row.PJNUM = $('#form_102_0_'+pos).val();	
@@ -19,7 +22,8 @@ function getRowData(pos){
 	return row;
 }
 //指定行に連想配列のデータをセットする
-function setRowData(pos,row){
+function setRowData(pos,row)
+{
 	$('#6CODE_'+pos).val(row.CODE6 );
 	$('#form_102_0_'+pos).val(row.PJNUM );
 	$('#form_202_0_'+pos).val( row.EDABAN );
@@ -33,7 +37,8 @@ function setRowData(pos,row){
 	$('#form_706_0_'+pos).val( row.ZANGYOU );
 }
 //指定行を白色にする（insert時）
-function changeColor(pos){
+function changeColor(pos)
+{
     document.getElementById('form_102_0_'+pos).style.backgroundColor = '';	
     document.getElementById('form_202_0_'+pos).style.backgroundColor = '';	
     document.getElementById('form_203_0_'+pos).style.backgroundColor = '';	
@@ -45,17 +50,22 @@ function changeColor(pos){
     document.getElementById('form_706_0_'+pos).style.backgroundColor = '';
 }
 //指定行をグローバル変数にコピーする
-function copyRow( pos ){
+function copyRow( pos )
+{
 	row_copy = getRowData(pos);
 }
 //指定行にグローバル変数のデータをコピーする
-function pasteRow( pos ){
+function pasteRow( pos )
+{
 	setRowData(pos,row_copy);
+        totalTime();
 }
 //指定箇所の行を削除してつめる
-function removeRow( pos ){
+function removeRow( pos )
+{
 	setRowData(pos,row_init);	//10行目は空白にする
         changeColor(pos);	//10行目は白色にする
+        totalTime();
 }
 
 function PROGRESScheck()
@@ -111,21 +121,25 @@ function PROGRESScheck()
                 if(teizitime.match(/[^0-9\.]+/))
                 {
                     document.getElementById('form_705_0_'+i).style.backgroundColor = '#ff0000';
+                    judge = false;
                 }
                 else if (strlen(teizitime) > 4)
 		{
 			if("\b\r".indexOf(m, 0) < 0)
 			{
                             document.getElementById('form_705_0_'+i).style.backgroundColor = '#ff0000';
+                            judge = false;
 			}
 		}
                 else if(document.getElementById('form_705_0_'+i).value == '')
                 {
                     document.getElementById('form_705_0_'+i).style.backgroundColor = '#ff0000';
+                    judge = false;
                 }
                 else if(teizi % 25 != 0)
                 {
                     document.getElementById('form_705_0_'+i).style.backgroundColor = '#ff0000';
+                    judge = false;
                 }
                 else
                 {
@@ -135,21 +149,25 @@ function PROGRESScheck()
                 if(zangyoutime.match(/[^0-9\.]+/))
                 {
                     document.getElementById('form_706_0_'+i).style.backgroundColor = '#ff0000';
+                    judge = false;
                 }
                 else if (strlen(zangyoutime) > 5)
 		{
 			if("\b\r".indexOf(m, 0) < 0)
 			{
                             document.getElementById('form_706_0_'+i).style.backgroundColor = '#ff0000';
+                            judge = false;
 			}
 		}
                 else if(document.getElementById('form_706_0_'+i).value == '')
                 {
                     document.getElementById('form_706_0_'+i).style.backgroundColor = '#ff0000';
+                    judge = false;
                 }
                 else if(zangyou % 25 != 0)
                 {
                     document.getElementById('form_706_0_'+i).style.backgroundColor = '#ff0000';
+                    judge = false;
                 }
                 else
                 {
@@ -157,11 +175,32 @@ function PROGRESScheck()
                 }                
             }
         }
+        
+        if(document.getElementById('teizitotal').value > 7.75)
+        {
+            judge = false;
+        }
+
+        var sagyoutotal = parseInt(document.getElementById('teizitotal').value); 
+        sagyoutotal += parseInt(document.getElementById('zangyoutotal').value);
+        if(sagyoutotal > 24)
+        {
+            judge = false;
+        }
     }
     
     if(!judge)
     {
         alert('入力内容に誤りがあります。');
+    }
+    else if(document.getElementById('teizitotal').value < 7.75)
+    {
+        var result = window.confirm('定時時間が7.75未満ですが、このまま登録しますか？');
+        
+        if(!result)
+        {
+            judge = false;
+        }
     }
     return judge;
 }
@@ -177,28 +216,40 @@ function totalTime()
         if(document.getElementById(teiziid).value == '')
         {
                 teizitotal += 0;
+                document.getElementById(teiziid).style.backgroundColor = '';
         }
-        else if(document.getElementById(teiziid).value.match(/[^0-9\.]+/))
+        else 
         {
-                document.getElementById(teiziid).style.backgroundColor = '#ff0000';
-        }
-        else
-        {
-                var teizi = document.getElementById(teiziid).value * 100;
-                teizitotal += parseInt(teizi);
+            var teizi = document.getElementById(teiziid).value * 100;
+            if(document.getElementById(teiziid).value.match(/[^0-9\.]+/) ||
+                    teizi % 25 != 0)
+            {
+                    document.getElementById(teiziid).style.backgroundColor = '#ff0000';
+            }
+            else
+            {
+                    document.getElementById(teiziid).style.backgroundColor = '';
+                    teizitotal += parseInt(teizi);
+            }
         }
         if(document.getElementById(zangyouid).value == '')
         {
                 zangyoutotal += 0;
-        }
-        else if(document.getElementById(zangyouid).value.match(/[^0-9\.]+/))
-        {
-                document.getElementById(zangyouid).style.backgroundColor = '#ff0000';
+                document.getElementById(zangyouid).style.backgroundColor = '';
         }
         else
         {
-                var zangyou = document.getElementById(zangyouid).value * 100;
-                zangyoutotal += parseInt(zangyou);
+            var zangyou = document.getElementById(zangyouid).value * 100;
+            if(document.getElementById(zangyouid).value.match(/[^0-9\.]+/) ||
+                    zangyou % 25 != 0)
+            {
+                    document.getElementById(zangyouid).style.backgroundColor = '#ff0000';
+            }
+            else
+            {
+                    document.getElementById(zangyouid).style.backgroundColor = '';
+                    zangyoutotal += parseInt(zangyou);
+            }
         }
     }
     document.getElementById('teizitotal').value = teizitotal /100;
