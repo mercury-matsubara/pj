@@ -72,17 +72,31 @@
 		}
 	}
 	$isexist = true;
-	$checkResultarray = existID($_SESSION['list']['id']);
-	if(count($checkResultarray) == 0)
-	{
-		$isexist = false;
-	}
-
+        if($filename == 'TOP_3')
+        {
+                $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'日';
+                
+                $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
+                $date = "";
+                if($_SESSION['edit'] == "")
+                {
+                        $isexist = false;
+                }
+        }
+        else
+        {
+                $checkResultarray = existID($_SESSION['list']['id']);
+                if(count($checkResultarray) == 0)
+                {
+                        $isexist = false;
+                }
+        }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
 <script src='./jquery.flatshadow.js'></script>
@@ -134,7 +148,15 @@
 	{
 		if($filename != 'PJTOUROKU_2')
 		{
-			echo "<form action='pageJump.php' method='post'><div class = 'left'>";
+                        if($filename == 'TOP_3')
+                        {
+                            echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                                                    onsubmit = "return PROGRESScheck();">';
+                        }
+                        else
+                        {
+                            echo "<form action='pageJump.php' method='post'><div class = 'left'>";
+                        }
 			echo makebutton();
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
@@ -149,6 +171,11 @@
 			echo EditComp($_SESSION['edit'],$_SESSION['data']);
 			echo "</form>";
 			echo "<div class = 'center'>";
+                        if($filename == 'TOP_3')
+                        {
+                            $list = makePROGRESSlist($_SESSION['edit']);
+                            echo $list;
+                        }
 			echo "<form action='listJump.php' method='post'>";
 			echo "<input type='submit' name = 'delete' value='削除'
 					class='button' style = 'height:30px;'>";

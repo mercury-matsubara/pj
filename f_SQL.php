@@ -43,7 +43,7 @@ function InsertSQL($post,$tablenum,$over){
 	{
 		$columns = "202,203";
 	}
-        if($filename == 'TOP_1')
+        if($filename == 'TOP_1' || $filename == 'TOP_3')
         {
                 $columns = "6,3,704,705,706";
         }

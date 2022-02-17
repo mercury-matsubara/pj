@@ -40,22 +40,37 @@
 		$filename = $_SESSION['filename'];
 		if($filename != 'PJTOUROKU_2')
 		{
-			delete($_SESSION['edit'],$_SESSION['data']);
-			echo "<form action='pageJump.php' method='post'><div class='left'>";
-			echo makebutton();
-			echo "</div>";
-			echo "<div style='clear:both;'></div>";
-			echo "<div class = 'center'><br><br>";
-			echo "<a class = 'title'>".$title1.$title2."</a>";
-			echo "</div>";
-			echo "<br><br>";
-			echo EditComp($_SESSION['edit'],$_SESSION['data']);
-			echo "</form>";
-			echo "<div class = 'center'>";
-			echo "<form action='listJump.php' method='post'>";
-			echo "<input type='submit' name = 'cancel' value='ˆê——‚É–ß‚é'
-					class='free'>";
-			echo "</form></div>";
+                        if($filename == 'TOP_3')
+                        {
+                            delete_progress($_SESSION['edit']['7CODE']);
+                            $_SESSION['pre_post'] = $_SESSION['post'];
+                            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+                            exit();
+                        }
+                        else
+                        {
+                            delete($_SESSION['edit'],$_SESSION['data']);
+                            echo "<form action='pageJump.php' method='post'><div class='left'>";
+                            echo makebutton();
+                            echo "</div>";
+                            echo "<div style='clear:both;'></div>";
+                            echo "<div class = 'center'><br><br>";
+                            echo "<a class = 'title'>".$title1.$title2."</a>";
+                            echo "</div>";
+                            echo "<br><br>";
+                            echo EditComp($_SESSION['edit'],$_SESSION['data']);
+                            echo "</form>";
+                            echo "<div class = 'center'>";
+                            if($filename == 'TOP_3')
+                            {
+                                $list = makePROGRESSlist($_SESSION['edit']);
+                                echo $list;
+                            }
+                            echo "<form action='listJump.php' method='post'>";
+                            echo "<input type='submit' name = 'cancel' value='ˆê——‚É–ß‚é'
+                                            class='free'>";
+                            echo "</form></div>";
+                        }
 			$_SESSION['edit'] = null;
 			$_SESSION['data'] = null;
 			$_SESSION['upload'] = null;
@@ -104,6 +119,7 @@
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./jquery.corner.js'></script>
 <script src='./jquery.flatshadow.js'></script>

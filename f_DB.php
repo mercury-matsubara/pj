@@ -1234,7 +1234,7 @@ function insert($post){
 	//          処理          //
 	//------------------------//
 	$con = dbconect();																									// db接続関数実行
-	if($filename == 'TOP_1')
+	if($filename == 'TOP_1' || $filename == 'TOP_3')
 	{
             for($i = 0; $i < $post['datas']; $i++)
             {
@@ -7162,7 +7162,7 @@ function makeCalendar()
                 $worktime = '<button class="copybtn" type="button" title="コピー" onclick="showdialog('."'$date2'".')">'
                         . '<i class="far fa-copy faa-tada animated-hover"></i></button>';
             }
-            $worktime = createWorkTd($workDate[$time]);
+            $worktime .= createWorkTd($workDate[$time]);
         }
         else
         {
@@ -7365,11 +7365,8 @@ function get7code($code4,$date)
     $param_ini = parse_ini_file('./ini/param.ini', true);
     
     $code_array = array();
+    $code_array['7CODE'] = "";
     $i = 0;
-    
-    $code_array['form_704_0'] = $date;
-    $code_array['form_402_0'] = $_SESSION['user']['STAFFID'];
-    $code_array['form_403_0'] = $_SESSION['user']['STAFFNAME'];
     
     // str_replace() で置換
     $date = str_replace('日', '', $date);  // "日"を空文字に置換する
@@ -7380,8 +7377,12 @@ function get7code($code4,$date)
     //指定した書式で日時を取得する
     $sagyoudate = $date->format('Y-m-d');
     
+    $code_array['form_704_0'] = $sagyoudate;
+    $code_array['form_402_0'] = $_SESSION['user']['STAFFID'];
+    $code_array['form_403_0'] = $_SESSION['user']['STAFFNAME'];
+    
     $con = dbconect();	
-    $sql = "SELECT 6CODE,PROJECTNUM,PJNAME,EDABAN,3CODE,KOUTEIID,KOUTEINAME,TEIZITIME,ZANGYOUTIME FROM progressinfo 
+    $sql = "SELECT 7CODE,6CODE,PROJECTNUM,PJNAME,EDABAN,3CODE,KOUTEIID,KOUTEINAME,TEIZITIME,ZANGYOUTIME FROM progressinfo 
         LEFT JOIN projectditealinfo USING(6CODE) LEFT JOIN projectinfo USING(5CODE) 
         LEFT JOIN projectnuminfo USING(1CODE) LEFT JOIN syaininfo USING(4CODE) LEFT JOIN edabaninfo USING(2CODE) 
         LEFT JOIN kouteiinfo USING(3CODE) WHERE SAGYOUDATE = '".$sagyoudate."' AND 4CODE = '".$code4."'";
@@ -7391,10 +7392,27 @@ function get7code($code4,$date)
         foreach($result_row as $key => $value)
         {
             $header = $param_ini[$key]['column_num'];
-            $code_array['form_'.$header.'_0_'.$i] = $result_row[$key];
+            if($header == '802' || $header == '702')
+            {
+                $code_array[$key.'_'.$i] = $result_row[$key];
+            }
+            else
+            {
+                $code_array['form_'.$header.'_0_'.$i] = $result_row[$key];
+            }
         }
+        $code_array['7CODE'] .= $result_row['7CODE'].",";
         $i++;
     }
+    $code_array['7CODE'] = rtrim($code_array['7CODE'], ", ");
     return $code_array;
+}
+
+function delete_progress($post)
+{
+    $con = dbconect();	
+    
+    $sql = "DELETE FROM progressinfo WHERE 7CODE in (".$post.") ;";																								// db接続関数実行
+    $con->query($sql);	
 }
 ?>

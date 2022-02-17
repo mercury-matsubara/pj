@@ -56,11 +56,22 @@
 		$maxover = $_SESSION['max_over'];
 	}
 	$isexist = true;
-	$checkResultarray = existID($_SESSION['list']['id']);
-	if(count($checkResultarray) == 0)
-	{
-		$isexist = false;
-	}
+        if($filename == 'TOP_3')
+        {
+                $edit = datasetting($_SESSION['edit']);
+                if($edit == "")
+                {
+                        $isexist = false;
+                }
+        }
+        else
+        {
+                $checkResultarray = existID($_SESSION['list']['id']);
+                if(count($checkResultarray) == 0)
+                {
+                        $isexist = false;
+                }
+        }
 	$endmonth = endMonth();
 	$endMonth = explode(',', $endmonth);
 ?>
@@ -68,6 +79,7 @@
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./inputcheck.js'></script>
 <script src='./generate_date.js'></script>
@@ -75,6 +87,7 @@
 <script src='./jquery.corner.js'></script>
 <script src='./jquery.flatshadow.js'></script>
 <script src='./button_size.js'></script>
+<script src="./progress.js"></script>
 <script language="JavaScript"><!--
 	history.forward();
 	
@@ -319,39 +332,50 @@
 	$_SESSION['pre_post'] = null;
 	if($isexist)
 	{
-		if($filename == 'PROGRESSINFO_2')
-		{
-            //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+                if($filename == 'PROGRESSINFO_2')
+                {
+                        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
 //			$errorinfo = endCheck($_SESSION['edit']['form_704_0'],$_SESSION['edit']['form_704_1']);
-            $date = explode('-', $_SESSION['edit']['form_704_0']);
-            $errorinfo = endCheck($date[0], $date[1]);
-            //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
-			if(count($errorinfo) == 1 && $errorinfo[0] == "" )
-			{
-				$judge = true;
-				$_SESSION['edit']['true'] = true;
-				$_SESSION['pre_post'] = $_SESSION['post'];
-			}
-		}
-		else
-		{
-			$errorinfo = existCheck($_SESSION['edit'],$main_table,2);
-			if(count($errorinfo) == 2 && $errorinfo[0] == "" && $errorinfo[1] == "")
-			{
-				$judge = true;
-				$_SESSION['edit']['true'] = true;
-				$_SESSION['pre_post'] = $_SESSION['post'];
-			}
-		}
-		if(isset($_SESSION['data']))
-		{
-			$data = $_SESSION['data'];
-		}
-		else
-		{
-			$data = "";
-		}
-		$form = makeformEdit_set($_SESSION['edit'],$errorinfo[0],$isReadOnly,"edit",$data );
+                        $date = explode('-', $_SESSION['edit']['form_704_0']);
+                        $errorinfo = endCheck($date[0], $date[1]);
+                        //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
+                        if(count($errorinfo) == 1 && $errorinfo[0] == "" )
+                        {
+                                $judge = true;
+                                $_SESSION['edit']['true'] = true;
+                                $_SESSION['pre_post'] = $_SESSION['post'];
+                        }
+                }
+                else if($filename == 'TOP_3')
+                {
+                        $errorinfo[0] = "";
+                        $errorinfo[1] = "";
+                        $list = makePROGRESSlist($_SESSION['edit']);
+                        $judge = true;
+                        $_SESSION['edit'] = $edit;
+                        $_SESSION['edit']['true'] = true;
+                        $_SESSION['pre_post'] = $_SESSION['post'];
+                        unset($edit);
+                }
+                else 
+                {
+                        $errorinfo = existCheck($_SESSION['edit'],$main_table,2);
+                        if(count($errorinfo) == 2 && $errorinfo[0] == "" && $errorinfo[1] == "")
+                        {
+                                $judge = true;
+                                $_SESSION['edit']['true'] = true;
+                                $_SESSION['pre_post'] = $_SESSION['post'];
+                        }
+                }
+                if(isset($_SESSION['data']))
+                {
+                        $data = $_SESSION['data'];
+                }
+                else
+                {
+                        $data = "";
+                }
+                $form = makeformEdit_set($_SESSION['edit'],$errorinfo[0],$isReadOnly,"edit",$data );
 		$checkList = $_SESSION['check_column'];
 		$notnullcolumns = $_SESSION['notnullcolumns'];
 		$notnulltype = $_SESSION['notnulltype'];
@@ -363,10 +387,18 @@
 //		echo "<input type ='submit' value = '戻る' name = 'cancel' class = 'free'>";
 //		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
-		echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
-					onsubmit = "return check(\''.$checkList.
-					'\',\''.$notnullcolumns.
-					'\',\''.$notnulltype.'\');">';
+                if($filename == 'TOP_1')
+                {
+                    echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                                            onsubmit = "return PROGRESScheck();">';
+                }
+                else
+                {
+                    echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                    			onsubmit = "return check(\''.$checkList.
+                    			'\',\''.$notnullcolumns.
+                    			'\',\''.$notnulltype.'\');">';
+                }
 		echo "<div class = 'center'>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
 		echo "</div><br><br>";
@@ -384,8 +416,10 @@
 		echo $form;
 		echo "</tr></table>";
 		echo "<div class = 'center'>";
-		
-		
+		if($filename == 'TOP_3')
+                {
+                    echo $list;
+                }
 		if($filename == "SAIINFO_2")
 		{
 			echo '<input type="submit" name = "kousinn" value = "登録" 
@@ -405,8 +439,12 @@
 		{
 			echo '>';
 		}
-		echo '<input type="submit" name = "clear" value = "クリア" 
+                
+                if($filename != 'TOP_3')
+                {
+            		echo '<input type="submit" name = "clear" value = "クリア" 
 				class = "free" onClick = "iscansel = false;">';
+                }
                 echo '<input type="submit" name = "cancel" value = "戻る" 
 				class = "free" onClick = "iscansel = false;">';
 		echo "</form>";

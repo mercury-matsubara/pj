@@ -128,8 +128,18 @@
 			{
 				unset($_SESSION['pre_post']['true']);
 			}
-			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
+                       
+                        if($filename = 'TOP_3')
+                        {
+                            $_SESSION['filename'] = $filename_array[0]."_4";
+                            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
+                            		.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+                        }
+                        else
+                        {
+                            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/list.php");
+                        }
 			exit();
 		}
 		if($key == 'kousinn')

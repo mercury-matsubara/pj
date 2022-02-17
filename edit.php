@@ -60,11 +60,25 @@
 		$maxover = $_SESSION['max_over'];
 	}
 	$isexist = true;
-	$checkResultarray = existID($_SESSION['list']['id']);
-	if(count($checkResultarray) == 0)
-	{
-		$isexist = false;
-	}
+        if($filename == 'TOP_3')
+        {
+                $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'日';
+                $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
+                $_SESSION['edit']['form_704_0'] = $date;
+                $date = "";
+                if($_SESSION['edit'] == "")
+                {
+                        $isexist = false;
+                }
+        }
+        else
+        {
+                $checkResultarray = existID($_SESSION['list']['id']);
+                if(count($checkResultarray) == 0)
+                {
+                        $isexist = false;
+                }
+        }
 	$endmonth = endMonth();
 	$endMonth = explode(',', $endmonth);
 	$edalist = edaget();
@@ -74,6 +88,7 @@
 <title><?php echo $title1.$title2 ; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <link rel="stylesheet" type="text/css" href="./list_css.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script src='./jquery-1.8.3.min.js'></script>
 <script src='./inputcheck.js'></script>
 <script src='./generate_date.js'></script>
@@ -81,6 +96,7 @@
 <script src='./jquery.corner.js'></script>
 <script src='./jquery.flatshadow.js'></script>
 <script src='./button_size.js'></script>
+<script src="./progress.js"></script>
 <script language="JavaScript"><!--
 	history.forward();
 	
@@ -505,7 +521,16 @@
 		var h = screen.availHeight;
 		w = (w * 0.8);
 		h = (h * 0.8);
-		url = 'Modal.php?tablenum='+GET+'&form=edit';
+                var filename = "<?php echo $filename; ?>";
+                if(filename == 'TOP_3')
+                {
+                    var getArray = GET.split('_')
+                    url = 'Modal.php?tablenum='+getArray[0]+'&form=edit&row='+getArray[1];
+                }
+                else
+                {
+                    url = 'Modal.php?tablenum='+GET+'&form=edit';
+                }
 //		n = showModalDialog(
 //			url,
 //			this,
@@ -590,65 +615,68 @@
 	$_SESSION['pre_post'] = null;
 	if($isexist)
 	{
-		$out_column ='';
-		make_post($_SESSION['list']['id']);
-		if(isset($_SESSION['data']))
-		{
-			$data = $_SESSION['data'];
-		}
-		else
-		{
-			$data = "";
-		}
-		//佐竹
-		if ($filename == 'PROGRESSINFO_2' ){
-			$judge = false;
-			$id = $_SESSION['list']['id'];
-			$con = dbconect();																									// db接続関数実行
-			$sql[1] = "SELECT * FROM projectditealinfo,syaininfo,projectinfo, projectnuminfo, edabaninfo,progressinfo where projectinfo.1CODE = projectnuminfo.1CODE AND projectinfo.2CODE = edabaninfo.2CODE AND projectinfo.5code = projectditealinfo.5CODE AND syaininfo.4CODE = projectditealinfo.4CODE AND projectditealinfo.6CODE = progressinfo.6CODE AND progressinfo.7code = ".$id." ;";
-			$result = $con->query($sql[1]) or ($judge = true);																	// クエリ発行
-			if($judge)
-			{
-				error_log($con->error,0);
-				$judge = false;
-			}
-			while($result_row = $result->fetch_array(MYSQLI_ASSOC))
-			{
-				$_SESSION['edit']['form_102_0'] = $result_row['PROJECTNUM'];
-				$_SESSION['edit']['form_202_0'] = $result_row['EDABAN'];
-				$_SESSION['edit']['form_203_0'] = $result_row['PJNAME'];
-				$_SESSION['edit']['form_402_0'] = $result_row['STAFFID'];
-				$_SESSION['edit']['form_403_0'] = $result_row['STAFFNAME'];
-                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
-//				$workday = explode('-',$result_row['SAGYOUDATE']);
-//				$_SESSION['edit']['form_704_0'] = $workday[0];
-//				$_SESSION['edit']['form_704_1'] = $workday[1];
-//				$_SESSION['edit']['form_704_2'] = $workday[2];
-				$_SESSION['edit']['form_704_0'] = $result_row['SAGYOUDATE'];
-                $workday = explode('-',$result_row['SAGYOUDATE']);
-                $_SESSION['edit']['workday_year'] = $workday[0];
-                $_SESSION['edit']['workday_month'] = $workday[1];
-                $_SESSION['edit']['workday_day'] = $workday[2];
-                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
-			}
-			//麻野間 2017/11/29
-			//月次済チェック
-			$endjudge = true;
-			for($i = 0; $i < count($endMonth); $i = $i + 3)
-			{
-                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
-//				if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['form_704_0'] == $endMonth[$i + 1]) && ($_SESSION['edit']['form_704_1'] == $endMonth[$i + 2]))
-//				{
-//					$endjudge = false;
-//				}
-                if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['workday_year'] == $endMonth[$i + 1]) && ($_SESSION['edit']['workday_month'] == $endMonth[$i + 2]))
-				{
-					$endjudge = false;
-				}
-                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
-			}
-		}
-		
+                if($filename != 'TOP_3')
+                {
+                        $out_column ='';
+                        make_post($_SESSION['list']['id']);
+                }
+                if(isset($_SESSION['data']))
+                {
+                        $data = $_SESSION['data'];
+                }
+                else
+                {
+                        $data = "";
+                }
+                //佐竹
+                if ($filename == 'PROGRESSINFO_2' )
+                {
+                        $judge = false;
+                        $id = $_SESSION['list']['id'];
+                        $con = dbconect();																									// db接続関数実行
+                        $sql[1] = "SELECT * FROM projectditealinfo,syaininfo,projectinfo, projectnuminfo, edabaninfo,progressinfo where projectinfo.1CODE = projectnuminfo.1CODE AND projectinfo.2CODE = edabaninfo.2CODE AND projectinfo.5code = projectditealinfo.5CODE AND syaininfo.4CODE = projectditealinfo.4CODE AND projectditealinfo.6CODE = progressinfo.6CODE AND progressinfo.7code = ".$id." ;";
+                        $result = $con->query($sql[1]) or ($judge = true);																	// クエリ発行
+                        if($judge)
+                        {
+                                error_log($con->error,0);
+                                $judge = false;
+                        }
+                        while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+                        {
+                                $_SESSION['edit']['form_102_0'] = $result_row['PROJECTNUM'];
+                                $_SESSION['edit']['form_202_0'] = $result_row['EDABAN'];
+                                $_SESSION['edit']['form_203_0'] = $result_row['PJNAME'];
+                                $_SESSION['edit']['form_402_0'] = $result_row['STAFFID'];
+                                $_SESSION['edit']['form_403_0'] = $result_row['STAFFNAME'];
+                        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+    //				$workday = explode('-',$result_row['SAGYOUDATE']);
+    //				$_SESSION['edit']['form_704_0'] = $workday[0];
+    //				$_SESSION['edit']['form_704_1'] = $workday[1];
+    //				$_SESSION['edit']['form_704_2'] = $workday[2];
+                                $_SESSION['edit']['form_704_0'] = $result_row['SAGYOUDATE'];
+                        $workday = explode('-',$result_row['SAGYOUDATE']);
+                        $_SESSION['edit']['workday_year'] = $workday[0];
+                        $_SESSION['edit']['workday_month'] = $workday[1];
+                        $_SESSION['edit']['workday_day'] = $workday[2];
+                        //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
+                        }
+                        //麻野間 2017/11/29
+                        //月次済チェック
+                        $endjudge = true;
+                        for($i = 0; $i < count($endMonth); $i = $i + 3)
+                        {
+                                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+    //				if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['form_704_0'] == $endMonth[$i + 1]) && ($_SESSION['edit']['form_704_1'] == $endMonth[$i + 2]))
+    //				{
+    //					$endjudge = false;
+    //				}
+                                if(isset($endMonth[$i + 1],$endMonth[$i + 2]) && ($_SESSION['edit']['workday_year'] == $endMonth[$i + 1]) && ($_SESSION['edit']['workday_month'] == $endMonth[$i + 2]))
+                                {
+                                        $endjudge = false;
+                                }
+                                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
+                        }
+                }
 		//麻野間 2017/11/29
 		$form = makeformEdit_set($_SESSION['edit'],$out_column,$isReadOnly,"edit",$data );
 		$checkList = $_SESSION['check_column'];
@@ -662,16 +690,30 @@
 //		echo "<input type ='submit' value = '戻る' name = 'cancel' class = 'free'>";
 //		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
-		echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
-					onsubmit = "return check(\''.$checkList.
-					'\',\''.$notnullcolumns.
-					'\',\''.$notnulltype.'\');">';
-		echo "<div class = 'center'>";
+                if($filename == 'TOP_3')
+                {
+                    echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                                            onsubmit = "return PROGRESScheck();">';
+                }
+                else
+                {
+                    echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                                            onsubmit = "return check(\''.$checkList.
+                                            '\',\''.$notnullcolumns.
+                                            '\',\''.$notnulltype.'\');">';
+                }
+                echo "<div class = 'center'>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
 		echo "</div><br>";
 		echo $form;
 		echo "</tr></table>";
 		echo "<div class = 'center'>";
+                
+                if($filename == 'TOP_3')
+                {
+                    $list = makePROGRESSlist($_SESSION['edit']);
+                    echo $list;
+                }
 
 		if($filename == "SAIINFO_2")
 		{
@@ -711,19 +753,28 @@
                                         echo '</form>';
                                         echo '</div>';
 				}
-			}else{
-					echo '<input type="submit" name = "kousinn" value = "更新" 
-							class="free">';
-					echo '<input type="submit" name = "clear" value = "クリア" 
-							class = "free" onClick = "ischeckpass = false;">';
-					echo '<input type="submit" name = "delete" value = "削除" 
-							class = "free" onClick = "ischeckpass = false;">';
-                                        echo "<input type ='submit' value = '戻る' name = 'cancel' "
-                                            . "class = 'free' onClick = 'ischeckpass = false;'>";
-			
 			}
+                        else if($filename == "TOP_3")
+                        {
+                                echo '<input type="submit" name = "kousinn" value = "更新" 
+                                                class="free">';
+                                echo '<input type="submit" name = "delete" value = "削除" 
+                                                class = "free" onClick = "ischeckpass = false;">';
+                                echo "<input type ='submit' value = '戻る' name = 'cancel' "
+                                    . "class = 'free' onClick = 'ischeckpass = false;'>";
+                        }
+                        else
+                        {
+                                echo '<input type="submit" name = "kousinn" value = "更新" 
+                                                class="free">';
+                                echo '<input type="submit" name = "clear" value = "クリア" 
+                                                class = "free" onClick = "ischeckpass = false;">';
+                                echo '<input type="submit" name = "delete" value = "削除" 
+                                                class = "free" onClick = "ischeckpass = false;">';
+                                echo "<input type ='submit' value = '戻る' name = 'cancel' "
+                                    . "class = 'free' onClick = 'ischeckpass = false;'>";
+                        }
 		}
-
 		echo "</form>";
 		echo "</div>";
 	}
