@@ -7349,11 +7349,11 @@ function datasetting($post)
             continue;
         }
         
-        $data_array[$i]['6CODE'] = $post['6CODE_'.$i];
-        $data_array[$i]['3CODE'] = $post['3CODE_'.$i];
-        $data_array[$i]['form_704_0'] = $sagyoudate;
-        $data_array[$i]['form_705_0'] = $post['form_705_0_'.$i];
-        $data_array[$i]['form_706_0'] = $post['form_706_0_'.$i];
+        $data_array[$data_array['datas']]['6CODE'] = $post['6CODE_'.$i];
+        $data_array[$data_array['datas']]['3CODE'] = $post['3CODE_'.$i];
+        $data_array[$data_array['datas']]['form_704_0'] = $sagyoudate;
+        $data_array[$data_array['datas']]['form_705_0'] = $post['form_705_0_'.$i];
+        $data_array[$data_array['datas']]['form_706_0'] = $post['form_706_0_'.$i];
         $data_array['datas'] ++ ;
     }
 
