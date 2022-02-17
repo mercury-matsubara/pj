@@ -3820,6 +3820,7 @@ function makePROGRESSlist($post="")
         $forms = '6,102,202,203,3,302,303,705,706';
         $form_array = explode(',',$forms);
     }
+    $request_filename = basename($_SERVER['SCRIPT_NAME']);          //関数呼び出し元ファイル名取得
     
     //------------------------//
     //          変数          //
@@ -3843,6 +3844,16 @@ function makePROGRESSlist($post="")
             $list_html .="<th><a class ='head'>".$columnname_array[$i]."</a></th>";
     }
     $list_html .="</tr></thead><tbody>";
+    
+    //関数呼び出し元が削除画面の場合はボタンを無効化する
+    if($request_filename == "delete.php")
+    {
+        $disabled = "disabled";
+    }
+    else
+    {
+        $disabled = "";
+    }
     for($i = 0 ; $i < 10 ; $i++)
     {
             $list_html .="<tr>";
@@ -3887,11 +3898,11 @@ function makePROGRESSlist($post="")
                     {
                         case 3:
                             $value = "工程選択";
-                            $on = "onclick='popup_modal(\"3_".$i."\")'";
+                            $on = "onclick='popup_modal(\"3_".$i."\")' ".$disabled."";
                             break;
                         case 6:
                             $value = "PJ詳細選択";
-                            $on = "onclick='popup_modal(\"6_".$i."\")'";
+                            $on = "onclick='popup_modal(\"6_".$i."\")' ".$disabled."";
                             break;
                     }
                 }
@@ -3937,9 +3948,9 @@ function makePROGRESSlist($post="")
             $list_html .= "<input type ='hidden' name ='form_402_0_".$i."' id ='form_402_0_".$i."' value='".$_SESSION['user']['STAFFID']."'>";
             $list_html .= "<input type ='hidden' name ='form_403_0_".$i."' id ='form_403_0_".$i."' value='".$_SESSION['user']['STAFFNAME']."'>";
             $list_html .="<td ".$id." ><a class='body'>"
-                    . "<button type='button' title='行をコピー' onclick='copyRow(".$i.");'><i class='far fa-copy faa-tada animated-hover'></i></button>"
-                    . "<button type='button' title='コピーデータを貼り付け' onclick='pasteRow(".$i.");'><i class='fas fa-paint-brush faa-tada animated-hover'></i></button>"
-                    . "<button type='button' title='行を削除' onclick='removeRow(".$i.");'><i class='far fa-minus-square faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='行をコピー' onclick='copyRow(".$i.");' ".$disabled."><i class='far fa-copy faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='コピーデータを貼り付け' onclick='pasteRow(".$i.");' ".$disabled."><i class='fas fa-paint-brush faa-tada animated-hover'></i></button>"
+                    . "<button type='button' title='行を削除' onclick='removeRow(".$i.");' ".$disabled."><i class='far fa-minus-square faa-tada animated-hover'></i></button>"
                     . "</a></td>";
             $list_html .= "</tr>";
             
