@@ -1038,6 +1038,8 @@ function existCheck($post,$tablenum,$type){
 	}
 	if($type == 2)
 	{
+            if($filename != 'TOP_3')
+            {
 		$table_title = $form_ini[$tablenum]['table_title'];
 		$code = $tablenum.'CODE';
 		$codeValue = $post[$code];
@@ -1060,6 +1062,7 @@ function existCheck($post,$tablenum,$type){
 			$errorinfo[$counter] = "";
 			$counter++;
 		}
+            }
 	}
 	for( $j = 0 ; $j < count($uniquecolumn_array) ; $j++)
 	{
@@ -1082,7 +1085,7 @@ function existCheck($post,$tablenum,$type){
 			}
 		}
 	}
-	if($filename == 'TOP_1')
+	if($filename == 'TOP_1' || $filename == 'TOP_3')
         {
             for($date = 0; $date < $post['datas']; $date++)
             {
@@ -1112,6 +1115,12 @@ function existCheck($post,$tablenum,$type){
                     }
                 }
             } 
+            
+            if($filename == 'TOP_3' || $counter == 1)
+            {
+                    $errorinfo[$counter] = "";
+                    $counter++;
+            }
         }
         else
         {

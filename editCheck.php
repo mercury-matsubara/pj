@@ -56,15 +56,7 @@
 		$maxover = $_SESSION['max_over'];
 	}
 	$isexist = true;
-        if($filename == 'TOP_3')
-        {
-                $edit = datasetting($_SESSION['edit']);
-                if($edit == "")
-                {
-                        $isexist = false;
-                }
-        }
-        else
+        if($filename != 'TOP_3')
         {
                 $checkResultarray = existID($_SESSION['list']['id']);
                 if(count($checkResultarray) == 0)
@@ -355,19 +347,13 @@
                                 $_SESSION['pre_post'] = $_SESSION['post'];
                         }
                 }
-                else if($filename == 'TOP_3')
-                {
-                        $errorinfo[0] = "";
-                        $errorinfo[1] = "";
-                        $list = makePROGRESSlist($_SESSION['edit']);
-                        $judge = true;
-                        $_SESSION['edit'] = $edit;
-                        $_SESSION['edit']['true'] = true;
-                        $_SESSION['pre_post'] = $_SESSION['post'];
-                        unset($edit);
-                }
                 else 
                 {
+                        if($filename == 'TOP_3')
+                        {
+                                $list = makePROGRESSlist($_SESSION['edit']);
+                                $_SESSION['edit'] = datasetting($_SESSION['edit']);
+                        }
                         $errorinfo = existCheck($_SESSION['edit'],$main_table,2);
                         if(count($errorinfo) == 2 && $errorinfo[0] == "" && $errorinfo[1] == "")
                         {
@@ -396,7 +382,7 @@
 //		echo "<input type ='submit' value = '–ß‚é' name = 'cancel' class = 'free'>";
 //		echo "</div></form>";
 		echo "<div style='clear:both;'></div>";
-                if($filename == 'TOP_1')
+                if($filename == 'TOP_3')
                 {
                     echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
                                             onsubmit = "return PROGRESScheck();">';
