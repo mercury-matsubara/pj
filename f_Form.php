@@ -3859,10 +3859,10 @@ function makePROGRESSlist($post="")
                     $list_html .="<td ".$id." class = 'center'><a class='body'>".$counter."</a></td>";
             }
             
-            if(isset($post['form_802_0_'.$i]))
+            if(isset($post['6CODE_'.$i]))
             {
-                $list_html .= "<input type ='hidden' name ='6CODE_".$i."'' id ='6CODE_".$i."'' value ='".$post['form_802_0_'.$i]."' >";
-                $list_html .= "<input type ='hidden' name ='3CODE_".$i."'' id ='3CODE_".$i."'' value ='".$post['form_702_0_'.$i]."' >";
+                $list_html .= "<input type ='hidden' name ='6CODE_".$i."' id ='6CODE_".$i."'' value ='".$post['6CODE_'.$i]."' >";
+                $list_html .= "<input type ='hidden' name ='3CODE_".$i."' id ='3CODE_".$i."'' value ='".$post['3CODE_'.$i]."' >";
                 $teijisum += (int)$post['form_705_0_'.$i];
                 $zangyousum += (int)$post['form_706_0_'.$i];
             }
