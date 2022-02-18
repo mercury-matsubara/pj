@@ -697,7 +697,7 @@
                 if($filename == 'TOP_3')
                 {
                         echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
-                                                onsubmit = "return PROGRESScheck();">';
+                                                onsubmit = "return PROGRESScheck('."'edit'".');">';
                 }
                 else
                 {

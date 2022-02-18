@@ -68,10 +68,10 @@ function removeRow( pos )
         totalTime();
 }
 //工数複数登録時のチェック
-function PROGRESScheck()
+function PROGRESScheck(post)
 {
     var judge = true;
-    var message = "";
+    var dates = 0;
     var m = String.fromCharCode(event.keyCode);
     if((typeof isCancel != 'undefined' && isCancel == false) || 
             (typeof ischeckpass != 'undefined' && ischeckpass == true))
@@ -173,7 +173,8 @@ function PROGRESScheck()
                 else
                 {
                     document.getElementById('form_706_0_'+i).style.backgroundColor = '';
-                }                
+                }          
+                dates++;
             }
         }
         
@@ -189,17 +190,24 @@ function PROGRESScheck()
             judge = false;
         }
         
-        if(!judge)
+        if(dates == 0 && post == "insert")
         {
-            alert('入力内容に誤りがあります。');
+            judge = false;
         }
-        else if(document.getElementById('teizitotal').value < 7.75)
+        else
         {
-            var result = window.confirm('定時時間が7.75未満ですが、このまま登録しますか？');
-
-            if(!result)
+            if(!judge)
             {
-                judge = false;
+                alert('入力内容に誤りがあります。');
+            }
+            else if(document.getElementById('teizitotal').value < 7.75)
+            {
+                var result = window.confirm('定時時間が7.75未満ですが、このまま登録しますか？');
+
+                if(!result)
+                {
+                    judge = false;
+                }
             }
         }
     }

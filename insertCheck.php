@@ -429,7 +429,7 @@
         if($filename == 'TOP_1')
         {
                 echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
-                                    onsubmit = "return PROGRESScheck();">';
+                                    onsubmit = "return PROGRESScheck('."'insert'".');">';
         }
         else
         {
