@@ -3799,7 +3799,14 @@ function make_teijicomplist($post)
         $list_html .="</tbody></table></div>";
         return ($list_html);
 }
+/************************************************************************************************************
+複数工数登録ができるテーブル作成
+function makePROGRESSlist($post="")
 
+引数	$post           既に登録されている情報（ない場合は””）
+
+戻り値	$list_html      テーブルのhtml
+************************************************************************************************************/
 function makePROGRESSlist($post="")
 {
     //------------------------//
@@ -3854,6 +3861,7 @@ function makePROGRESSlist($post="")
     {
         $disabled = "";
     }
+    //10行作成
     for($i = 0 ; $i < 10 ; $i++)
     {
             $list_html .="<tr>";

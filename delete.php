@@ -75,7 +75,6 @@
         if($filename == 'TOP_3')
         {
                 $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'“ú';
-                
                 $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
                 $date = "";
                 if($_SESSION['edit'] == "")
@@ -150,12 +149,11 @@
 		{
                         if($filename == 'TOP_3')
                         {
-                            echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
-                                                    onsubmit = "return PROGRESScheck();">';
+                                echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" >';
                         }
                         else
                         {
-                            echo "<form action='pageJump.php' method='post'><div class = 'left'>";
+                                echo "<form action='pageJump.php' method='post'><div class = 'left'>";
                         }
 			echo makebutton();
 			echo "</div>";
@@ -173,8 +171,8 @@
 			echo "<div class = 'center'>";
                         if($filename == 'TOP_3')
                         {
-                            $list = makePROGRESSlist($_SESSION['edit']);
-                            echo $list;
+                                $list = makePROGRESSlist($_SESSION['edit']);
+                                echo $list;
                         }
 			echo "<form action='listJump.php' method='post'>";
 			echo "<input type='submit' name = 'delete' value='íœ'

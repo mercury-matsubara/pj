@@ -42,17 +42,17 @@
 	}
 	switch ($form_ini[$main_table]['table_type'])
 	{
-	case 0:
-		$title2 = '編集';
-		$isReadOnly = true;
-		break;
-	case 1:
-		$title2 = '編集';
-		$isMaster = true;
-		$isReadOnly = true;
-		break;
-	default:
-		$title2 = '';
+                case 0:
+                        $title2 = '編集';
+                        $isReadOnly = true;
+                        break;
+                case 1:
+                        $title2 = '編集';
+                        $isMaster = true;
+                        $isReadOnly = true;
+                        break;
+                default:
+                        $title2 = '';
 	}
 	$maxover = -1;
 	if(isset($_SESSION['max_over']))
@@ -436,22 +436,22 @@
 									formelements.elements[j].style.backgroundColor = '';
 								}
 							}
-                            //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
-                            var id = formelements.elements[j].id;
-                            if(id == 'form_704_0')
-                            {
-                                if(formelements.elements[j].value == "")
-                                {
-									formelements.elements[j].style.backgroundColor = '#ff0000';
-									judge = false;
-									alert('値を選択して下さい');                                    
-                                }
-                                else
-								{
-									formelements.elements[j].style.backgroundColor = '';
-								}
-                            }
-                            //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<
+                                                        //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                                                        var id = formelements.elements[j].id;
+                                                        if(id == 'form_704_0')
+                                                        {
+                                                            if(formelements.elements[j].value == "")
+                                                            {
+                                                                    formelements.elements[j].style.backgroundColor = '#ff0000';
+                                                                    judge = false;
+                                                                    alert('値を選択して下さい');                                    
+                                                            }
+                                                            else
+                                                            {
+                                                                    formelements.elements[j].style.backgroundColor = '';
+                                                            }
+                                                        }
+                                                        //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<
 						}
 					}
 				}
@@ -491,22 +491,22 @@
 									formelements.elements[j].style.backgroundColor = '';
 								}
 							}
-                            //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
-                            var id = formelements.elements[j].id;
-                            if(id == 'form_704_0')
-                            {
-                                if(formelements.elements[j].value == "")
-                                {
-									formelements.elements[j].style.backgroundColor = '#ff0000';
-									judge = false;
-									alert('値を選択して下さい');                                    
-                                }
-                                else
-								{
-									formelements.elements[j].style.backgroundColor = '';
-								}
-                            }
-                            //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                                                        
+                                                        //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                                                        var id = formelements.elements[j].id;
+                                                        if(id == 'form_704_0')
+                                                        {
+                                                            if(formelements.elements[j].value == "")
+                                                            {
+                                                                                                    formelements.elements[j].style.backgroundColor = '#ff0000';
+                                                                                                    judge = false;
+                                                                                                    alert('値を選択して下さい');                                    
+                                                            }
+                                                            else
+                                                                                            {
+                                                                                                    formelements.elements[j].style.backgroundColor = '';
+                                                                                            }
+                                                        }
+                                                        //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                                                        
 						}
 					}
 				}
@@ -524,12 +524,13 @@
                 var filename = "<?php echo $filename; ?>";
                 if(filename == 'TOP_3')
                 {
-                    var getArray = GET.split('_')
-                    url = 'Modal.php?tablenum='+getArray[0]+'&form=edit&row='+getArray[1];
+                        //行情報を渡す
+                        var getArray = GET.split('_')
+                        url = 'Modal.php?tablenum='+getArray[0]+'&form=edit&row='+getArray[1];
                 }
                 else
                 {
-                    url = 'Modal.php?tablenum='+GET+'&form=edit';
+                        url = 'Modal.php?tablenum='+GET+'&form=edit';
                 }
 //		n = showModalDialog(
 //			url,
@@ -554,7 +555,8 @@
 		totalcount++;
 		for(count=0 ; count < tr_count ; count++)
 		{
-			if(tr[count].id==id){
+			if(tr[count].id==id)
+                        {
 				if(start)
 				{
 					start_count = count;
@@ -592,13 +594,15 @@
 			cell2.innerHTML = cell5.innerHTML;
 			
 			var inp = cell3.getElementsByTagName("INPUT");
-			for( var count = 0, len = inp.length; count < len; count++ ){
+			for( var count = 0, len = inp.length; count < len; count++ )
+                        {
 				var id = inp[count].id;
 				var re = new RegExp(id,'g');
 				cell3.innerHTML =cell3.innerHTML.replace(re,id+"_"+totalcount);
 			}
 			var inp2 = cell3.getElementsByTagName("SELECT");
-			for( var count = 0, len = inp2.length; count < len; count++ ){
+			for( var count = 0, len = inp2.length; count < len; count++ )
+                        {
 				var id = inp2[count].id;
 				var re = new RegExp(id,'g');
 				cell3.innerHTML =cell3.innerHTML.replace(re,id+"_"+totalcount);
@@ -648,17 +652,17 @@
                                 $_SESSION['edit']['form_203_0'] = $result_row['PJNAME'];
                                 $_SESSION['edit']['form_402_0'] = $result_row['STAFFID'];
                                 $_SESSION['edit']['form_403_0'] = $result_row['STAFFNAME'];
-                        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+                                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
     //				$workday = explode('-',$result_row['SAGYOUDATE']);
     //				$_SESSION['edit']['form_704_0'] = $workday[0];
     //				$_SESSION['edit']['form_704_1'] = $workday[1];
     //				$_SESSION['edit']['form_704_2'] = $workday[2];
                                 $_SESSION['edit']['form_704_0'] = $result_row['SAGYOUDATE'];
-                        $workday = explode('-',$result_row['SAGYOUDATE']);
-                        $_SESSION['edit']['workday_year'] = $workday[0];
-                        $_SESSION['edit']['workday_month'] = $workday[1];
-                        $_SESSION['edit']['workday_day'] = $workday[2];
-                        //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
+                                $workday = explode('-',$result_row['SAGYOUDATE']);
+                                $_SESSION['edit']['workday_year'] = $workday[0];
+                                $_SESSION['edit']['workday_month'] = $workday[1];
+                                $_SESSION['edit']['workday_day'] = $workday[2];
+                                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
                         }
                         //麻野間 2017/11/29
                         //月次済チェック
@@ -692,15 +696,15 @@
 		echo "<div style='clear:both;'></div>";
                 if($filename == 'TOP_3')
                 {
-                    echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
-                                            onsubmit = "return PROGRESScheck();">';
+                        echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                                                onsubmit = "return PROGRESScheck();">';
                 }
                 else
                 {
-                    echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
-                                            onsubmit = "return check(\''.$checkList.
-                                            '\',\''.$notnullcolumns.
-                                            '\',\''.$notnulltype.'\');">';
+                        echo '<form name ="edit" action="listJump.php" method="post" enctype="multipart/form-data" 
+                                                onsubmit = "return check(\''.$checkList.
+                                                '\',\''.$notnullcolumns.
+                                                '\',\''.$notnulltype.'\');">';
                 }
                 echo "<div class = 'center'>";
 		echo "<a class = 'title'>".$title1.$title2."</a>";
@@ -708,11 +712,10 @@
 		echo $form;
 		echo "</tr></table>";
 		echo "<div class = 'center'>";
-                
                 if($filename == 'TOP_3')
                 {
-                    $list = makePROGRESSlist($_SESSION['edit']);
-                    echo $list;
+                        $list = makePROGRESSlist($_SESSION['edit']);
+                        echo $list;
                 }
 
 		if($filename == "SAIINFO_2")
@@ -725,7 +728,8 @@
 		}
 		else
 		{
-			if($filename == "PROGRESSINFO_2"){
+			if($filename == "PROGRESSINFO_2")
+                        {
 				if($endjudge)
 				{
 					echo '<input type="submit" name = "kousinn" value = "更新" 

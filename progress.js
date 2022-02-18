@@ -1,4 +1,3 @@
-
 var row_copy = { CODE6:'', PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', CODE3:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'0' };//コピー用
 var row_init = { CODE6:'', PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', CODE3:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'0' };//クリア用
 var color_copy = { CODE6:'', PJNUM:'', EDABAN:'', PJNAME:'', STAFFID:'', STAFFNAME:'', CODE3:'', KOUTEIID:'', KOUTEINAME:'', TEIZI:'', ZANGYOU:'' };//カラーコピー用
@@ -68,7 +67,7 @@ function removeRow( pos )
         changeColor(pos);	//10行目は白色にする
         totalTime();
 }
-
+//工数複数登録時のチェック
 function PROGRESScheck()
 {
     var judge = true;
@@ -79,6 +78,7 @@ function PROGRESScheck()
     {
         for(var i = 0; i < 10; i++)
         {
+            //入力のない行はチェックしない
             if(document.getElementById('form_102_0_'+i).value == "" &&
                     document.getElementById('form_302_0_'+i).value == "" &&
                     document.getElementById('form_705_0_'+i).value == "" &&
@@ -205,7 +205,7 @@ function PROGRESScheck()
     }
     return judge;
 }
-
+//定時時間と残業時間の合計を計算
 function totalTime()
 {
     var teizitotal = 0;

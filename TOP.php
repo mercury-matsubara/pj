@@ -12,12 +12,12 @@
         $filename = 'TOP_4';
 	$title = $form_ini[$filename]['title'];
     
-    //工数が登録されている日付取得
-    require_once("f_DB.php");
-    $ym = "";
-    $workDate = getProjectData($ym);
-    $workDate_keys = array_keys($workDate);
-    $workDate_keys = json_encode($workDate_keys);
+        //工数が登録されている日付取得
+        require_once("f_DB.php");
+        $ym = "";
+        $workDate = getProjectData($ym);
+        $workDate_keys = array_keys($workDate);
+        $workDate_keys = json_encode($workDate_keys);
 ?>
 <head>
 <title><?php echo $title; ?></title>
@@ -63,7 +63,7 @@
         {
                 var yearmonth;
                 var month = $(".month").text();
-                //2020/X
+                //押下された日の情報を渡す
                 month = month.replace(/[^0-9]/g, '/');
                 month = month.slice(2,-3);
                 yearmonth = month.split("/");
@@ -80,6 +80,7 @@
                 document.getElementById('dgl').showModal()
         }
         
+        //コピー先選択ダイアログ内のカレンダー設定
         function setdate() 
         {        
                 //カレンダーの初期値を今日の日付にする
@@ -89,12 +90,14 @@
                 var mm = ("0"+(today.getMonth()+1)).slice(-2);
                 var dd = ("0"+today.getDate()).slice(-2);
                 
+                //未来の日付と締め処理済の月は選択できないようにする
                 document.getElementById("startdate").value = yyyy+'-'+mm+'-'+dd;
                 document.getElementById("startdate").max = yyyy+'-'+mm+'-'+dd;
                 document.getElementById("enddate").value = yyyy+'-'+mm+'-'+dd;
                 document.getElementById("enddate").max = yyyy+'-'+mm+'-'+dd;
         }
         
+        //工数コピー処理
         function copy()
         {
             var judge = true;
@@ -164,7 +167,8 @@
 
                 if(tourokucheck)
                 {
-                    if(confirm("工数登録済みの日付が入力されています。\n" + "上書きしてもよろしいでしょうか？") ) {
+                    if(confirm("工数登録済みの日付が入力されています。\n" + "上書きしてもよろしいでしょうか？") ) 
+                    {
                         judge = true;
                     }
                     else
@@ -187,10 +191,8 @@
                         sessionStorage.removeItem('date');
                         location.href = "./TOP.php";
                     }
-
                 });
             }
-            
         }
 --></script>
 </head>
@@ -201,11 +203,13 @@
         $calender_html = "";
         // カレンダー作成
         $calendar = makeCalendar();
-        foreach ($calendar as $week) {
+        foreach ($calendar as $week) 
+        {
             // カレンダー表示
             $calender_html .= $week;
         }
         
+        //最後に締め処理された月を取得
         $min = lastEndMonth();
         
         echo "<form action='TOPexe.php' method='post'>";

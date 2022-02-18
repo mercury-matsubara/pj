@@ -38,17 +38,17 @@
 	$isReadOnly = false;
 	switch ($form_ini[$main_table]['table_type'])
 	{
-	case 0:
-		$title2 = '編集';
-		$isReadOnly = true;
-		break;
-	case 1:
-		$title2 = '編集';
-		$isMaster = true;
-		$isReadOnly = true;
-		break;
-	default:
-		$title2 = '';
+                case 0:
+                        $title2 = '編集';
+                        $isReadOnly = true;
+                        break;
+                case 1:
+                        $title2 = '編集';
+                        $isMaster = true;
+                        $isReadOnly = true;
+                        break;
+                default:
+                        $title2 = '';
 	}
 	$maxover = -1;
 	if(isset($_SESSION['max_over']))
@@ -160,22 +160,22 @@
 								formelements.elements[j].style.backgroundColor = '';
 							}
 						}
-                        //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
-                        var id = formelements.elements[j].id;
-                        if(id == 'form_704_0')
-                        {
-                            if(formelements.elements[j].value == "")
-                            {
-                                formelements.elements[j].style.backgroundColor = '#ff0000';
-                                judge = false;
-                                alert('値を選択して下さい');                                    
-                            }
-                            else
-                            {
-                                formelements.elements[j].style.backgroundColor = '';
-                            }
-                        }
-                        //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                                                    
+                                                //2022-01-28 日付入力欄をカレンダー表示に変更　start ----->>
+                                                var id = formelements.elements[j].id;
+                                                if(id == 'form_704_0')
+                                                {
+                                                    if(formelements.elements[j].value == "")
+                                                    {
+                                                        formelements.elements[j].style.backgroundColor = '#ff0000';
+                                                        judge = false;
+                                                        alert('値を選択して下さい');                                    
+                                                    }
+                                                    else
+                                                    {
+                                                        formelements.elements[j].style.backgroundColor = '';
+                                                    }
+                                                }
+                                                //2022-01-28 日付入力欄をカレンダー表示に変更　end -----<<                                                    
 					}
 				}
 			}
@@ -202,8 +202,8 @@
 //					}
 //				}
                 //月次チェック
-				var endmonth = "<?php echo $endmonth; ?>";
-				var endArray = endmonth.split(",");
+                var endmonth = "<?php echo $endmonth; ?>";
+                var endArray = endmonth.split(",");
                 var date = document.getElementById("form_704_0").value;
                 var dateArray = date.split('-');
                 var cnt = 0;
@@ -241,12 +241,13 @@
                 var filename = "<?php echo $filename; ?>";
                 if(filename == 'TOP_3')
                 {
-                    var getArray = GET.split('_')
-                    url = 'Modal.php?tablenum='+getArray[0]+'&form=edit&row='+getArray[1];
+                        //行情報を渡す
+                        var getArray = GET.split('_')
+                        url = 'Modal.php?tablenum='+getArray[0]+'&form=edit&row='+getArray[1];
                 }
                 else
                 {
-                    url = 'Modal.php?tablenum='+GET+'&form=edit';
+                        url = 'Modal.php?tablenum='+GET+'&form=edit';
                 }
 //		n = showModalDialog(
 //			url,
@@ -260,7 +261,9 @@
                         "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
                 );	
 	}
-	function AddTableRows(id){
+        
+	function AddTableRows(id)
+        {
 		var table01 = document.getElementById('edit');
 		var tr = table01.getElementsByTagName("TR");
 		var tr_count = tr.length;

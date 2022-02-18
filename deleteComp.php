@@ -42,10 +42,10 @@
 		{
                         if($filename == 'TOP_3')
                         {
-                            delete_progress($_SESSION['edit']['7CODE']);
-                            $_SESSION['pre_post'] = $_SESSION['post'];
-                            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
-                            exit();
+                                delete_progress($_SESSION['edit']['7CODE']);
+                                $_SESSION['pre_post'] = $_SESSION['post'];
+                                header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+                                exit();
                         }
                         else
                         {
@@ -163,8 +163,5 @@
 --></script>
 </head>
 <body>
-
-
 </body>
-
 </html>

@@ -56,17 +56,17 @@
 	$isReadOnly = false;
 	switch ($form_ini[$main_table]['table_type'])
 	{
-	case 0:
-		$title2 = 'ìoò^';
-		$isReadOnly = true;
-		break;
-	case 1:
-		$title2 = 'ìoò^';
-		$isMaster = true;
-		$isReadOnly = true;
-		break;
-	default:
-		$title2 = '';
+                case 0:
+                        $title2 = 'ìoò^';
+                        $isReadOnly = true;
+                        break;
+                case 1:
+                        $title2 = 'ìoò^';
+                        $isMaster = true;
+                        $isReadOnly = true;
+                        break;
+                default:
+                        $title2 = '';
 	}
 	$maxover = -1;
 	if(isset($_SESSION['max_over']))
@@ -146,7 +146,8 @@
 		set_button_size();
 	});
 
-	function inputcheck(name,size,type,isnotnull,isJust){
+	function inputcheck(name,size,type,isnotnull,isJust)
+        {
 		var judge =true;
 		var str = document.getElementById(name).value;
 		m = String.fromCharCode(event.keyCode);
@@ -171,9 +172,12 @@
 		}
 		else if(type==1)
 		{
-			for(i = 0; i < str2.length; i++, len++){
-				if(str2.charAt(i) == "%"){
-					if(str2.charAt(++i) == "u"){
+			for(i = 0; i < str2.length; i++, len++)
+                        {
+				if(str2.charAt(i) == "%")
+                                {
+					if(str2.charAt(++i) == "u")
+                                        {
 						i += 3;
 						len++;
 					}
@@ -200,9 +204,12 @@
 		}
 		else if(type==2)
 		{
-			for(i = 0; i < str2.length; i++, len++){
-				if(str2.charAt(i) == "%"){
-					if(str2.charAt(++i) == "u"){
+			for(i = 0; i < str2.length; i++, len++)
+                        {
+				if(str2.charAt(i) == "%")
+                                {
+					if(str2.charAt(++i) == "u")
+                                        {
 						i += 3;
 						len++;
 						judge=false;
@@ -661,6 +668,7 @@
                 var filename = "<?php echo $filename; ?>";
                 if(filename == 'TOP_1')
                 {
+                    //çsèÓïÒÇìnÇ∑
                     var getArray = GET.split('_')
                     url = 'Modal.php?tablenum='+getArray[0]+'&form=insert&row='+getArray[1];
                 }
@@ -680,7 +688,8 @@
                         "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
                 );	
 	}
-	function AddTableRows(id){
+	function AddTableRows(id)
+        {
 		var table01 = document.getElementById('insert');
 		var tr = table01.getElementsByTagName("TR");
 		var tr_count = tr.length;

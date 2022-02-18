@@ -22,7 +22,7 @@
 	require_once ("f_SQL.php");
 	require_once("f_Construct.php");
 	$tablenum = "";
-        $row="";
+        $row="";                                //工数進捗登録画面（TOP）のような複数登録時に使用
 	
 	if(count($_POST) != 0)
 	{
@@ -31,7 +31,7 @@
 		$form_name = $_POST['form'];
                 if(isset($_POST['row']))
                 {
-                    $row = $_POST['row'];
+                        $row = $_POST['row'];
                 }
 	}
 	else if(count($_GET) != 0)
@@ -41,7 +41,7 @@
 		$tablenum = $_GET['tablenum'];
                 if(isset($_GET['row']))                     
                 {
-                    $row = $_GET['row'];
+                        $row = $_GET['row'];
                 }
 		$_POST = array();
 	}
@@ -54,19 +54,11 @@
 	$columns_num_array = explode(',',$columns_num);
 	$filename = $_SESSION['filename'];
 	
-	
-	
-	
-	
 	if($filename == 'HENKYAKUINFO_2' || $filename == 'SYUKKAINFO_2')
 	{
 		$columns_num = '402,403,202,203';
 		$columns_num_array = explode(',',$columns_num);
 	}
-	
-	
-	
-	
 	
 	$form_num = '';
 	$form_type = '';
@@ -86,25 +78,25 @@
 		{
 			$_SESSION['Modal']['limitstart'] -= 10;
 			$_SESSION['Modal']['limit'] = ' LIMIT '.
-					$_SESSION['Modal']['limitstart'].',10 ';
+			$_SESSION['Modal']['limitstart'].',10 ';
 		}
 		else if(isset($_POST['next']))
 		{
 			$_SESSION['Modal']['limitstart'] += 10;
 			$_SESSION['Modal']['limit'] = ' LIMIT '.
-					$_SESSION['Modal']['limitstart'].',10 ';
+			$_SESSION['Modal']['limitstart'].',10 ';
 		}
 		else if(isset($_POST['backall']))
 		{
 			$_SESSION['Modal']['limitstart'] = 0;
 			$_SESSION['Modal']['limit'] = ' LIMIT '.
-					$_SESSION['Modal']['limitstart'].',10 ';
+			$_SESSION['Modal']['limitstart'].',10 ';
 		}
 		else if(isset($_POST['nextall']))
 		{
 			$_SESSION['Modal']['limitstart'] = $_SESSION['Modal']['max'];
 			$_SESSION['Modal']['limit'] = ' LIMIT '.
-					$_SESSION['Modal']['limitstart'].',10 ';
+			$_SESSION['Modal']['limitstart'].',10 ';
 		}
 		else
 		{
@@ -119,20 +111,20 @@
 		$form_type .= $type.',';
 		switch($type)
 		{
-		case 1:
-		case 2:
-			$form_num .='3,';
-			break;
-		case 3:
-		case 4:
-			$form_num .='2,';
-			break;
-		case 9:
-			$form_num .=$form_ini[$columns_num_array[$i]]['form_num'].',';
-			break;
-		default :
-			$form_num .='1,';
-			break;
+                        case 1:
+                        case 2:
+                                $form_num .='3,';
+                                break;
+                        case 3:
+                        case 4:
+                                $form_num .='2,';
+                                break;
+                        case 9:
+                                $form_num .=$form_ini[$columns_num_array[$i]]['form_num'].',';
+                                break;
+                        default :
+                                $form_num .='1,';
+                                break;
 		}
 	}
 	$form_num = substr($form_num,0,-1);
@@ -142,23 +134,11 @@
 		$form_num = '0';
 	}
 	
-	
-	
-	
-	
-	
 	if($filename == 'HENKYAKUINFO_2' || $filename == 'SYUKKAINFO_2' || $filename == 'genbaend_5')
 	{
 		$_POST['form_405_0'] = '0';
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 ?>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
@@ -230,6 +210,7 @@
 		form_num = form_num.split(",");
                 if(filename == 'TOP_1' || filename == 'TOP_3')
                 {
+                    //指定された行にデータを挿入
                     var row = "<?php echo $row; ?>";
                     var value = document.getElementsByName(tablenum+'CODE')[(document.getElementsByName(tablenum+'CODE').length-1)].value;
                     opener_form.getElementsByName(tablenum+'CODE_'+row)[(opener_form.getElementsByName(tablenum+'CODE_'+row).length-1)].value = value ;  
@@ -247,6 +228,7 @@
 				{
                                         if(filename == 'TOP_1' || filename == 'TOP_3')
                                         {
+                                            //指定された行にデータを挿入
                                             var row = "<?php echo $row; ?>";
                                             var name1 = "form_"+array[i]+"_"+(j);
                                             var name2 = "form_"+array[i]+"_"+(j)+"_"+row;
@@ -313,6 +295,7 @@
         if($filename == 'TOP_1' || $filename == 'TOP_3')
 	{
 		$_POST['form_607_0'] = "1";
+                //ログインしている社員で自動的に抽出
                 $_POST['form_402_0'] = $_SESSION['user']['STAFFID'];
                 $_POST['form_403_0'] = $_SESSION['user']['STAFFNAME'];
 	}
@@ -384,10 +367,9 @@
 	$list ="";
 	$list = makeList_Modal($sql,$_POST,$tablenum);
 	$columns = $form_ini[$tablenum]['sech_form_num'];
-    $_SESSION["tablenum"] = $tablenum;
+        $_SESSION["tablenum"] = $tablenum;
 	$form = makeformModal_set($_POST,'',"form",$columns);
 	$columns = $form_ini[$tablenum]['insert_form_num'];
-	
 	
 	if($filename == 'HENKYAKUINFO_2' || $filename == 'SYUKKAINFO_2')
 	{
@@ -402,7 +384,7 @@
 	echo "<input type = 'hidden' name = 'form' value = '".$form_name."'>";
         if($filename == 'TOP_1' || $filename == 'TOP_3')
         {
-            echo "<input type = 'hidden' name = 'row' value = '".$row."'>";
+                echo "<input type = 'hidden' name = 'row' value = '".$row."'>";
         }
 	echo "<table><tr><td>";
 	echo "<fieldset><legend>検索条件</legend>";

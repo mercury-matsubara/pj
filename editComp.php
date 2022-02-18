@@ -24,8 +24,6 @@
 		$filename = $_SESSION['filename'];
 		$main_table = $form_ini[$filename]['use_maintable_num'];
 		
-		
-		
 		$title1 = $form_ini[$filename]['title'];
 		switch ($form_ini[$main_table]['table_type'])
 		{
@@ -42,15 +40,14 @@
 	}
         if($judge && $filename == 'TOP_3')
         {
-            $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'“ú';
-            require_once("f_DB.php");
-            $edit = $_SESSION['edit'];
-            $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
-            delete_progress($_SESSION['edit']['7CODE']);
-            insert($edit);
-            $_SESSION['pre_post'] = $_SESSION['post'];
-            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
-            exit();
+                $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'“ú';
+                $edit = $_SESSION['edit'];
+                $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
+                delete_progress($_SESSION['edit']['7CODE']);
+                insert($edit);
+                $_SESSION['pre_post'] = $_SESSION['post'];
+                header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+                exit();
         }
 	else if($judge)
 	{

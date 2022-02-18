@@ -238,7 +238,8 @@ table.list input[type="text"]
 	HEIGHT: 20px;
 }
 
-.listScroll{    
+.listScroll
+{    
     /*画面に対する比率で最大の幅を設定*/
     max-width: 99%;
 
@@ -268,21 +269,24 @@ table.list input[type="text"]
     
     border-style: solid;
     border-width: thin;
-    }   
+}   
 
-.listScroll th {  
+.listScroll th 
+{  
     /*スクロール時にヘッダーを固定する*/
     position: sticky;
     top: 0; 
 }
 
 /* カラムの調整 */
-.column {
+.column 
+{
     overflow: hidden;/*スクロール時にカラム名を固定*/
     text-overflow: ellipsis;
 }
 
-.selectScroll{    
+.selectScroll
+{    
     /*画面に対する比率で最大の幅を設定*/
     max-width: 99%;
 
@@ -312,21 +316,24 @@ table.list input[type="text"]
     
     border-style: solid;
     border-width: thin;
-    }   
+}   
 
-.selectScroll th {  
+.selectScroll th 
+{  
     /*スクロール時にヘッダーを固定する*/
     position: sticky;
     top: 0; 
 }
 
 /* カラムの調整 */
-.column {
+.column 
+{
     overflow: hidden;/*スクロール時にカラム名を固定*/
     text-overflow: ellipsis;
 }
 /*ナビゲーション全体の設定*/
-nav{
+nav
+{
         text-align: center;
         position: fixed;
         width: 100%;
@@ -335,7 +342,8 @@ nav{
         box-shadow: 0 5px 10px 0 #b9b9b9;
 }
 /*ナビゲーションを横並びに*/
-nav ul{
+nav ul
+{
         list-style: none;
         display: flex;
         justify-content: center;
@@ -345,28 +353,33 @@ nav ul{
         border-bottom: 1px solid #afafaf;
 }
 /*2階層目以降は横並びにしない*/
-nav ul ul{
+nav ul ul
+{
         display: block;
 }
 
 /*下の階層のulや矢印の基点にするためliにrelativeを指定*/
-nav ul li{
+nav ul li
+{
         position: relative;
         width: 210px;
 }
 
 /*ナビゲーションのリンク設定*/
-nav ul li a{
+nav ul li a
+{
         display: block;
         text-decoration: none;
         color: #383839;
         padding:20px 20px;
         transition:all .3s;
 }
-.line{
+.line
+{
         position:relative;
 }
-.line::after {
+.line::after 
+{
         content: '';
         position: absolute;
         bottom:-2px;
@@ -376,11 +389,13 @@ nav ul li a{
         background: #000;
         transition: all .3s;
 }
-nav ul li a:hover .line::after{
+nav ul li a:hover .line::after
+{
         width: 100%;
 }
 /*下の階層を持っているulの指定*/
-nav li.has-child ul{
+nav li.has-child ul
+{
         /*絶対配置で位置を指定*/
         position: absolute;
         left:0;
@@ -400,12 +415,14 @@ nav li.has-child ul{
 nav li.has-child:hover > ul,
 nav li.has-child ul li:hover > ul,
 nav li.has-child:active > ul,
-nav li.has-child ul li:active > ul{
+nav li.has-child ul li:active > ul
+{
         visibility: visible;
         opacity: 1;
 }
 /*サブボタンデザイン*/
-input.menu{
+input.menu
+{
         background: #efefef;
         border: 1px solid #afafaf;
         margin: 0 0 5px 0px;
@@ -413,48 +430,59 @@ input.menu{
         height: 40px;
         width: 210px;
 }
-input.menu:hover{
+input.menu:hover
+{
         background: gray;
         color: #fff;
 }
 
 /*カレンダーCSS*/
-.container {
+.container 
+{
     font-family: 'Noto Sans JP', sans-serif;
     width: 80%;
     margin-left: 12%;
     height: 100vh;
 }
-h3 {
+h3 
+{
     margin-top: 10%;
     margin-bottom: 1%;
 }
-.month{
+.month
+{
     float: left;
 }
 /*テーブル背景色*/
-.container table {
+.container table 
+{
     background-color: white;
 }
 /*カレンダー枠線*/
-.container table,.container td,.container th {
+.container table,.container td,.container th 
+{
     border-collapse: collapse;
     border: 3px solid white;
 }
 /*カレンダー大きさ*/
-.calendar{
+.calendar
+{
     width: 100%;
 }
-
-tr.youbi{
+/*曜日部分*/
+tr.youbi
+{
     background-color: #b0c4de;
 }
-th.youbiColor {
+th.youbiColor 
+{
     width: 10%;
     height: 30px;
     text-align: center;
 }
-td.day {
+/*日付部分*/
+td.day 
+{
     height: 100px;
     background-color: #eaeff7;
 }
@@ -464,15 +492,16 @@ td.day {
     background: #dce5f4;;
     height: 100px;
 }
+/*日曜日（ボタン以外）*/
 th.youbiColor:nth-of-type(1), td.day:nth-of-type(1) 
 {
     color: red;
 }
+/*土曜日（ボタン以外）*/
 th.youbiColor:nth-of-type(7), td.day:nth-of-type(7) 
 {
     color: blue;
 }
-
 /*日にち*/
 span.dayof 
 {
@@ -494,7 +523,8 @@ input.dayofSUN
     font-size: 18px;
     font-weight: bold;
     color: red;
-}input.dayofSAT
+}
+input.dayofSAT
 {
     background: none;
     border: none;
@@ -503,7 +533,8 @@ input.dayofSUN
     color: blue;
 }
 /*勤務時間、残業時間*/
-span.worktime,span.overtime{
+span.worktime,span.overtime
+{
     display: block;
     border-bottom: 1px solid #b8b8b8;
     height: 25%;
@@ -512,6 +543,7 @@ span.worktime,span.overtime{
     padding-top: 4%;
     color: black;
 }
+/*コピーボタン*/
 button.copybtn
 {
     float: right;
@@ -519,6 +551,7 @@ button.copybtn
     height: 27px;
     width: 27px;
 }
+/*コピー先選択ダイアログ*/
 #dgl
 {
     border: black 0px solid;

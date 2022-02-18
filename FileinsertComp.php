@@ -158,6 +158,7 @@
                 echo "<br><br>";
                 echo $form;
                 
+                //TOP画面の「ファイル取込」ボタンを押下された場合
                 if(isset($_SESSION['history']))
                 {
                     echo "<br><br>";

@@ -36,23 +36,23 @@
 	$title2 = '';
 	switch ($form_ini[$main_table]['table_type'])
 	{
-	case 0:
-		$title2 = '“o˜^Š®—¹';
-		break;
-	case 1:
-		$title2 = '“o˜^Š®—¹';
-		$isMaster = true;
-		break;
-	default:
-		$title2 = '';
+                case 0:
+                        $title2 = '“o˜^Š®—¹';
+                        break;
+                case 1:
+                        $title2 = '“o˜^Š®—¹';
+                        $isMaster = true;
+                        break;
+                default:
+                        $title2 = '';
 	}
         if($judge && $filename == 'TOP_1')
         {
-            require_once("f_DB.php");
-            insert($_SESSION['insert']);
-            $_SESSION['pre_post'] = $_SESSION['post'];
-            header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
-            exit();
+                require_once("f_DB.php");
+                insert($_SESSION['insert']);
+                $_SESSION['pre_post'] = $_SESSION['post'];
+                header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
+                exit();
         }
 	else if($judge)
 	{
@@ -152,8 +152,5 @@
 --></script>
 </head>
 <body>
-
-
 </body>
-
 </html>

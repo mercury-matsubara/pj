@@ -40,17 +40,17 @@
 	$isReadOnly = false;
 	switch ($form_ini[$main_table]['table_type'])
 	{
-	case 0:
-		$title2 = 'çƒìoò^';
-		$isReadOnly = true;
-		break;
-	case 1:
-		$title2 = 'çƒìoò^';
-		$isReadOnly = true;
-		$isMaster = true;
-		break;
-	default:
-		$title2 = '';
+                case 0:
+                        $title2 = 'çƒìoò^';
+                        $isReadOnly = true;
+                        break;
+                case 1:
+                        $title2 = 'çƒìoò^';
+                        $isReadOnly = true;
+                        $isMaster = true;
+                        break;
+                default:
+                        $title2 = '';
 	}
 	$maxover = -1;
 	if(isset($_SESSION['max_over']))
@@ -202,7 +202,7 @@
 	function check(checkList,notnullcolumns,notnulltype)
 	{
 		var judge = true;
-        var filename = "<?php echo $filename; ?>";
+                var filename = "<?php echo $filename; ?>";
 		if(isCancel == false)
 		{
 			var checkListArray = checkList.split(",");
@@ -278,6 +278,7 @@
                 var filename = "<?php echo $filename; ?>";
                 if(filename == 'TOP_1')
                 {
+                    //çsèÓïÒÇìnÇ∑
                     var getArray = GET.split('_')
                     url = 'Modal.php?tablenum='+getArray[0]+'&form=insert&row='+getArray[1];
                 }
@@ -297,7 +298,8 @@
                         "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
                 );	
 	}
-	function AddTableRows(id){
+	function AddTableRows(id)
+        {
 		var table01 = document.getElementById('insert');
 		var tr = table01.getElementsByTagName("TR");
 		var tr_count = tr.length;
@@ -347,13 +349,15 @@
 			
 			
 			var inp = cell3.getElementsByTagName("INPUT");
-			for( var count = 0, len = inp.length; count < len; count++ ){
+			for( var count = 0, len = inp.length; count < len; count++ )
+                        {
 				var id = inp[count].id;
 				var re = new RegExp(id,'g');
 				cell3.innerHTML =cell3.innerHTML.replace(re,id+"_"+totalcount);
 			}
 			var inp2 = cell3.getElementsByTagName("SELECT");
-			for( var count = 0, len = inp2.length; count < len; count++ ){
+			for( var count = 0, len = inp2.length; count < len; count++ )
+                        {
 				var id = inp2[count].id;
 				var re = new RegExp(id,'g');
 				cell3.innerHTML =cell3.innerHTML.replace(re,id+"_"+totalcount);
@@ -372,7 +376,7 @@
 	$_SESSION['pre_post'] = null;
         if($filename == 'TOP_1')
         {
-            $_SESSION['insert'] = datasetting($_SESSION['insert']);
+                $_SESSION['insert'] = datasetting($_SESSION['insert']);
         }
 	$errorinfo = existCheck($_SESSION['insert'],$main_table,1);
 	if(count($errorinfo) == 1 && $errorinfo[0] == "")
@@ -424,15 +428,15 @@
 	echo "<div style='clear:both;'></div>";
         if($filename == 'TOP_1')
         {
-            echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
+                echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
                                     onsubmit = "return PROGRESScheck();">';
         }
         else
         {
-            echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
-                                    onsubmit = "return check(\''.$checkList.
-                                    '\',\''.$notnullcolumns.
-                                    '\',\''.$notnulltype.'\');">';
+                echo '<form name ="insert" action="insertJump.php" method="post" enctype="multipart/form-data" 
+                                        onsubmit = "return check(\''.$checkList.
+                                        '\',\''.$notnullcolumns.
+                                        '\',\''.$notnulltype.'\');">';
         }
 	echo "<div class = 'center'><br><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";

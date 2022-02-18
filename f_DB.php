@@ -7062,16 +7062,21 @@ function teijicheck($post)
 }
 
 
-/**
-* カレンダー作成
-*/
+/************************************************************************************************************
+カレンダー作成
+function makeCalendar()
+
+引数	
+
+戻り値	$weeks　カレンダーhtml
+************************************************************************************************************/
 function makeCalendar()
 {
     $ym = "";
     // タイムゾーンを設定
     date_default_timezone_set('Asia/Tokyo');
 
-    // 前月・次月リンクが押された場合は、GETパラメーターから年月を取得
+    // 前月・次月リンクが押された場合は、SESSIONから年月を取得
     if (isset($_SESSION['TOP_4'])) 
     {
         $ym = $_SESSION['TOP_4'];
@@ -7089,11 +7094,10 @@ function makeCalendar()
         $timestamp = strtotime($ym . '-01');
     }
 
-    // 今日の日付 フォーマット　例）2018-07-3
-//    $today = date('Y-m-j');
+    // 今日の日付
     $today = new DateTime('today');
 
-    // カレンダーのタイトルを作成　例）2017年7月
+    // カレンダーのタイトルを作成　
     $_SESSION['month'] = date('Y', $timestamp)."年".date('n月', $timestamp);
     // 前月・次月の年月を取得
     $_SESSION['prev'] = date('Y-m', mktime(0, 0, 0, date('m', $timestamp) - 1, 1, date('Y', $timestamp)));
@@ -7152,6 +7156,7 @@ function makeCalendar()
             $td_class = 'day';
         }
         
+        //土日の日付（ボタンの場合）はクラス追加
         switch($weekcount)
         {
             case 1:
@@ -7166,6 +7171,7 @@ function makeCalendar()
         if(isset($workDate[$time]))
         {
             $name = 'TOP_3_button';
+            //定時時間が7.75の場合、コピーボタン表示
             if($workDate[$time]['TEIZITIME'] == '7.75')
             {
                 $worktime = '<button class="copybtn" type="button" title="コピー" onclick="showdialog('."'$date2'".')">'
@@ -7226,9 +7232,14 @@ function makeCalendar()
     return $weeks;
 }
 
-/**
-* プロジェクト進捗データ取得
-*/
+/************************************************************************************************************
+プロジェクト進捗データ取得
+function getProjectData($month) 
+
+引数1		$month                          月
+		
+戻り値		$workDate			その月に登録された工数進捗情報		
+************************************************************************************************************/
 function getProjectData($month) 
 {
     // db接続関数実行
@@ -7259,9 +7270,15 @@ function getProjectData($month)
     return $workDate;
 }
 
-/**
- * 作業時間、残業時間作成
- */
+/************************************************************************************************************
+作業時間、残業時間作成
+function createWorkTd($workDate,$day) 
+
+引数1		$workDate			その日のTEIZITIMEとZANGYOUTIME				
+引数2		$day				日付
+		
+戻り値		$work				カレンダーhtml	
+************************************************************************************************************/
 function createWorkTd($workDate,$day) 
 {
     if($day == 1)
@@ -7274,6 +7291,7 @@ function createWorkTd($workDate,$day)
         $teizi_hyouzi = "";
         $zangyo_hyouzi = "";
     }
+    //定時時間が7.75以外の場合は文字を赤くする
     if($workDate['TEIZITIME'] != '7.75')
     {
         $work = "<span class='worktime' style='color:red;'>".$teizi_hyouzi."";
@@ -7291,6 +7309,7 @@ function createWorkTd($workDate,$day)
     $work .= "</span></td>";
     return $work;
 }
+
 /************************************************************************************************************
 function endMonthcheck()
 
@@ -7327,6 +7346,14 @@ function endMonthcheck($year,$month)
 	return ($judge);
 }
 
+/************************************************************************************************************
+最後の月次処理された月取得
+function lastEndMonth()
+
+引数1		
+
+戻り値		$lastEndmonth　　締め処理済の最終月のよく月の一日
+************************************************************************************************************/
 function lastEndMonth()
 {
     //------------------------//
@@ -7338,6 +7365,7 @@ function lastEndMonth()
     $result_row = $result->fetch_array(MYSQLI_ASSOC);
     $lastEndmonth = $result_row['YEAR']."-";
     $m =(int)$result_row['MONTH'];
+    //締め処理が終わった次の月の一日
     if($m == 12)
     {
         $lastEndmonth .= "01-01";
@@ -7355,6 +7383,14 @@ function lastEndMonth()
     return ($lastEndmonth);
 }
 
+/************************************************************************************************************
+工数進捗情報の整理と並べ替え
+function datasetting($post)
+
+引数1		$post   複数の工数情報
+
+戻り値		$data_array　　入れ替わった工数情報
+************************************************************************************************************/
 function datasetting($post)
 {
     $data_array['datas'] = 0;
@@ -7373,11 +7409,12 @@ function datasetting($post)
     
     for($i = 0; $i < 10; $i++)
     {
+        //6CODEがない場合はデータが入っていないため飛ばす
         if($post['6CODE_'.$i] == "")
         {
             continue;
         }
-        
+        //insert時に必要な情報のみ挿入
         $data_array[$data_array['datas']]['6CODE'] = $post['6CODE_'.$i];
         $data_array[$data_array['datas']]['3CODE'] = $post['3CODE_'.$i];
         $data_array[$data_array['datas']]['form_704_0'] = $sagyoudate;
@@ -7389,6 +7426,15 @@ function datasetting($post)
     return $data_array;
 }
 
+/************************************************************************************************************
+工数進捗情報の検索
+function get7code($code4,$date)
+
+引数1		$code4	４CODE
+                $date   SAGYOUDATE
+
+戻り値		$code_array　工数情報
+************************************************************************************************************/
 function get7code($code4,$date)
 {
     $param_ini = parse_ini_file('./ini/param.ini', true);
@@ -7437,6 +7483,14 @@ function get7code($code4,$date)
     return $code_array;
 }
 
+/************************************************************************************************************
+工数進捗情報削除
+function delete_progress($post)
+
+引数1		$post	削除対象の７CODE（複数ある場合はコンマ区切り）
+
+戻り値		
+************************************************************************************************************/
 function delete_progress($post)
 {
     $con = dbconect();	

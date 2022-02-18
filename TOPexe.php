@@ -18,23 +18,15 @@
                 $interval = new DateInterval('P1D');
 
                 $daterange = new DatePeriod( $begin, $interval ,$end );
-                foreach( $daterange as $date ){
+                foreach( $daterange as $date )
+                {
                     $dates[] = $date->format('Y-m-d').PHP_EOL;;
                 }
                 $dates[] = $_POST['pasteEnd'];
-
                 $a = 0;
-
-                //------------------------//
-                //          処理          //
-                //------------------------//
-
+                
                 // db接続関数実行
                 $con = dbconect();
-
-//                $selecrSQL = "SELECT 3CODE,6CODE,TEIZITIME,ZANGYOUTIME,7ENDDATE,7PJSTAT FROM progressinfo "
-//                        . "LEFT JOIN syaininfo ON 4CODE WHERE SAGYOUDATE='".$_POST['copydate']."' AND 4CODE='".$_SESSION['user']['4CODE']."';";
-
                 $selecrSQL = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo using (6CODE) "
                         . "where SAGYOUDATE = '".$_POST['copydate']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
                 
@@ -125,6 +117,7 @@
             }
         }
         
+        //メインメニューのTOPボタンが押された場合
         if(isset($_GET['mainmenu']))
         {
             unset($_GET['mainmenu']);
