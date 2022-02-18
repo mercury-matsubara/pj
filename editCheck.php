@@ -84,7 +84,7 @@
 	history.forward();
 	
 	var totalcount  = "<?php echo $maxover; ?>";
-	var iscansel = true;
+        var ischeckpass = true;
 	
 	$(window).resize(function()
 	{
@@ -125,7 +125,7 @@
 	{
 		var judge = true;
 		var filename = "<?php echo $filename; ?>";
-		if(iscansel == true)
+		if(ischeckpass == true)
 		{
 			var checkListArray = checkList.split(",");
 			var notNullArray = notnullcolumns.split(",");
@@ -438,10 +438,10 @@
                 if($filename != 'TOP_3')
                 {
             		echo '<input type="submit" name = "clear" value = "ƒNƒŠƒA" 
-				class = "free" onClick = "iscansel = false;">';
+				class = "free" onClick = "ischeckpass = false;">';
                 }
                 echo '<input type="submit" name = "cancel" value = "–ß‚é" 
-				class = "free" onClick = "iscansel = false;">';
+				class = "free" onClick = "ischeckpass = false;">';
 		echo "</form>";
 		echo "</div>";
 	}

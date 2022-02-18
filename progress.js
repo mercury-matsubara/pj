@@ -58,6 +58,7 @@ function copyRow( pos )
 function pasteRow( pos )
 {
 	setRowData(pos,row_copy);
+        changeColor(pos);
         totalTime();
 }
 //w’è‰ÓŠ‚Ìs‚ğíœ‚µ‚Ä‚Â‚ß‚é

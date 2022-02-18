@@ -58,8 +58,6 @@
                         else
                         {
                             $filename = $_SESSION['filename'];
-                            $filename_array = explode('_',$filename);
-                            $_SESSION['filename'] = $filename_array[0]."_2";
                             header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
                                             .$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/teiji.php");
                         }

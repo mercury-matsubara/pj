@@ -44,12 +44,12 @@
     </head>
     <body>
         <?php
-            if(isset($_POST))
+            if(isset($_SESSION['insert']))
             {
-                    $_SESSION['teijicheck'] = $_POST;
+                    $_SESSION['teijicheck'] = $_SESSION['insert'];
                     $startdate = explode('-',$_SESSION['teijicheck']['startdate']);
                     //1Œ…‚ÌŒŽ‚Ìê‡A0‚ð•\Ž¦‚µ‚È‚¢
-                    if(substr($startdate[1],0,1) == "0")
+                    if(isset($startdate) && substr($startdate[1],0,1) == "0")
                     {
                             $startdate[1] = ltrim($startdate[1],"0");
                     }

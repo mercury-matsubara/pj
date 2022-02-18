@@ -3910,7 +3910,7 @@ function makePROGRESSlist($post="")
                 {
                     $type = "text";
                     $name = "form_".$form."_0_".$i;
-                    if($form != "705" && $form != "706")
+                    if(($form != "705" && $form != "706") || ($request_filename == "delete.php"))
                     {
                         $readonly = "class='readOnly' readonly";
                     }
