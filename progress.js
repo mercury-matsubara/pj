@@ -182,9 +182,9 @@ function PROGRESScheck()
             judge = false;
         }
 
-        var sagyoutotal = parseInt(document.getElementById('teizitotal').value); 
-        sagyoutotal += parseInt(document.getElementById('zangyoutotal').value);
-        if(sagyoutotal > 24)
+        var sagyoutotal = document.getElementById('teizitotal').value * 100; 
+        sagyoutotal += document.getElementById('zangyoutotal').value * 100;
+        if(sagyoutotal > 2400)
         {
             judge = false;
         }
