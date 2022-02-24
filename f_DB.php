@@ -7409,12 +7409,26 @@ function datasetting($post)
     
     for($i = 0; $i < 10; $i++)
     {
-        //6CODEがない場合はデータが入っていないため飛ばす
-        if($post['6CODE_'.$i] == "")
+        //7CODEと6CODEがない場合はデータが入っていないため飛ばす
+        if($post['7CODE_'.$i] == "" && $post['6CODE_'.$i] == "")
         {
             continue;
         }
         //insert時に必要な情報のみ挿入
+        if($post['7CODE_'.$i] != "" && $post['6CODE_'.$i] != "")
+        {
+            $data_array[$data_array['datas']]['7CODE'] = $post['7CODE_'.$i];
+        }
+        else if($post['7CODE_'.$i] != "" && $post['6CODE_'.$i] == "")
+        {
+            //編集でレコード数が減り、不要になった７CODE
+            $data_array['delete'][] = $post['7CODE_'.$i];
+            continue;
+        }
+        else
+        {
+            $data_array[$data_array['datas']]['7CODE'] = "";
+        }
         $data_array[$data_array['datas']]['6CODE'] = $post['6CODE_'.$i];
         $data_array[$data_array['datas']]['3CODE'] = $post['3CODE_'.$i];
         $data_array[$data_array['datas']]['form_704_0'] = $sagyoudate;
@@ -7467,7 +7481,7 @@ function get7code($code4,$date)
         foreach($result_row as $key => $value)
         {
             $header = $param_ini[$key]['column_num'];
-            if($header == '802' || $header == '702')
+            if($header == '701' || $header == '802' || $header == '702')
             {
                 $code_array[$key.'_'.$i] = $result_row[$key];
             }
@@ -7479,7 +7493,7 @@ function get7code($code4,$date)
         $code_array['7CODE'] .= $result_row['7CODE'].",";
         $i++;
     }
-    $code_array['7CODE'] = rtrim($code_array['7CODE'], ", ");
+    $code_array['7CODE'] = rtrim($code_array['7CODE'], ",");
     return $code_array;
 }
 
@@ -7494,8 +7508,63 @@ function delete_progress($post)
 function delete_progress($post)
 {
     $con = dbconect();	
-    
-    $sql = "DELETE FROM progressinfo WHERE 7CODE in (".$post.") ;";																								// db接続関数実行
+    $code = explode(",", $post);
+    $sql = "DELETE FROM progressinfo WHERE 7CODE = '".$code[0]."'";
+    for($i = 1; $i < count($code); $i++)
+    {
+        $sql .= " OR 7CODE = '".$code[$i]."'";
+    }							
+    $sql .= ";";
     $con->query($sql);	
+}
+
+/************************************************************************************************************
+工数進捗編集処理
+function edit_progress($post)
+
+引数1		$post	更新するデータ
+
+戻り値		
+************************************************************************************************************/
+function edit_progress($post)
+{
+    $con = dbconect();	
+    $sql = "";
+    //工数の数が減る場合
+    if(isset($post['delete']) && $post['delete'] != "")
+    {
+        //delete
+        $sql = "DELETE FROM progressinfo WHERE 7CODE = '".$post['delete'][0]."'";
+        
+        for($h = 1; $h < count($post['delete']); $h++)
+        {
+            $sql .= " OR 7CODE = '".$post['delete'][$h]."'";
+        }
+        
+        $sql .= ";";
+        
+        $con->query($sql);
+    }
+    
+    for($i = 0; $i < $post['datas']; $i++)
+    {
+        $sql = "";
+        if($post[$i]['7CODE'] != "" && $post[$i]['6CODE'] != "")
+        {
+            //update
+            $sql = "UPDATE progressinfo SET 3CODE = '".$post[$i]['3CODE']."',"
+                    . "6CODE = '".$post[$i]['6CODE']."',SAGYOUDATE = '".$post[$i]['form_704_0']."',"
+                    . "TEIZITIME = '".$post[$i]['form_705_0']."',ZANGYOUTIME = '".$post[$i]['form_706_0']."'"
+                    . "WHERE 7CODE = '".$post[$i]['7CODE']."';";
+        }
+        else if($post[$i]['7CODE'] == "" && $post[$i]['6CODE'] != "")
+        {
+            //insert
+            $sql = "INSERT INTO progressinfo (3CODE,6CODE,SAGYOUDATE,TEIZITIME,ZANGYOUTIME) "
+                    . "VALUE ('".$post[$i]['3CODE']."','".$post[$i]['6CODE']."','".$post[$i]['form_704_0']."',"
+                    . "'".$post[$i]['form_705_0']."','".$post[$i]['form_706_0']."');";
+        }
+        $con->query($sql);
+    }
 }
 ?>

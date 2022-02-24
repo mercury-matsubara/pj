@@ -3880,6 +3880,7 @@ function makePROGRESSlist($post="")
             
             if(isset($post['6CODE_'.$i]))
             {
+                $list_html .= "<input type ='hidden' name ='7CODE_".$i."' id ='7CODE_".$i."'' value ='".$post['7CODE_'.$i]."' >";
                 $list_html .= "<input type ='hidden' name ='6CODE_".$i."' id ='6CODE_".$i."'' value ='".$post['6CODE_'.$i]."' >";
                 $list_html .= "<input type ='hidden' name ='3CODE_".$i."' id ='3CODE_".$i."'' value ='".$post['3CODE_'.$i]."' >";
                 $teijisum += (float)$post['form_705_0_'.$i];
@@ -3887,6 +3888,7 @@ function makePROGRESSlist($post="")
             }
             else
             {
+                $list_html .= "<input type ='hidden' name ='7CODE_".$i."'' id ='7CODE_".$i."'' value ='' >";
                 $list_html .= "<input type ='hidden' name ='6CODE_".$i."'' id ='6CODE_".$i."'' value ='' >";
                 $list_html .= "<input type ='hidden' name ='3CODE_".$i."'' id ='3CODE_".$i."'' value ='' >";
             }

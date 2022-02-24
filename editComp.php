@@ -42,9 +42,8 @@
         {
                 $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'“ú';
                 $edit = $_SESSION['edit'];
+                edit_progress($edit);
                 $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
-                delete_progress($_SESSION['edit']['7CODE']);
-                insert($edit);
                 $_SESSION['pre_post'] = $_SESSION['post'];
                 header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
                 exit();

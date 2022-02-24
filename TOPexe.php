@@ -28,7 +28,7 @@
                 // db接続関数実行
                 $con = dbconect();
                 $selecrSQL = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo using (6CODE) "
-                        . "where SAGYOUDATE = '".$_POST['copydate']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
+                        . "WHERE SAGYOUDATE = '".$_POST['copydate']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
                 
                 // SQL実行
                 $result = $con->query($selecrSQL);																	// クエリ発行
@@ -50,7 +50,7 @@
 
                 //削除する工数を検索
                 $delete_selectsql = "SELECT * FROM progressinfo LEFT JOIN projectditealinfo using (6CODE) "
-                        . "where SAGYOUDATE BETWEEN '".$_POST['pasteStart']."' AND '".$_POST['pasteEnd']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
+                        . "WHERE SAGYOUDATE BETWEEN '".$_POST['pasteStart']."' AND '".$_POST['pasteEnd']."' AND 4CODE = '".$_SESSION['user']['4CODE']."';";
                 
                 $result = $con->query($delete_selectsql);																	// クエリ発行
                 if(!$result)
