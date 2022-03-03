@@ -124,8 +124,8 @@
     function deleterireki()
     {
         <?php 
-        $rireki_ini_array = parse_ini_file("./ini/sousarireki.ini",true);            //操作履歴情報ファイル
-        $delete_month = $rireki_ini_array["deleterireki"]["delete_month"];			
+        $rireki_ini_array = parse_ini_file("./ini/form.ini",true);            //操作履歴情報ファイル
+        $delete_month = $rireki_ini_array["rireki_2"]["delete_month"];			
         ?>
         var checkmsg = '<?php echo $delete_month; ?>' + 'ヶ月以上前の操作履歴を削除します。よろしいでしょうか？';
         if(window.confirm(checkmsg))
