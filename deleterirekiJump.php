@@ -23,6 +23,13 @@
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/pjdelete.php");
 			exit();
 		}
+        if($key == 'deletesousarireki')
+        {
+            delete_sousarireki();
+			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
+					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/list.php");
+			exit();            
+        }
 	}
 	header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 			.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/retry.php");

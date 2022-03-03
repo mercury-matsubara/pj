@@ -1114,6 +1114,27 @@ function makeformSerch_set($post,$formName){
 	//          処理          //
 	//------------------------//
 	$serch_str .= "<table name ='formInsert' id ='serch'>";
+    if($filename == "rireki_2")
+    {
+        if(isset($post["form_start_0"]))
+        {
+            $startdate = $post["form_start_0"];
+        }
+        else
+        {
+            $startdate = date("Y-m-d");
+        }
+        if(isset($post["form_end_0"]))
+        {
+            $enddate = $post["form_end_0"];
+        }
+        else
+        {
+            $enddate = date("Y-m-d");
+        }
+        $serch_str .= "<tr><td><a class = 'itemname'>操作日</a></td>";
+        $serch_str .= "<td><input type='date' name='form_start_0' value='".$startdate."'>　～　<input type='date' name='form_end_0' value='".$enddate."'></td></tr>";         
+    }
 	for($i = 0 ; $i < count($columns_array) ; $i++)
 	{
 		if($columns_array[0] == "")
@@ -1132,10 +1153,6 @@ function makeformSerch_set($post,$formName){
 			{
 				$insertColumn = '402,403,202,203';
 			}
-			
-			
-			
-			
 			
 			$insertColumn_array = explode(',',$insertColumn);
 			if($tablenum != $Colum)
@@ -1503,14 +1520,28 @@ function pulldown_set($type,$name,$over,$post,$ReadOnly,$formName,$isnotnull){
 		$pulldown.='<option value ="'.$value.'" '.$select.' >'.$text.'</option>';
 		$select = "";
 	}
-	if($isSelect)
-	{
-		$pulldown.='<option value ="" >---選択して下さい---</option>';
-	}
-	else
-	{
-		$pulldown.='<option value ="" selected >---選択して下さい---</option>';
-	}
+    if($_SESSION["filename"] == "rireki_2")
+    {
+        if($isSelect)
+        {
+            $pulldown.='<option value ="" ></option>';
+        }
+        else
+        {
+            $pulldown.='<option value ="" selected ></option>';
+        }        
+    }
+    else
+    {
+        if($isSelect)
+        {
+            $pulldown.='<option value ="" >---選択して下さい---</option>';
+        }
+        else
+        {
+            $pulldown.='<option value ="" selected >---選択して下さい---</option>';
+        }
+    }
 	return $pulldown;
 }
 

@@ -1935,6 +1935,57 @@ function itemListSQL($post){
 		$sql .= ' group by progressinfo.7CODE';
 		$sql .= ' ;';
 	}
+    elseif($filename == "rireki_2")
+    {
+        $before_year = $form_ini[$filename]['before_year'];
+        $after_year = date_create('NOW');
+        $after_year = date_format($after_year, "Y");
+        
+        //ëÄçÏì˙
+        if(isset($_SESSION["list"]["form_start_0"]) && $_SESSION["list"]["form_start_0"] != "")
+        {
+            $startdate = $_SESSION["list"]["form_start_0"]." 00:00:00";
+        }
+        else
+        {
+            $startdate = $before_year."-01-01 00:00:00";
+        }
+        
+        if(isset($_SESSION["list"]["form_end_0"]) && $_SESSION["list"]["form_end_0"] != "")
+        {
+            $enddate = $_SESSION["list"]["form_end_0"]." 23:59:59";
+        }
+        else
+        {
+            $enddate = $after_year."-12-31 23:59:59";
+        }
+        $sql .= " WHERE DATE BETWEEN '".$startdate."' AND '".$enddate."' ";
+        
+        //é–àı
+        if(isset($_SESSION["list"]["4CODE"]) && $_SESSION["list"]["4CODE"] != "")
+        {
+            $sql .= " AND 4CODE = '".$_SESSION["list"]["4CODE"]."' ";
+        }
+        
+        //âÊñ ñº
+        if(isset($_SESSION["list"]["form_1204_0"]) && $_SESSION["list"]["form_1204_0"] != "")
+        {
+            $sql .= " AND GAMEN = '".$_SESSION["list"]["form_1204_0"]."' ";
+        }
+        
+        //ëÄçÏãÊï™
+        if(isset($_SESSION["list"]["form_1205_0"]) && $_SESSION["list"]["form_1205_0"] != "")
+        {
+            $sql .= " AND KUBUN = '".$_SESSION["list"]["form_1205_0"]."' ";
+        }
+        
+        //ëÄçÏì‡óe
+        if(isset($_SESSION["list"]["form_1206_0"]))
+        {
+            $sql .= " AND NAIYOU LIKE '%".$_SESSION["list"]["form_1206_0"]."%' ";
+        }
+        $sql .= ' ;';        
+    }
 	else
 	{
 		$sql .= ' ;';

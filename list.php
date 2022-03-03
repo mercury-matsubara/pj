@@ -120,6 +120,23 @@
                         "width =" + w + ",height=" + h + ",resizable=yes,maximize=yes"
                 );	
 	}
+    
+    function deleterireki()
+    {
+        <?php 
+        $rireki_ini_array = parse_ini_file("./ini/sousarireki.ini",true);            //操作履歴情報ファイル
+        $delete_month = $rireki_ini_array["deleterireki"]["delete_month"];			
+        ?>
+        var checkmsg = '<?php echo $delete_month; ?>' + 'ヶ月以上前の操作履歴を削除します。よろしいでしょうか？';
+        if(window.confirm(checkmsg))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }    
+    }
 --></script>
 </head>
 <body>
@@ -146,6 +163,12 @@
 		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
 		$list = makeList_item($sql,$_SESSION['list']);
 	}
+    elseif($filename == "rireki_2")
+    {
+		$sql = itemListSQL($_SESSION['list']);
+		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
+		$list = makeList_item($sql,$_SESSION['list']);        
+    }
 	elseif($filename != "KOUTEIINFO_2")
 	{
 		$sql = joinSelectSQL($_SESSION['list'],$main_table);
@@ -286,6 +309,14 @@
 		echo "</div>";
 //		echo "</form>";
 	}
+    if($filename == "rireki_2")
+    {
+        echo "<form action='deleterirekiJump.php' method='post' onsubmit='return deleterireki();'>";
+		echo "<div class = 'left'>";
+		echo "<input type ='submit' name = 'deletesousarireki' class='free' value = 'データ削除'>";
+		echo "</div>";
+        echo "</form>";
+    }
 	echo "</div>";
 	echo "</div>";
         echo "<form action='pageJump.php' method='post'>";

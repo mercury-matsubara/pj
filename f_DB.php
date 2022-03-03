@@ -1665,7 +1665,7 @@ function make_csv($post){
 	//------------------------//
 	$con = dbconect();																									// db接続関数実行
 	
-	if($filename == 'PJLIST_2' || $filename == 'MONTHLIST_2')
+	if($filename == 'PJLIST_2' || $filename == 'MONTHLIST_2' || $filename == 'rireki_2')
 	{
 		$sql = itemListSQL($post);
 		$sql = SQLsetOrderby($post,$filename,$sql);
@@ -3525,7 +3525,11 @@ function makeList_item($sql,$post){
 		}
 	}
 	$_SESSION['kobetu']['total'] = $totalcount;
-
+	if($filename == "rireki_2")
+	{
+		$sql[0] = substr($sql[0],0,-1);																						// 最後の';'削除
+		$sql[0] .= $limit.";";																									// LIMIT追加
+	}
 	$result = $con->query($sql[0]) or ($judge = true);																		// クエリ発行
 	if($judge)
 	{
@@ -3659,12 +3663,7 @@ function makeList_item($sql,$post){
 								','.$listtable_array[$i].')"></td>';
 			}
 		}
-		
-		
-		
-		
-		
-		
+			
 		if($filename == 'PJTOUROKU_2' || $filename == 'EDABANINFO_2')
 		{
 			$check_js = 'onChange = " return inputcheck(\'kobetu_'.$totalcount.'_'.$counter.'\',7,7,0,2)"';
@@ -3716,19 +3715,44 @@ function makeList_item($sql,$post){
 				$list_html .= "<td ".$id."><input type='submit' name='edit_".
 								$result_row[$main_table.'CODE']."' value = '編集'></td>";
 			}
-		}
-		
-		
-		
-		
-		
-		
-		
+		}		
 		$list_html .= "</tr>";
 		$counter++;
 	}
 	$list_html .="</tbody></table>";
     $list_html .= "</div>";
+	if($filename == "rireki_2")
+	{
+        $list_html .= "<br>";
+		$list_html .="<div style='display:inline-flex'>";
+		$list_html .= "<div class = 'left'>";
+		$list_html .= "<input type='submit' name ='backall' value ='一番最初に戻る' class = 'button' style ='height : 30px;' ";
+		if($limitstart == 0)
+		{
+			$list_html .= " disabled='disabled'";
+		}
+		$list_html .= "></div>";
+		$list_html .= "<div class = 'left'>";
+		$list_html .= "<input type='submit' name ='back' value ='戻る' class = 'button' style ='height : 30px;' ";
+		if($limitstart == 0)
+		{
+			$list_html .= " disabled='disabled'";
+		}
+		$list_html .= "></div><div class = 'left'>";
+		$list_html .= "<input type='submit' name ='next' value ='進む' class = 'button' style ='height : 30px;' ";
+		if(($limitstart + $listcount) == $totalcount)
+		{
+			$list_html .= " disabled='disabled'";
+		}
+		$list_html .= "></div>";
+		$list_html .="<div class = 'left'>";
+		$list_html .= "<input type='submit' name ='nextall' value ='一番最後に進む' class = 'button' style ='height : 30px;' ";
+		if(($limitstart + $listcount) == $totalcount)
+		{
+			$list_html .= " disabled='disabled'";
+		}
+		$list_html .= "></div>";
+	}    
 	$_SESSION['kobetu']['totalCharge'] = $total_charge;
 	return ($list_html);
 }
@@ -7565,6 +7589,36 @@ function edit_progress($post)
                     . "'".$post[$i]['form_705_0']."','".$post[$i]['form_706_0']."');";
         }
         $con->query($sql);
+    }
+}
+/************************************************************************************************************
+操作履歴削除処理
+function delete_sousarireki()
+
+引数1
+
+戻り値		
+***********************************************************************************************************/
+function delete_sousarireki()
+{
+    //DB接続
+    $con = dbconect();
+   
+    //削除対象の日付を計算する。
+    $rireki_ini_array = parse_ini_file("./ini/sousarireki.ini",true);            //操作履歴情報ファイル
+    $delete_month = $rireki_ini_array["deleterireki"]["delete_month"];          		
+    $delete_date = date("Y-m-d",strtotime("-".$delete_month." month"));
+    $delete_date = $delete_date." 23:59:59";
+    
+    //履歴削除SQL
+    $delete_sql = "DELETE FROM rireki WHERE DATE <= '".$delete_date."';";
+    
+    // SQL実行
+    $result = $con->query($delete_sql);																	// クエリ発行
+    if(!$result)
+    {
+        error_log($con->error,0);
+        exit();
     }
 }
 ?>
