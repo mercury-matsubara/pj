@@ -43,6 +43,7 @@
                 $date = $_SESSION['pre_post']['ym'].$_SESSION['pre_post']['TOP_3_button'].'“ú';
                 $edit = $_SESSION['edit'];
                 edit_progress($edit);
+                insert_sousarireki($_SESSION["filename"],"2",$_SESSION["edit"]);
                 $_SESSION['edit'] = get7code($_SESSION['user']['4CODE'],$date);
                 $_SESSION['pre_post'] = $_SESSION['post'];
                 header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
@@ -79,6 +80,7 @@
 		
 			require_once("f_DB.php");
 			update($_SESSION['edit']);
+            insert_sousarireki($_SESSION["filename"],"2",$_SESSION["edit"]);
 			unset($_SESSION['upload']);
 			echo "<form action='pageJump.php' method='post'><div class='left'>";
 			echo makebutton();

@@ -43,6 +43,7 @@
                         if($filename == 'TOP_3')
                         {
                                 delete_progress($_SESSION['edit']['7CODE']);
+                                insert_sousarireki($_SESSION["filename"],"3",$_SESSION["edit"]);
                                 $_SESSION['pre_post'] = $_SESSION['post'];
                                 header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
                                 exit();
@@ -50,6 +51,7 @@
                         else
                         {
                             delete($_SESSION['edit'],$_SESSION['data']);
+                            insert_sousarireki($_SESSION["filename"],"3",$_SESSION["edit"]);
                             echo "<form action='pageJump.php' method='post'><div class='left'>";
                             echo makebutton();
                             echo "</div>";
@@ -93,6 +95,7 @@
 					class='free'>";
 			echo "</form></div>";
 			pjdelete($_SESSION['kobetu']);
+            insert_sousarireki($_SESSION["filename"],"3","");
 			unset($_SESSION['kobetu']);
 			unset($_SESSION['list']);
 		}

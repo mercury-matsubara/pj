@@ -19,6 +19,7 @@
 		$filename = $_SESSION['filename'];
 		require_once("f_DB.php");
 		insertUser();
+        insert_sousarireki($_SESSION["filename"],"1",$_SESSION["insertUser"]);
 		$userName = $_SESSION['insertUser']['uid'];
 		$password = $_SESSION['insertUser']['pass'];
 		$_SESSION['insertUser'] = null;

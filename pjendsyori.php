@@ -18,9 +18,11 @@
 	
 	if($filename == 'pjend_5')
 	{
-		$message = pjend($_SESSION['list']);
+		$message = pjend($_SESSION['list']);        
 		if($message == 'Š®—¹')
 		{
+            insert_sousarireki($_SESSION["filename"],"5",$_SESSION["seizyou5code"]);
+            unset($_SESSION['seizyou5code']);
 			echo "<div class = 'center'><br><br>";
 			echo "<form action='pageJump.php' method='post'>";
 			echo makebutton();

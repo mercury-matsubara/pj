@@ -37,6 +37,7 @@
 		if($isexist)
 		{
 			updateUser();
+            insert_sousarireki($_SESSION["filename"],"2",$_SESSION['result_array']);
 			$userName = $_SESSION['editUser']['uid'];
 			$password = $_SESSION['editUser']['newpass'];
 			$_SESSION['editUser'] = null;

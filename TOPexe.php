@@ -101,7 +101,9 @@
                 {
                         error_log($con->error,0);
                         exit();
-                }   
+                }
+                
+                insert_sousarireki("TOP_4","4",$_POST);
             }
             else if($key == 'prev')
             {

@@ -156,8 +156,9 @@
 			}
 		}
 	}
-        $_SESSION['list'] = $_SESSION['kensaku'];
-        unset($_SESSION['kensaku']);
+    insert_sousarireki($_SESSION["filename"],"1",$_SESSION["pjdata"]);
+    $_SESSION['list'] = $_SESSION['kensaku'];
+    unset($_SESSION['kensaku']);
 ?>
 </body>
 </html>

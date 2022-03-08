@@ -50,6 +50,7 @@
         {
                 require_once("f_DB.php");
                 insert($_SESSION['insert']);
+                insert_sousarireki($_SESSION["filename"],"1",$_SESSION["insert"]);
                 $_SESSION['pre_post'] = $_SESSION['post'];
                 header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/TOP.php");
                 exit();
@@ -60,6 +61,7 @@
 		$filename = $_SESSION['filename'];
 		require_once("f_DB.php");
 		insert($_SESSION['insert']);
+        insert_sousarireki($_SESSION["filename"],"1",$_SESSION["insert"]);
 		unset($_SESSION['upload']);
 		echo "<form action='pageJump.php' method='post'><div class = 'left'>";
 		echo makebutton();

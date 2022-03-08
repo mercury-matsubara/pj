@@ -113,6 +113,7 @@
 	else
 	{
 		nenji($_SESSION['nenzi']['period']);
+        insert_sousarireki($_SESSION["filename"],"7",$_SESSION["nenzi"]["period"]);
 		echo "<form action='pageJump.php' method='post'>";
 		echo makebutton();
 		echo "<div style='clear:both;'></div>";

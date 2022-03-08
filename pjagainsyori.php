@@ -22,6 +22,7 @@
 		$_SESSION['post'] = $_SESSION['pre_post'];
 		unset($_SESSION['pre_post']);
 		$message = pjagain($_SESSION['list']);
+        insert_sousarireki($_SESSION["filename"],"6",$_SESSION["list"]["5CODE"]);
 		if($message !== '終了PJキャンセル処理が完了しました。')
 		{
 			$title = str_replace("処理完了", "エラー", $title);

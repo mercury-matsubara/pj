@@ -19,6 +19,7 @@
 
 	$_SESSION['list'] = $_POST;
 	deletepjall($_POST['id'] );
+    insert_sousarireki($_SESSION["filename"],"3",$_SESSION["pjdata"]);
 	header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 			.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/kobetu.php");
 	exit();

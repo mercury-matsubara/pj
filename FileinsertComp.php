@@ -110,6 +110,7 @@
 		require_once("f_DB.php");
 		unset($_SESSION['upload']);
 		$form = FileReadInsert();
+        insert_sousarireki($_SESSION["filename"],"1","");
                 if(isset($_SESSION['history']))
                 {
                     if($_SESSION['fileinsert']['judge'])

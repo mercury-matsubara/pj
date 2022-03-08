@@ -132,6 +132,7 @@
 		if($key == 'delete')
 		{
 			$_SESSION['editUser'] = null;
+            $_SESSION["deleteUser"] = $_POST;
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/deleteUserCheck.php");
 		}

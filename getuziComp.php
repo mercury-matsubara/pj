@@ -55,9 +55,10 @@
 <?php
 	$filename = $_SESSION['filename'];
 	$judge = true;
-	$message = getuji($_SESSION['getuji']['month'],$_SESSION['getuji']['period']);
+	$message = getuji($_SESSION['getuji']['month'],$_SESSION['getuji']['period']);    
 	if($message == 'ŒŽŽŸŠ®—¹')
 	{
+        insert_sousarireki($_SESSION["filename"],"8",$_SESSION["getuji"]);
 		echo "<center>";
 		echo "<a class = 'title'>ŒŽŽŸˆ—Š®—¹</a>";
 		echo "<br><br><a>ŒŽŽŸˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½B </a>";

@@ -26,6 +26,7 @@
         if($key == 'deletesousarireki')
         {
             delete_sousarireki();
+            insert_sousarireki($_SESSION["filename"],"3","");
 			header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://")
 					.$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/list.php");
 			exit();            

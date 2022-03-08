@@ -31,6 +31,7 @@
 		if(countLoginUser())
 		{
 			deleteUser();
+            insert_sousarireki($_SESSION["filename"],"3",$_SESSION['result_array']);
 			$userName = $_SESSION['result_array']['LUSERNAME'];
 			$password = $_SESSION['result_array']['LUSERPASS'];
 			$_SESSION['result_array'] = null;

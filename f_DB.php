@@ -4851,8 +4851,11 @@ function getPJdata($id){
 	$form .= "</td></tr><tr><td>金額</td><td>";
 	$form .= "<input type = 'text' id ='PJCharge' class = 'readOnly' size = 40 readonly value = '".$result_array['CHARGE']."'>";
 	$form .= "</td></tr></table>";
-	return ($form);
-	
+    
+    $_SESSION["pjdata"]["form_102_0"] = $result_array['PROJECTNUM'];
+    $_SESSION["pjdata"]["form_202_0"] = $result_array["EDABAN"];
+    $_SESSION["pjdata"]["form_203_0"] = $result_array["PJNAME"];
+	return ($form);	
 }
 
 /************************************************************************************************************
@@ -4884,7 +4887,7 @@ function pjend($post){
         if(isset($_SESSION['seizyou5code']))
         {
             $pjid = $_SESSION['seizyou5code'];
-            unset($_SESSION['seizyou5code']);
+            //unset($_SESSION['seizyou5code']);
         }
         else
         {
@@ -7619,6 +7622,162 @@ function delete_sousarireki()
     {
         error_log($con->error,0);
         exit();
+    }
+}
+
+/************************************************************************************************************
+操作履歴登録処理
+function insert_sousarireki()
+
+引数1   $filename   ファイル名
+引数2   $sousakubun_num     操作区分番号
+引数3   $data   登録データ
+
+戻り値		
+***********************************************************************************************************/
+
+function insert_sousarireki($filename,$sousakubun_num,$data)
+{
+    //DB接続
+    $con = dbconect();
+    
+    $form_ini_array = parse_ini_file("./ini/form.ini",true);
+    $sousa_list_array = parse_ini_file("./ini/pulldown.ini",true);
+    
+    //操作画面取得
+    $sousagamen_num = $form_ini_array[$filename]["sousagamen_num"];  
+    $sousagamen = $sousa_list_array["12"]["text".$sousagamen_num];          //操作画面    
+    
+    //操作区分取得
+    $sousakubun = $sousa_list_array["13"]["text".$sousakubun_num];          //操作区分    
+    
+    $request_filename = basename($_SERVER['SCRIPT_NAME']);          //関数呼び出し元ファイル名取得
+    
+    //操作内容
+    $naiyou = array();
+    if($filename == "PROGRESSINFO_6")
+    {
+        $naiyou[0] = "CSV取り込み　PJ進捗情報登録";
+    }
+    elseif($filename == "rireki_2")
+    {
+        $month = $form_ini_array[$filename]["delete_month"];
+        $naiyou[0] = "操作履歴削除　削除対象：".$month."ヶ月以上前";
+    }
+    elseif($filename == "TOP_4")
+    {
+        //日付フォーマット変更
+        $startdate = date('Y', strtotime($data["pasteStart"]))."年".date('n月j日',  strtotime($data["pasteStart"]));
+        $enddate = date('Y', strtotime($data["pasteEnd"]))."年".date('n月j日',  strtotime($data["pasteEnd"]));
+        $copydate = date('Y', strtotime($data["copydate"]))."年".date('n月j日',  strtotime($data["copydate"]));
+        $naiyou[0] = "開始日付：".$startdate."　終了日付：".$enddate."　コピー元：".$copydate;
+    }
+    elseif($filename == "nenzi_5")
+    {
+        $naiyou[0] = "年次処理対象期：".$data."期";
+    }
+    elseif($filename == "getuzi_5")
+    {
+        $naiyou[0] = "月次処理対象期：".$data["period"]."期　月次処理対象月：".$data["month"]."月";
+    }
+    elseif($filename == "GENKAINFO_2")
+    {
+        $naiyou[0] = "原価情報設定";
+    }
+    elseif($filename == "pjagain_5" || $filename == "pjend_5")
+    {
+        if($filename == "pjagain_5")
+        {
+            $pjcode[0] = $data;
+        }
+        else
+        {
+            $pjcode = $data;
+        }        
+        //PJ情報検索
+        for($i = 0; $i < count($pjcode); $i++)
+        {
+            $sql = "SELECT PROJECTNUM,EDABAN,PJNAME FROM projectinfo LEFT JOIN projectnuminfo using(1CODE) LEFT JOIN edabaninfo using(2CODE) WHERE 5CODE = '".$pjcode[$i]."';";
+            $result = $con->query($sql);																	// クエリ発行
+            if(!$result)
+            {
+                error_log($con->error,0);
+                exit();
+            }
+            while($result_row = $result->fetch_array(MYSQLI_ASSOC))
+            {
+                $result_array = $result_row;
+            }
+            $naiyou[$i] = "プロジェクトコード：".$result_array["PROJECTNUM"]."　枝番コード：".$result_array["EDABAN"]."　製番・案件名：".$result_array["PJNAME"];
+        }
+    }
+    elseif($filename == "PJTOUROKU_1" || $filename == "PJTOUROKU_2")
+    {
+        if($request_filename == "insertComp.php")
+        {
+            $naiyou[0] = "プロジェクト登録　";
+        }
+        elseif($request_filename == "insertrireki.php")
+        {
+            $naiyou[0] = "社員別金額設定　";
+            $data = $_SESSION["pjdata"];
+        }
+        elseif($request_filename == "alldelJump.php")
+        {
+            $naiyou[0] = "社員別金額クリア　";
+            $data = $_SESSION["pjdata"];
+        }
+        elseif($request_filename == "deleteComp.php")
+        {
+            $naiyou[0] = "プロジェクト削除　";
+            $data = $_SESSION["pjdata"];
+        }        
+        
+        $naiyou[0] .= "プロジェクトコード：".$data["form_102_0"]."　枝番コード：".$data["form_202_0"]."　製番・案件名：".$data["form_203_0"];
+    }
+    else
+    {
+        $colums = $form_ini_array[$filename]["sousanaiyou_colum"];
+        $columns_array = explode(',',$colums);
+        if($filename == "editUser_5")
+        {
+            $data_colum = "STAFFID,STAFFNAME";
+            $data_colum_array = explode(',',$data_colum);
+        }
+
+        for($i = 0;$i < count($columns_array); $i++)
+        {
+            $header = $form_ini_array[$columns_array[$i]]["item_name"];
+
+            if($columns_array[$i] == "704" && ($filename == "PROGRESSINFO_1" || $filename == "PROGRESSINFO_2"))
+            {
+                $value = date('Y', strtotime($data["form_".$columns_array[$i]."_0"]))."年".date('n月j日',  strtotime($data["form_".$columns_array[$i]."_0"]));
+            }
+            elseif($filename == "editUser_5")
+            {
+                $value = $data[$data_colum_array[$i]];
+            }
+            else
+            {
+                $value = $data["form_".$columns_array[$i]."_0"];
+            }
+            $naiyou[0] .= $header."：".$value."　";
+        }
+    }
+    
+    //操作履歴登録処理
+    for($i = 0; $i < count($naiyou); $i++)
+    {
+        //操作履歴登録SQL
+        $sql = "INSERT INTO rireki (4CODE,NUMBER,GAMEN,KUBUN,NAIYOU) VALUES('".$_SESSION["user"]["4CODE"]."','".$i."','".$sousagamen."','".$sousakubun."','".$naiyou[$i]."');";
+
+        // SQL実行
+        $result = $con->query($sql);																	// クエリ発行
+        if(!$result)
+        {
+            error_log($con->error,0);
+            exit();
+        }
     }
 }
 ?>
