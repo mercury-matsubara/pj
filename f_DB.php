@@ -573,7 +573,7 @@ function makeList($sql,$post){
 		$judge = false;
 	}
 	$listcount = $result->num_rows;																						// 検索結果件数取得
-    $list_html .= "<div>";
+        $list_html .= "<div>";
 	if ($totalcount == $limitstart )
 	{
 		$list_html .= $totalcount."件中 ".($limitstart)."件～".($limitstart + $listcount)."件 表示中";					// 件数表示作成
@@ -582,9 +582,14 @@ function makeList($sql,$post){
 	{
 		$list_html .= $totalcount."件中 ".($limitstart + 1)."件～".($limitstart + $listcount)."件 表示中";				// 件数表示作成
 	}
-    $list_html .= "</div>";
-    $list_html .= "<div class='listScroll'>";
-	$list_html .= "<table class ='list'><thead><tr>";
+        $list_html .= "</div>";
+        $list_html .= "<div class='listScroll'>";
+	$list_html .= "<table class ='list'";
+        if($filename == 'GENKAINFO_2')
+        {
+            $list_html .= " id='genkaList' ";
+        }
+        $list_html .= "><thead><tr>";
 	if($isCheckBox == 1 )
 	{
 		$list_html .="<th><a class ='head'>発行</a></th>";
@@ -673,6 +678,11 @@ function makeList($sql,$post){
 			{
 				$value = substr($result_row[$field_name],0,4)."-".substr($result_row[$field_name],4,2);
 			}
+                        if($field_name == "GENKA")
+                        {
+                                $value = "<input type='text' name='".$result_row['STAFFID']."' id='genka_".$counter."' "
+                                        . "value = '".$result_row[$field_name]."' onChange='editgenka(\"genka_".$counter."\")'></td>";
+                        }
 			$type = $form_ini[$columns_array[$i]]['form_type'];
 			if($format != 0)
 			{
@@ -6952,7 +6962,12 @@ function syaget(){
 	//------------------------//
 	//          定数          //
 	//------------------------//
-	$sql = "SELECT * FROM syaininfo ;";
+	$sql = "SELECT * FROM syaininfo ";
+        if($_SESSION['filename'] == 'GENKAINFO_2')
+        {
+            $sql .= "WHERE LUSERNAME IS NOT NULL";
+        }
+        $sql .= ";";
 	
 	//------------------------//
 	//          変数          //

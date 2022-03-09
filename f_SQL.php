@@ -348,7 +348,7 @@ function joinSelectSQL($post,$tablenum){
 		$count_SQL .= ",projectditealinfo ";
 	}
 	//ç≤í|
-	if($masterNums != '')
+	if($masterNums != '' && $filename != 'GENKAINFO_2')
 	{
 		for($i = 0 ; $i < count($masterNums_array) ; $i++)
 		{
@@ -381,6 +381,18 @@ function joinSelectSQL($post,$tablenum){
 			}
 		}
 	}
+        else if($masterNums != '' && $filename == 'GENKAINFO_2')
+        {
+                for($i = 0 ; $i < count($masterNums_array) ; $i++)
+		{
+                        $masterName[$i] = $form_ini[$masterNums_array[$i]]['table_name'];
+                        $select_SQL .= "RIGHT JOIN ".$masterName[$i]." USING (".$masterNums_array[$i]."CODE ) ";
+                        $count_SQL .= "RIGHT JOIN ".$masterName[$i]." USING (".$masterNums_array[$i]."CODE ) ";
+                        $masterNums1 = $form_ini[$masterNums_array[$i]]['seen_table_num'];
+                        $masterNums_array1 = explode(',',$masterNums1);
+                        $masterName1 = array();
+                }
+        }
 	$select_SQL .= " WHERE";
 	$count_SQL .= " WHERE";
 	if($filename == 'PROGRESSINFO_2' && $tablenum == '7' ){
@@ -665,19 +677,19 @@ function joinSelectSQL($post,$tablenum){
 	}
 	//ç≤í|
 	
-    //ç›ê–é–àıÇÃÇ›ÉäÉXÉgÇ…ï\é¶Ç∑ÇÈSQLçÏê¨
-	if($tablenum == 4 && $filename != "insertUser_5" && $filename != "SYAINNINFO_2")
-    {
-        $select_SQL .= " LUSERNAME is not null AND LUSERPASS is not null ";
-        $count_SQL .= " LUSERNAME is not null AND LUSERPASS is not null ";
-    }
-    
-    //ÉÜÅ[ÉUÅ[ìoò^âÊñ Å@IDÇ™ñ¢ìoò^ÇÃé–àıÇÃÇ›ÉäÉXÉgÇ…ï\é¶Ç∑ÇÈSQLçÏê¨
-    if($filename == "insertUser_5")
-    {
-        $select_SQL .= " LUSERNAME is null ";
-        $count_SQL .= " LUSERNAME is null ";
-    }
+        //ç›ê–é–àıÇÃÇ›ÉäÉXÉgÇ…ï\é¶Ç∑ÇÈSQLçÏê¨
+        if(($tablenum == 4 || $tablenum == 13) && $filename != "insertUser_5" && $filename != "SYAINNINFO_2")
+        {
+            $select_SQL .= " LUSERNAME is not null AND LUSERPASS is not null ";
+            $count_SQL .= " LUSERNAME is not null AND LUSERPASS is not null ";
+        }
+
+        //ÉÜÅ[ÉUÅ[ìoò^âÊñ Å@IDÇ™ñ¢ìoò^ÇÃé–àıÇÃÇ›ÉäÉXÉgÇ…ï\é¶Ç∑ÇÈSQLçÏê¨
+        if($filename == "insertUser_5")
+        {
+            $select_SQL .= " LUSERNAME is null ";
+            $count_SQL .= " LUSERNAME is null ";
+        }
 	$select_SQL = rtrim($select_SQL,'WHERE');
 	$select_SQL = rtrim($select_SQL,'AND');
 	$count_SQL = rtrim($count_SQL,'WHERE');

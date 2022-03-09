@@ -41,6 +41,7 @@
 	$title1 = $form_ini[$filename]['title'];
 	$title2 = '';
 	$isMaster = false;
+        $syain = "";
 	switch ($form_ini[$main_table]['table_type'])
 	{
 	case 0:
@@ -54,15 +55,22 @@
 		$title2 = '';
 	}
     
-    if($filename == "PROGRESSINFO_2" || $filename == "PJTOUROKU_2")
-    {
-        $title2 = "登録/編集";
-    }
-    
-    if($filename == "PROJECTNUMINFO_2" || $filename == "EDABANINFO_2" || $filename == "KOUTEIINFO_2" || $filename == "SYAINNINFO_2")
-    {
-        $title2 = "メンテナンス";
-    }
+        if($filename == "PROGRESSINFO_2" || $filename == "PJTOUROKU_2")
+        {
+            $title2 = "登録/編集";
+        }
+
+        if($filename == "PROJECTNUMINFO_2" || $filename == "EDABANINFO_2" || $filename == "KOUTEIINFO_2" || 
+                $filename == "SYAINNINFO_2" || $filename == "GENKAINFO_2")
+        {
+            $title2 = "メンテナンス";
+        }
+        //在籍社員取得
+        if($filename == "GENKAINFO_2")
+        {
+            $syain = syaget();
+            $syain = rtrim($syain, ",");
+        }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>
@@ -137,6 +145,89 @@
             return false;
         }    
     }
+    
+    //原価を修正した社員をリストに追加
+    function editgenka(id)
+    {
+        if(inputcheck(id,5,4,0,2))
+        {
+            var judge = true;
+            var datas = sessionStorage.getItem('datas');
+            if(datas != null)
+            {
+                var dataArray = datas.split(",");
+                for (var i = 0 ; i < dataArray.length ; i++ )
+                {
+                    if(dataArray[i] == $('#'+id).attr('name'))
+                    {
+                        judge = false;
+                    }
+                }
+            }
+            else
+            {
+                datas = $('#'+id).attr('name');
+                judge = false;
+            }
+            
+            if(judge)
+            {
+                datas += ','+$('#'+id).attr('name');
+            }
+            sessionStorage.setItem('datas',datas);
+        }
+    }
+    
+    //チェックリスト作成
+    function madeChecklist()
+    {
+            var checkList = '';
+            //テーブルの行数を取得
+            var row = genkaList.rows.length;
+            for (var i = 1 ; i < row ; i++ )
+            {
+                    checkList += 'genka_'+i+'~5~4~1~2,';
+            }
+            checkList = checkList.slice(0,-1);
+            if(check(checkList))
+            {
+                    var msg = "以下の社員の原価を変更しますが、よろしいですか？\n"
+                    var syain = "<?php echo $syain; ?>";
+                    var syainArray = syain.split(",");
+                    var datas = sessionStorage.getItem('datas');
+                    var dataArray = datas.split(",");
+                    //原価を修正された社員の名前をメッセージに追加
+                    for (var i = 0 ; i < dataArray.length ; i++ )
+                    {
+                            for(var j = 0; j < syainArray.length; j++)
+                            {
+                                    if(dataArray[i] == syainArray[j])
+                                    {
+                                            msg += syainArray[j + 1]+'\n';
+                                    }
+                            }
+                    }
+                    sessionStorage.removeItem('datas');
+                    if(window.confirm(msg))
+                    {
+                            return true;
+                    }
+                    else
+                    {
+                            //入力値のリセット
+                            for (var i = 1 ; i < row ; i++ )
+                            {
+                                    document.getElementById("gebka_"+i).value = sessionStorage.getItem("gebka_"+i);
+                                    sessionStorage.removeItem("gebka_"+i);
+                            }
+                            return false;
+                    }
+            }
+            else
+            {
+                    return false;
+            }
+    }
 --></script>
 </head>
 <body>
@@ -148,7 +239,7 @@
 	{
 		$_SESSION['list'] = array();
 	}
-	$form = makeformSerch_set($_SESSION['list'],"form");
+        $form = makeformSerch_set($_SESSION['list'],"form");
 	
 	if($filename == 'MONTHLIST_2')
 	{
@@ -163,17 +254,17 @@
 		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
 		$list = makeList_item($sql,$_SESSION['list']);
 	}
-    elseif($filename == "rireki_2")
-    {
-		$sql = itemListSQL($_SESSION['list']);
-		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
-		$list = makeList_item($sql,$_SESSION['list']);        
-    }
+        elseif($filename == "rireki_2")
+        {
+                    $sql = itemListSQL($_SESSION['list']);
+                    $sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
+                    $list = makeList_item($sql,$_SESSION['list']);        
+        }
 	elseif($filename != "KOUTEIINFO_2")
 	{
 		$sql = joinSelectSQL($_SESSION['list'],$main_table);
 		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
-		$list = makeList($sql,$_SESSION['list']);
+ 		$list = makeList($sql,$_SESSION['list']);
 	}
 	if($filename == 'KOUTEIINFO_2' && $main_table ='3' )
 	{
@@ -194,29 +285,29 @@
 			}
 		}
         
-        //ソート条件
-        if(!isset($_SESSION['list']['sort1']) && !isset($_SESSION['list']['sort2']))
-        {
-            $orderbysql = "ORDER BY KOUTEIID ASC";
-        }
-        elseif($_SESSION['list']['sort1'] == 1 && $_SESSION['list']['sort2'] == 1)
-        {
-            $orderbysql = "ORDER BY KOUTEIID ASC";
-        }
-        else
-        {
-            $orderby = "ORDER BY ";
-            $orderbysql = "";
-            for($i = 1; $i <= 2; $i++)
-            {
-                if($_SESSION['list']['sort'.$i] != 1)
+                //ソート条件
+                if(!isset($_SESSION['list']['sort1']) && !isset($_SESSION['list']['sort2']))
                 {
-                    $orderby_column_name = $form_ini[$_SESSION['list']['sort'.$i]]['column'];
-                    $orderbysql .= "".$orderby." ".$orderby_column_name." ".$_SESSION['list']['radiobutton'.$i]."";
-                    $orderby = " , ";
+                    $orderbysql = "ORDER BY KOUTEIID ASC";
                 }
-            }
-        }
+                elseif($_SESSION['list']['sort1'] == 1 && $_SESSION['list']['sort2'] == 1)
+                {
+                    $orderbysql = "ORDER BY KOUTEIID ASC";
+                }
+                else
+                {
+                    $orderby = "ORDER BY ";
+                    $orderbysql = "";
+                    for($i = 1; $i <= 2; $i++)
+                    {
+                        if($_SESSION['list']['sort'.$i] != 1)
+                        {
+                            $orderby_column_name = $form_ini[$_SESSION['list']['sort'.$i]]['column'];
+                            $orderbysql .= "".$orderby." ".$orderby_column_name." ".$_SESSION['list']['radiobutton'.$i]."";
+                            $orderby = " , ";
+                        }
+                    }
+                }
 		$sql[0] = "SELECT * FROM kouteiinfo ".$where." ".$orderbysql.";";
 		$sql[1] = "SELECT COUNT(*) FROM kouteiinfo ".$where.";";
 		$list = makeList($sql,$_SESSION['list']);
@@ -259,16 +350,23 @@
 	echo "<br>";
 	echo "</div>";
 	echo "<div class = 'pad' >";
-	echo '<form name ="form" action="listJump.php" method="post" 
+        if($filename == 'GENKAINFO_2')
+        {
+                echo "<form name ='form' action='listJump.php' method='post' onsubmit = 'return madeChecklist();'>";
+        }
+        else
+        {
+                echo '<form name ="form" action="listJump.php" method="post" 
 				onsubmit = "return check(\''.$checkList.'\');">';
-	echo "<table><tr><td>";
-	echo "<fieldset><legend>検索条件</legend>";
-	echo $form;
-	echo "</fieldset>";
-	echo "</td><td valign='bottom'>";
-	echo '<input type="submit" name="serch" value = "表示" class="free" >';
-	echo "</td></tr></table><br><br>";
-	
+                echo "<table><tr><td>";
+                echo "<fieldset><legend>検索条件</legend>";
+                echo $form;
+                echo "</fieldset>";
+                echo "</td><td valign='bottom'>";
+                echo '<input type="submit" name="serch" value = "表示" class="free" >';
+                echo "</td></tr></table><br><br>";
+        }
+        
 	if($filename == 'HENKYAKUINFO_2' || $filename == 'SYUKKAINFO_2')
 	{
 		$year = date_create('NOW');
@@ -280,7 +378,10 @@
 	}
 	
 	echo $list;
-	echo "</form>";
+        if($filename != 'GENKAINFO_2')
+        {
+                echo "</form>";
+        }
 	if($isCSV == 1)
 	{
 		echo "<form action='download_csv.php' method='post'>";
@@ -309,6 +410,11 @@
 		echo "</div>";
 //		echo "</form>";
 	}
+        if($filename == 'GENKAINFO_2')
+        {
+		echo "<input type ='submit' name='setGenka' class='free' value = '設定' >";
+                echo "</form>";
+        }
     if($filename == "rireki_2")
     {
         echo "<form action='deleterirekiJump.php' method='post' onsubmit='return deleterireki();'>";
@@ -332,6 +438,13 @@
             //日付入力欄値
             document.getElementById("startdate").value = '<?php if(isset($_SESSION["list"]["startdate"])){ echo $_SESSION["list"]["startdate"]; }else{ echo ""; } ?>';
             document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
+        }        
+        
+        //DBの原価の値を記憶
+        var row = genkaList.rows.length;
+        for (var i = 1 ; i < row ; i++ )
+        {
+                sessionStorage.setItem('genka_'+i,document.getElementById('genka_'+i).value);
         }
     }
 </script>
