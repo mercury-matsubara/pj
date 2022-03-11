@@ -106,6 +106,25 @@
 		return judge;
 	}
 	
+    //ラジオボタン、チェックボックスのあるセルにカーソルを合わせた時の動作
+    function mouseMove(row)
+    {
+        var tabledata = document.getElementById("tablelist");
+        for(var i = 0; i < tabledata.rows[row].cells.length; i++)
+        {
+            tabledata.rows[row].cells[i].style.backgroundColor = "#f7ca79";
+        }
+    }
+    
+    //ラジオボタン、チェックボックスのあるセルからカーソルが離れた時の動作
+    function mouseOut(row)
+    {
+        var tabledata = document.getElementById("tablelist");
+        for(var i = 0; i < tabledata.rows[row].cells.length; i++)
+        {
+            tabledata.rows[row].cells[i].style.backgroundColor = "";
+        }
+    }
 // --></script>
 </head>
 <body>
