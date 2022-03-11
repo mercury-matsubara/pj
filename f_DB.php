@@ -871,7 +871,7 @@ function makeList_Modal($sql,$post,$tablenum){
 	}
     $list_html .= "</div>";
     $list_html .= "<div class='listScroll'>";
-	$list_html .= "<table class ='list'><thead><tr>";
+	$list_html .= "<table class ='list' id = 'tablelist'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
 	for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
 	{
@@ -890,7 +890,7 @@ function makeList_Modal($sql,$post,$tablenum){
 		{
 			$id = "id = 'stripe'";
 		}
-		$list_html .= "<td ".$id." class = 'center'>";
+		$list_html .= "<td ".$id." class = 'center' onmousemove='mouseMove(this.parentNode.rowIndex);' onmouseout='mouseOut(this.parentNode.rowIndex);'>";
 		$column_value = $result_row[$tablenum.'CODE'].'#$';
 		$form_name = $tablenum.'CODE,';
 		$form_type .= '9,';
@@ -937,9 +937,11 @@ function makeList_Modal($sql,$post,$tablenum){
 		$form_name = substr($form_name,0,-1);
 		$column_value = substr($column_value,0,-2);
 		$form_type = substr($form_type,0,-1);
+        $list_html .= '<label for = "check'.$counter.'" style="display:block;width:100%;height:100%;">';
 		$list_html .= '<input type ="radio" name = "radio" onClick="select_value(\''
-						.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';
-		$list_html .= "</td>";
+						.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')" id="check'.$counter.'">';
+        $list_html .= "</label>";
+        $list_html .= "</td>";
 		$list_html .= $row;
 		$list_html .= "</tr>";
 		$row ="";
@@ -4007,7 +4009,7 @@ function makeList_radio($sql,$post,$tablenum){
 	}
     $list_html .= "</div>";
     $list_html .= "<div class='listScroll'>";
-	$list_html .= "<table border='1' class ='list'><thead><tr>";
+	$list_html .= "<table border='1' class ='list' id='tablelist'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
 	for($i = 0 ; $i < count($resultcolumns_array) ; $i++)
 	{
@@ -4026,7 +4028,7 @@ function makeList_radio($sql,$post,$tablenum){
 		{
 			$id = "id = 'stripe'";
 		}
-		$list_html .= "<td ".$id." class = 'center'>";
+		$list_html .= "<td ".$id." class = 'center' onmousemove='mouseMove(this.parentNode.rowIndex);' onmouseout='mouseOut(this.parentNode.rowIndex);'>";
 		if($filename == 'pjagain_5')
 		{
 			$column_value = $result_row['5CODE'].'#$';
@@ -4089,9 +4091,11 @@ function makeList_radio($sql,$post,$tablenum){
 		$form_name = substr($form_name,0,-1);
 		$column_value = substr($column_value,0,-2);
 		$form_type = substr($form_type,0,-1);
+        $list_html .= '<label for = "check'.$counter.'" style="display:block;width:100%;height:100%;">';
 		$list_html .= '<input type ="radio" name = "radio" onClick="select_value(\''
-						.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">';
-		$list_html .= "</td>";
+						.$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')" id="check'.$counter.'">';
+		$list_html .= "</label>";
+        $list_html .= "</td>";
 		$list_html .= $row;
 		$list_html .= "</tr>";
 		$row ="";
@@ -4213,7 +4217,7 @@ function makeList_check($sql,$post,$tablenum){
     
         $list_html .= "</div>";
         $list_html .= "<div class='listScroll'>";
-	$list_html .= "<table border='1' class ='list'><thead><tr>";
+	$list_html .= "<table border='1' class ='list' id='tablelist'><thead><tr>";
 	$list_html .="<th><a class ='head'>選択</a></th>";
     
 	for($i = 0 ; $i < count($resultcolumns_array) ; ++$i)
@@ -4240,7 +4244,7 @@ function makeList_check($sql,$post,$tablenum){
 		{
 			$id = "id = 'stripe'";
 		}
-		$list_html .= "<td ".$id." class = 'center'>";
+		$list_html .= "<td ".$id." class = 'center' onmousemove='mouseMove(this.parentNode.rowIndex);' onmouseout='mouseOut(this.parentNode.rowIndex);'>";
 
                 $column_value = $result_row[$tablenum.'CODE'].'#$';
                 $form_name = $tablenum.'CODE,';
@@ -4292,47 +4296,48 @@ function makeList_check($sql,$post,$tablenum){
 			$form_type .=  $form_value[2];
 		}
                 
-                if($filename == "pjend_5")
-                {
-                        //終了日付項目作成
-                        $row .= "<td ".$id." ".$class." ><a class ='body'>"
-                                                                .$result_row['5ENDDATE']."</a></td>";
+        if($filename == "pjend_5")
+        {
+            //終了日付項目作成
+            $row .= "<td ".$id." ".$class." ><a class ='body'>"
+                                                    .$result_row['5ENDDATE']."</a></td>";
 
-                        //詳細ボタン追加
-                        $row .= '<td '.$id.' class = "center"><input type ="button" value = "詳細" onClick="syousai_open(\''.$result_row["5CODE"].'\')"></td>'; 
-                }
+            //詳細ボタン追加
+            $row .= '<td '.$id.' class = "center"><input type ="button" value = "詳細" onClick="syousai_open(\''.$result_row["5CODE"].'\')"></td>'; 
+        }
 		$form_name = substr($form_name,0,-1);
 		$column_value = substr($column_value,0,-2);
 		$form_type = substr($form_type,0,-1);
-        
-                if(isset($result_row["5PJSTAT"]) && $result_row["5PJSTAT"] === "2")
+        $list_html .= '<label for = "check'.$counter.'" style="display:block;width:100%;height:100%;">';
+        if(isset($result_row["5PJSTAT"]) && $result_row["5PJSTAT"] === "2")
+        {
+            $list_html .= '済';           
+        }
+        else if($filename == 'teiji_5')
+        {
+            //チェックボックス
+            $list_html .= '<input type ="checkbox" name = "checkbox[]" id="check'.$counter.'" value = "'.$result_row["".$tablenum."CODE"].'" onClick="select_checkbox(\''
+                .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')" '; 
+            if(!empty($post))
+            {
+                for($i = 0; $i < count($post['checkbox']); $i++)
                 {
-                    $list_html .= '済';           
-                }
-                else if($filename == 'teiji_5')
-                {
-                    //チェックボックス
-                    $list_html .= '<input type ="checkbox" name = "checkbox[]" value = "'.$result_row["".$tablenum."CODE"].'" onClick="select_checkbox(\''
-                        .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')" '; 
-                    if(!empty($post))
+                    if($post['checkbox'][$i] == $result_row["".$tablenum."CODE"])
                     {
-                        for($i = 0; $i < count($post['checkbox']); $i++)
-                        {
-                            if($post['checkbox'][$i] == $result_row["".$tablenum."CODE"])
-                            {
-                                $list_html .= 'checked';
-                            }
-                        }
+                        $list_html .= 'checked';
                     }
-                    $list_html .= ' >';
                 }
-                else
-                {
-                    //チェックボックス
-                    $list_html .= '<input type ="checkbox" name = "checkbox" value = "'.$result_row["".$tablenum."CODE"].'" onClick="select_checkbox(\''
-                        .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">'; 
-                }
-                
+            }
+            $list_html .= ' >';
+        }
+        else
+        {
+            //チェックボックス
+            $list_html .= '<input type ="checkbox" name = "checkbox" id="check'.$counter.'" value = "'.$result_row["".$tablenum."CODE"].'" onClick="select_checkbox(\''
+                .$column_value.'\',\''.$form_name.'\',\''.$form_type.'\')">'; 
+        }
+
+		$list_html .= "</label>";        
 		$list_html .= "</td>";
 		$list_html .= $row;
 		$list_html .= "</tr>";
