@@ -372,6 +372,7 @@
 	$html = "";
 	$out_column ='';
 	$judge = false;
+    $word_judge = false;
 	$_SESSION['post'] = $_SESSION['pre_post'];
 	$_SESSION['pre_post'] = null;
         if($filename == 'TOP_1')
@@ -414,6 +415,30 @@
 			$judge = false;
 		}
 	}
+    
+    //文字数チェック
+    if($filename == "PROJECTNUMINFO_1" || $filename == "EDABANINFO_1" || $filename == "KOUTEIINFO_1" || $filename == "SYAINNINFO_1")
+    {
+        $wordcount_colum = $form_ini[$filename]['insert_form_tablenum'];
+        if($filename == "EDABANINFO_1")
+        {
+            $wordcount_colum = "202,203";
+        }   
+        $wordcount_array = explode(",",$wordcount_colum);
+        
+        for($i = 0; $i < count($wordcount_array); $i++)
+        {
+            $value = $_SESSION["insert"]["form_".$wordcount_array[$i]."_0"];
+            $max_length = $form_ini[$wordcount_array[$i]]["form1_length"];      //最大文字数
+            $count = mb_strlen($value, 'SJIS');
+            if($count > $max_length)
+            {
+                $word_judge = true;
+                $judge = false;
+                break;
+            }
+        }
+    }
 	$form = makeformInsert_set($_SESSION['insert'],$errorinfo[0],$isReadOnly,"insert");
 	$checkList = $_SESSION['check_column'];
 	$notnullcolumns = $_SESSION['notnullcolumns'];
@@ -493,6 +518,12 @@
 				location.href = "./insertComp.php";
 			}
 		}
+        
+        var wordjudge = '<?php echo $word_judge ?>';
+        if(wordjudge)
+        {
+            window.alert('登録できるデータ量を超えています。再入力してください。');
+        }
 	}
 --></script>
 </body>

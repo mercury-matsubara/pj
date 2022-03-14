@@ -332,48 +332,72 @@
 <body>
 <?php
 	$judge = false;
+    $word_judge = false;
 	$_SESSION['post'] = $_SESSION['pre_post'];
 	$_SESSION['pre_post'] = null;
 	if($isexist)
 	{
-                if($filename == 'PROGRESSINFO_2')
-                {
-                        //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
+        if($filename == 'PROGRESSINFO_2')
+        {
+                //2022-01-27 日付入力欄をカレンダー表示に変更　start ----->>
 //			$errorinfo = endCheck($_SESSION['edit']['form_704_0'],$_SESSION['edit']['form_704_1']);
-                        $date = explode('-', $_SESSION['edit']['form_704_0']);
-                        $errorinfo = endCheck($date[0], $date[1]);
-                        //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
-                        if(count($errorinfo) == 1 && $errorinfo[0] == "" )
-                        {
-                                $judge = true;
-                                $_SESSION['edit']['true'] = true;
-                                $_SESSION['pre_post'] = $_SESSION['post'];
-                        }
-                }
-                else 
+                $date = explode('-', $_SESSION['edit']['form_704_0']);
+                $errorinfo = endCheck($date[0], $date[1]);
+                //2022-01-26 日付入力欄をカレンダー表示に変更　end -----<<
+                if(count($errorinfo) == 1 && $errorinfo[0] == "" )
                 {
-                        if($filename == 'TOP_3')
-                        {
-                                $list = makePROGRESSlist($_SESSION['edit']);
-                                $_SESSION['edit'] = datasetting($_SESSION['edit']);
-                        }
-                        $errorinfo = existCheck($_SESSION['edit'],$main_table,2);
-                        if(count($errorinfo) == 2 && $errorinfo[0] == "" && $errorinfo[1] == "")
-                        {
-                                $judge = true;
-                                $_SESSION['edit']['true'] = true;
-                                $_SESSION['pre_post'] = $_SESSION['post'];
-                        }
+                        $judge = true;
+                        $_SESSION['edit']['true'] = true;
+                        $_SESSION['pre_post'] = $_SESSION['post'];
                 }
-                if(isset($_SESSION['data']))
+        }
+        else 
+        {
+                if($filename == 'TOP_3')
                 {
-                        $data = $_SESSION['data'];
+                        $list = makePROGRESSlist($_SESSION['edit']);
+                        $_SESSION['edit'] = datasetting($_SESSION['edit']);
                 }
-                else
+                $errorinfo = existCheck($_SESSION['edit'],$main_table,2);
+                if(count($errorinfo) == 2 && $errorinfo[0] == "" && $errorinfo[1] == "")
                 {
-                        $data = "";
+                        $judge = true;
+                        $_SESSION['edit']['true'] = true;
+                        $_SESSION['pre_post'] = $_SESSION['post'];
                 }
-                $form = makeformEdit_set($_SESSION['edit'],$errorinfo[0],$isReadOnly,"edit",$data );
+        }
+        if(isset($_SESSION['data']))
+        {
+                $data = $_SESSION['data'];
+        }
+        else
+        {
+                $data = "";
+        }
+        //文字数チェック
+        if($filename == "PROJECTNUMINFO_2" || $filename == "EDABANINFO_2" || $filename == "KOUTEIINFO_2" || $filename == "SYAINNINFO_2")
+        {
+            $wordcount_colum = $form_ini[$filename]['insert_form_tablenum'];
+            if($filename == "EDABANINFO_1")
+            {
+                $wordcount_colum = "202,203";
+            }   
+            $wordcount_array = explode(",",$wordcount_colum);
+
+            for($i = 0; $i < count($wordcount_array); $i++)
+            {
+                $value = $_SESSION["edit"]["form_".$wordcount_array[$i]."_0"];
+                $max_length = $form_ini[$wordcount_array[$i]]["form1_length"];      //最大文字数
+                $count = mb_strlen($value, 'SJIS');
+                if($count > $max_length)
+                {
+                    $word_judge = true;
+                    $judge = false;
+                    break;
+                }
+            }
+        }
+        $form = makeformEdit_set($_SESSION['edit'],$errorinfo[0],$isReadOnly,"edit",$data );
 		$checkList = $_SESSION['check_column'];
 		$notnullcolumns = $_SESSION['notnullcolumns'];
 		$notnulltype = $_SESSION['notnulltype'];
@@ -481,6 +505,11 @@
 				location.href = "./editComp.php";
 			}
 		}
+        var wordjudge = '<?php echo $word_judge ?>';
+        if(wordjudge)
+        {
+            window.alert('登録できるデータ量を超えています。再入力してください。');
+        }
 	}
 --></script>
 </body>
