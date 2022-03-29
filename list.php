@@ -149,7 +149,7 @@
     //原価を修正した社員をリストに追加
     function editgenka(id)
     {
-        if(inputcheck(id,5,4,0,2))
+        if(inputcheck(id,7,4,0,2))
         {
             var judge = true;
             var datas = sessionStorage.getItem('datas');
@@ -186,7 +186,7 @@
             var row = genkaList.rows.length;
             for (var i = 1 ; i < row ; i++ )
             {
-                    checkList += 'genka_'+i+'~5~4~1~2,';
+                    checkList += 'genka_'+i+'~7~4~1~2,';
             }
             checkList = checkList.slice(0,-1);
             if(check(checkList))
@@ -217,8 +217,8 @@
                             //入力値のリセット
                             for (var i = 1 ; i < row ; i++ )
                             {
-                                    document.getElementById("gebka_"+i).value = sessionStorage.getItem("gebka_"+i);
-                                    sessionStorage.removeItem("gebka_"+i);
+                                    document.getElementById("genka_"+i).value = sessionStorage.getItem("genka_"+i);
+                                    sessionStorage.removeItem("genka_"+i);
                             }
                             return false;
                     }
@@ -235,6 +235,7 @@
 	$_SESSION['post'] = $_SESSION['pre_post'];
 	$_SESSION['pre_post'] = null;
 	$sql = array();
+        $list = "";
 	if(!isset($_SESSION['list']))
 	{
 		$_SESSION['list'] = array();
@@ -260,7 +261,7 @@
                     $sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
                     $list = makeList_item($sql,$_SESSION['list']);        
         }
-	elseif($filename != "KOUTEIINFO_2")
+	elseif($filename != "KOUTEIINFO_2" && $filename != "SYUEKIHYO_2")
 	{
 		$sql = joinSelectSQL($_SESSION['list'],$main_table);
 		$sql = SQLsetOrderby($_SESSION['list'],$filename,$sql);
@@ -344,7 +345,7 @@
 				onClick = "click_mail();">';
 		echo "</div>";
 	}
-	echo "<div style='clear:both;'></div>";
+	echo "<div style='clear:both;' id='container'></div>";
 	echo "<div class = 'center'><br>";
 	echo "<a class = 'title'>".$title1.$title2."</a>";
 	echo "<br>";
@@ -354,7 +355,7 @@
         {
                 echo "<form name ='form' action='listJump.php' method='post' onsubmit = 'return madeChecklist();'>";
         }
-        else
+        else if($filename != 'SYUEKIHYO_2')
         {
                 echo '<form name ="form" action="listJump.php" method="post" 
 				onsubmit = "return check(\''.$checkList.'\');">';
@@ -385,10 +386,24 @@
 	if($isCSV == 1)
 	{
 		echo "<form action='download_csv.php' method='post'>";
-		echo "<div class = 'left'>";
-		echo "<input type ='submit' name = 'csv' class='button' value = 'csvファイル生成' style ='height:30px;' >";
-		echo "</div>";
-		echo "</form>";
+                if($filename == 'SYUEKIHYO_2')
+                {
+                        echo "<div class = 'center'>";
+                        echo "<input type ='submit' name = 'csv' class='button' value = 'csvファイル生成' style ='height:30px;' onclick='showdialog()' >";
+                        echo "</div>";
+                        echo "</form>";
+                        //処理中表示
+                        echo "<dialog id='dgl'>
+                            <p class='dlgtitle'>処理中</p>
+                            </dialog>";
+                }
+                else
+                {
+                        echo "<div class = 'left'>";
+                        echo "<input type ='submit' name = 'csv' class='button' value = 'csvファイル生成' style ='height:30px;' >";
+                        echo "</div>";
+                        echo "</form>";
+                }
 	}
 	if(isset($form_ini[$filename_insert]))
 	{
@@ -441,7 +456,7 @@
         }        
         
         //DBの原価の値を記憶
-        var row = genkaList.rows.length;
+        var row = this.genkaList.rows.length;
         for (var i = 1 ; i < row ; i++ )
         {
                 sessionStorage.setItem('genka_'+i,document.getElementById('genka_'+i).value);
