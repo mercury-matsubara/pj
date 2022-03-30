@@ -46,7 +46,7 @@ function makebutton(){
             {
                 $subbutton_value = $button_ini_array[$subbutton_num]['value'];    //ボタン文字
                 $subbutton_name = $button_ini_array[$subbutton_num]['button_name'];   //ボタン名称
-                if($subbutton_value != '原価マスタ' || $_SESSION['user']['STAFFID'] == '808001')
+                if($subbutton_value != '原価メンテナンス' || $_SESSION['user']['STAFFID'] == '808001')
                 {
                     $button_html .= '<li>';
                     $button_html .= '<input type = "submit" class = "menu" name = "'.$subbutton_name.'" value = "'.$subbutton_value.'">';
