@@ -451,7 +451,7 @@
 </body>
 <script language="JavaScript">
     window.onload = function() {
-        var filename = '<?php if($filename == "ENDPJLIST_2"){ echo $filename; }else{ echo ""; } ?>';
+        var filename = '<?php if($filename == "ENDPJLIST_2" || $filename == "GENKAINFO_2"){ echo $filename; }else{ echo ""; } ?>';
         
         if(filename == 'ENDPJLIST_2'){
             //日付入力欄値
@@ -459,11 +459,14 @@
             document.getElementById("enddate").value = '<?php if(isset($_SESSION["list"]["enddate"])){ echo $_SESSION["list"]["enddate"]; }else{ echo ""; } ?>';
         }        
         
-        //DBの原価の値を記憶
-        var row = this.genkaList.rows.length;
-        for (var i = 1 ; i < row ; i++ )
+        if(filename == 'GENKAINFO_2')
         {
-                sessionStorage.setItem('genka_'+i,document.getElementById('genka_'+i).value);
+            //DBの原価の値を記憶
+            var row = genkaList.rows.length;
+            for (var i = 1 ; i < row ; i++ )
+            {
+                    sessionStorage.setItem('genka_'+i,document.getElementById('genka_'+i).value);
+            }
         }
     }
 </script>
