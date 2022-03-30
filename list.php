@@ -71,6 +71,14 @@
             $syain = syaget();
             $syain = rtrim($syain, ",");
         }
+        if(isset($_SESSION['path']))
+        {
+                header('Content-Type: application/octet-stream'); 
+                header('Content-Disposition: attachment; filename="'.$_SESSION['file_name'].'"'); 
+                header('Content-Length: '.filesize($_SESSION['path']));
+                readfile($_SESSION['path']);
+                unlink($_SESSION['path']);
+        }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>
@@ -210,6 +218,7 @@
                     sessionStorage.removeItem('datas');
                     if(window.confirm(msg))
                     {
+                            sessionStorage.clear();
                             return true;
                     }
                     else
@@ -218,7 +227,6 @@
                             for (var i = 1 ; i < row ; i++ )
                             {
                                     document.getElementById("genka_"+i).value = sessionStorage.getItem("genka_"+i);
-                                    sessionStorage.removeItem("genka_"+i);
                             }
                             return false;
                     }
@@ -389,13 +397,9 @@
                 if($filename == 'SYUEKIHYO_2')
                 {
                         echo "<div class = 'center'>";
-                        echo "<input type ='submit' name = 'csv' class='button' value = 'csvファイル生成' style ='height:30px;' onclick='showdialog()' >";
+                        echo "<input type ='submit' name = 'csv' class='button' value = 'csvファイル生成' style ='height:30px;' >";
                         echo "</div>";
                         echo "</form>";
-                        //処理中表示
-                        echo "<dialog id='dgl'>
-                            <p class='dlgtitle'>処理中</p>
-                            </dialog>";
                 }
                 else
                 {

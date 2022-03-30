@@ -7800,4 +7800,492 @@ function insert_sousarireki($filename,$sousakubun_num,$data)
         }
     }
 }
+
+function make_syuekihyocsv()
+{
+        require_once ("f_SQL.php");
+        require_once ("f_File.php");
+
+        $csv = "";
+        $pj_csv = "";
+        $uriage_csv = "";
+        $genka_csv = "";
+        $arari_csv = "";
+        $bairitsu_csv = "";
+        $getsuzi_month = array();
+        $getsuzi = array();
+
+        $item_ini = parse_ini_file('./ini/item.ini', true);
+        $judge = false;
+        $month_array = ['6','7','8','9','10','11','12','1','2','3','4','5'];
+        $i = 0;
+        $j = 0;
+        //現在の期を求める
+        $date = date_create('NOW');
+        $year = date_format($date, "Y");
+        $month = date_format($date, "n");
+        $startyear = $item_ini['period']['startyear'];
+        $startmonth = $item_ini['period']['startmonth'];
+        $period = $year - $startyear;
+        if($startmonth <= $month)
+        {
+            $period = $period + 1;
+        }
+        //ヘッダー（6月~5月,合計）
+        $header_csv = ",";
+        foreach($month_array as $m)
+        {
+            $header_csv .= $m."月,";
+        }
+        $header_csv .= "合計,\r\n";
+        $con = dbconect();
+
+        //月次処理情報取得
+        $getsuzi_sql = "SELECT * FROM endmonthinfo WHERE PERIOD = '".$period."';";
+        $getsuzi_result = $con->query($getsuzi_sql) or ($judge = true);																	// クエリ発行
+        if($judge)
+        {
+                error_log($con->error,0);
+        }
+        while($getsuzi_result_row = $getsuzi_result->fetch_array(MYSQLI_ASSOC))
+        {
+                $getsuzi_month[] = $getsuzi_result_row['MONTH'];
+                $getsuzi[] =  $getsuzi_result_row['YEAR'].'-'.$getsuzi_result_row['MONTH'];
+        }
+        //社員別原価取得
+        $genka_sql = "SELECT * FROM genkainfo;";
+        $genka_result = $con->query($genka_sql) or ($judge = true);																	// クエリ発行
+        if($judge)
+        {
+                error_log($con->error,0);
+        }
+        while($genka_result_row = $genka_result->fetch_array(MYSQLI_ASSOC))
+        {
+                $syain_genka[$genka_result_row['4CODE']] = $genka_result_row['GENKA'];
+        }
+        
+        //PJナンバ,PJ名,枝番ナンバ,製番・案件名,現在の状況
+        $pj_sql[0] = "SELECT * FROM projectinfo LEFT JOIN projectnuminfo USING (1CODE) "
+                . "LEFT JOIN edabaninfo USING (2CODE) WHERE PROJECTNUM LIKE '".$period."%' AND EDABAN != 'Z00490' "
+                . "ORDER BY PROJECTNUM ASC, EDABAN ASC;";
+        $pj_sql[1] = "SELECT COUNT(*) FROM projectinfo LEFT JOIN projectnuminfo USING (1CODE) "
+                . "LEFT JOIN edabaninfo USING (2CODE) WHERE PROJECTNUM LIKE '".$period."%' AND EDABAN != 'Z00490';";
+        $pj_result = $con->query($pj_sql[0]) or ($judge = true);																	// クエリ発行
+        if($judge)
+        {
+                error_log($con->error,0);
+        }
+        while($pj_result_row = $pj_result->fetch_array(MYSQLI_ASSOC))
+        {
+                $pj_array[$i]['5CODE'] = $pj_result_row['5CODE'];
+                $pj_array[$i]['PROJECTNUM'] = $pj_result_row['PROJECTNUM'];
+                $pj_array[$i]['PROJECTNAME'] = $pj_result_row['PROJECTNAME'];
+                $pj_array[$i]['EDABAN'] = $pj_result_row['EDABAN'];
+                $pj_array[$i]['PJNAME'] = $pj_result_row['PJNAME'];
+                $pj_array[$i]['5PJSTAT'] = $pj_result_row['5PJSTAT'];
+                $pj_array[$i]['5ENDDATE'] = $pj_result_row['5ENDDATE'];
+                $i++;
+        }
+        for($i = 0; $i < count($pj_array); $i++)
+        {
+                //PJが変わったら初期化
+                $uriagekei = 0;
+                $genkakei = 0;
+                $ararikei = 0;
+                $bairitsukei = "";
+                $syain_csv = "";
+                $zangyou_csv = "";
+                $syain_array = array();
+                $endmonth = "";
+                $j = 0;
+                foreach($month_array as $m)
+                {
+                        $month_genka[$m] = 0;
+                }
+                
+                //枝番(A000)が同じもので集計し出力
+                if(isset($eda) && $eda != substr($pj_array[$i]['EDABAN'],0,4))
+                {
+                        $edaban_bairitsu = "";
+                        $edaban_csv = $projectnum.",".$projectname.",".$eda.",合計,,,,,,,,,,".$edaban_jokyo.",\r\n";
+                        $edaban_csv .= $header_csv;
+                        $edaban_csv .= "売上,";
+                        $edaban_csv2 = "原価,";
+                        $edaban_csv3 = "粗利,";
+                        $edaban_csv4 = "倍率,";
+                        foreach($month_array as $m)
+                        {
+                                if(in_array($m,$getsuzi_month))
+                                {
+                                        $edaban_csv .= $edaban_uriage[$m];
+                                        $edaban_csv2 .= $edaban_genka[$m];
+                                        $edaban_csv3 .= $edaban_arari[$m];
+                                        if($endmonth != "" && $edaban_uriage[$m] != 0 && $edaban_genka[$m] != 0)
+                                        {
+                                                $edaban_bairitsu = $edaban_uriage[$m] / $edaban_genka[$m];
+                                                $edaban_bairitsu = round($edaban_bairitsu,2);
+                                        }
+                                        else if($endmonth != "")
+                                        {
+                                                $edaban_bairitsu = 0;
+                                        }
+                                        $edaban_csv4 .= $edaban_bairitsu;
+                                        $edaban_uriage[$m] = 0;
+                                        $edaban_genka[$m] = 0;
+                                        $edaban_arari[$m] = 0;
+                                        $edaban_bairitsu = 0;
+                                }
+                                $edaban_csv .= ",";
+                                $edaban_csv2 .= ",";
+                                $edaban_csv3 .= ",";
+                                $edaban_csv4 .= ",";
+                        }
+                        if($edaban_uriagekei != 0 && $edaban_genkakei != 0)
+                        {
+                                $edaban_bairitsukei = $edaban_uriagekei / $edaban_genkakei;
+                                $edaban_bairitsukei = round($edaban_bairitsukei,2);
+                        }
+                        else
+                        {
+                                $edaban_bairitsu = 0;
+                        }
+                        $edaban_csv .= $edaban_uriagekei.",\r\n";
+                        $edaban_csv .= $edaban_csv2.$edaban_genkakei.",\r\n".$edaban_csv3.$edaban_ararikei.",\r\n".$edaban_csv4.$edaban_bairitsu.",\r\n";
+                        $csv .= $edaban_csv;
+                        $edaban_csv = "";
+                        $eda = substr($pj_array[$i]['EDABAN'],0,4);
+                        $edaban_jokyo = "終了";
+                        $edaban_uriagekei = 0;
+                        $edaban_genkakei = 0;
+                        $edaban_ararikei = 0;
+                        $edaban_bairitsukei = "";
+                }
+                else if(!isset($eda))
+                {
+                        foreach($month_array as $m)
+                        {
+                                $edaban_uriage[$m] = 0; 
+                                $edaban_genka[$m] = 0;
+                                $edaban_arari[$m] = 0;
+                        }
+                        $edaban_uriagekei = 0;
+                        $edaban_genkakei = 0;
+                        $edaban_ararikei = 0;
+                        $edaban_bairitsukei = "";
+                        $eda = substr($pj_array[$i]['EDABAN'],0,4);
+                }
+
+                $projectnum = mb_convert_encoding($pj_array[$i]['PROJECTNUM'], "sjis-win", "cp932");
+                $projectname = mb_convert_encoding($pj_array[$i]['PROJECTNAME'], "sjis-win", "cp932");
+                $edaban = mb_convert_encoding($pj_array[$i]['EDABAN'], "sjis-win", "cp932");
+                $pjname = mb_convert_encoding($pj_array[$i]['PJNAME'], "sjis-win", "cp932");
+                if($pj_array[$i]['5PJSTAT'] == 1)
+                {
+                    $jyokyo = "継続中";
+                    $edaban_jokyo = "継続中";
+                }
+                else if($pj_array[$i]['5PJSTAT'] == 2)
+                {
+                    $jyokyo = "終了";
+                    $enddate = explode('-',$pj_array[$i]['5ENDDATE']);
+                    $endmonth = abs($enddate[1]);
+                }
+                $pj_csv = $projectnum.",".$projectname.",".$edaban.",".$pjname.",,,,,,,,,,".$jyokyo.",\r\n";
+                
+                $uriage_csv = "売上,";
+                $genka_csv = "原価,";
+                $arari_csv = "粗利,";
+                $bairitsu_csv = "倍率,";
+                
+                $code5 = $pj_array[$i]['5CODE'];  
+                $syain_sql = "SELECT * FROM projectditealinfo LEFT JOIN syaininfo USING (4CODE)"
+                        . "WHERE 5CODE = ".$code5." ORDER BY STAFFID;"; 
+                $syain_result = $con->query($syain_sql) or ($judge = true);																	// クエリ発行
+                if($judge)
+                {
+                        error_log($con->error,0);
+                }
+                while($syain_result_row = $syain_result->fetch_array(MYSQLI_ASSOC))
+                {
+                        $syain_array[$j]['4CODE'] = $syain_result_row['4CODE'];
+                        $syain_array[$j]['STAFFNAME'] = $syain_result_row['STAFFNAME'];
+                        $syain_array[$j]['DETALECHARGE'] = $syain_result_row['DETALECHARGE'];
+                        $j++;
+                }
+
+                for($j = 0; $j < count($syain_array); $j++)
+                {
+                        $code4 = $syain_array[$j]['4CODE'];
+                        if(isset($syain_genka[$code4]))
+                        {
+                            $genka = $syain_genka[$code4];
+                        }
+                        else
+                        {
+                            $genka = 0;
+                        }
+
+                        $staffname = mb_convert_encoding($syain_array[$j]['STAFFNAME'], "sjis-win", "cp932");
+                        $syain_csv .= $staffname.",";
+                        $zangyou_csv .= $staffname."残業(H),";
+
+                        $data_array = syuekiinfo($code5,$code4,$getsuzi,$genka);
+                        foreach($month_array as $m)
+                        {   
+                                if(isset($data_array['GENKA'.$m]) && $data_array['GENKA'.$m] != "")
+                                {
+                                        $g = $data_array['GENKA'.$m] / 1000;
+                                        $syain_csv .= $g.",";
+                                        $month_genka[$m] += $g;
+                                }
+                                else
+                                {
+                                        $syain_csv .= ",";
+                                }
+
+                                if(isset($data_array['ZANGYOU'.$m]))
+                                {
+                                        $zangyou_csv .= $data_array['ZANGYOU'.$m].",";
+                                }
+                                else
+                                {
+                                        $zangyou_csv .= ",";
+                                }
+                        }
+                        $syain_csv .= $data_array['GOUKEI'].",\r\n";
+                        $zangyou_csv .= $data_array['ZANGYOUKEI'].",\r\n";
+
+                        $uriagekei += $syain_array[$j]['DETALECHARGE'] / 1000;
+                }
+
+                foreach($month_array as $m)
+                {   
+                        $genka = 0;
+                        $uriage = 0;
+                        $bairitsu = "";
+                        if(in_array($m,$getsuzi_month))
+                        {
+                                if($m == $endmonth || ($endmonth == "" && $m == end($getsuzi_month)))
+                                {       
+                                        $uriage = mb_convert_encoding($uriagekei, "sjis-win", "cp932"); 
+                                        $uriage_csv .= $uriage;
+                                        $edaban_uriage[$m] += $uriage;
+                                }
+                                else
+                                {
+                                        $uriage_csv .= "0";
+                                        $edaban_uriage[$m] += 0;
+                                }
+
+                                if($month_genka[$m] != "")
+                                {
+                                        $genka = $month_genka[$m];
+                                        $genka_csv .= $genka;
+                                        $edaban_genka[$m] += $genka;
+                                        $genkakei += $genka;
+                                }
+                                
+                                $arari = $uriage - $genka;
+                                $ararikei += $arari;
+                                $arari_csv .= $arari;
+                                $edaban_arari[$m] += $arari;
+                                if($endmonth != "" && $uriage != 0 && $genka != 0)
+                                {
+                                        $bairitsu = $uriage / $genka;
+                                        $bairitsu = round($bairitsu,2);
+                                }
+                                else if($endmonth != "")
+                                {
+                                        $bairitsu = 0;
+                                }
+                                $bairitsu_csv .= $bairitsu;
+                        }
+                        $uriage_csv .= ",";
+                        $genka_csv .= ",";
+                        $arari_csv .= ",";
+                        $bairitsu_csv .= ",";
+                }
+
+                if($endmonth != "" && $uriagekei != 0 && $genkakei != 0)
+                {
+                        $bairitsukei = $uriagekei / $genkakei;
+                        $bairitsukei = round($bairitsukei,2);
+                }
+                else if($endmonth != "")
+                {
+                        $bairitsukei = 0;
+                }
+
+                $uriage_csv .= $uriagekei.",\r\n";
+                $genka_csv .= $genkakei.",\r\n";
+                $arari_csv .= $ararikei.",\r\n";
+                $bairitsu_csv .= $bairitsukei.",\r\n";
+                $edaban_uriagekei += $uriagekei;
+                $edaban_genkakei += $genkakei;
+                $edaban_ararikei += $ararikei;
+
+                $csv .= $pj_csv . $header_csv . $uriage_csv . $genka_csv . $syain_csv . $zangyou_csv . $arari_csv . $bairitsu_csv;
+        }
+
+        $path = csv_write($csv);
+        return $path;
+}
+
+function syuekiinfo ($code5,$code4,$getsuzi,$genka)
+{
+        $teizikei = array();
+        $value = "";
+    
+        $data['GOUKEI'] = 0;
+        $data['ZANGYOUKEI'] = 0;
+        $lastmonth = array_slice($getsuzi, -1);
+        $month_array = ['6','7','8','9','10','11','12','1','2','3','4','5'];
+        $judge = false;
+        $con = dbconect();
+        
+        //収益情報が登録されているか確認
+        $sql1 = "SELECT COUNT(*) FROM syuekiinfo WHERE 5CODE = ".$code5." AND 4CODE = ".$code4;
+        $result1 = $con->query($sql1);																				// クエリ発行
+	$result_row1 = $result1->fetch_array(MYSQLI_ASSOC);
+	if($result_row1['COUNT(*)'] != 0)
+        {
+                $sql2 = "SELECT * FROM syuekiinfo WHERE 5CODE = ".$code5." AND 4CODE = ".$code4;
+                $result2 = $con->query($sql2);																				// クエリ発行
+                $result_row2 = $result2->fetch_array(MYSQLI_ASSOC);
+                $nextmonth = $result_row2['NEXTMONTH'];
+                foreach($month_array as $m)
+                {
+                        if($nextmonth == $m)
+                        {
+                                break;
+                        }
+                        else
+                        {
+                                $data['GENKA'.$m] = $result_row2['GENKA'.$m];
+                                $data['ZANGYOU'.$m] = $result_row2['ZANGYOU'.$m];
+                                array_splice($getsuzi, 0, 1); 
+                        }
+                }
+                $data['GOUKEI'] = $result_row2['GOUKEI'];
+                $data['ZANGYOUKEI'] = $result_row2['ZANGYOUKEI'];
+        }
+        
+        //月次処理済みで収益の計算がされいない月があれば計算する
+        if(count($getsuzi) != 0)
+        {
+                //月ごとの定時時間と残業時間の合計を取得（月次処理済みかつ未計算の月のみ）
+                $sql3 = "SELECT DATE_FORMAT(SAGYOUDATE, '%c') as SAGYOUDATE,SUM(ZANGYOUTIME) as ZANGYOUTIME,SUM(TEIZITIME) as TEIZITIME "
+                                            . "FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE ) LEFT JOIN syaininfo USING(4CODE ) "
+                                            . "WHERE 5CODE = ".$code5." AND 4CODE = ".$code4." AND (";
+                $sql4 = "SELECT DATE_FORMAT(SAGYOUDATE, '%c') as SAGYOUDATE,SUM(TEIZITIME) as TEIZITIME "
+                                            . "FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE ) LEFT JOIN syaininfo USING(4CODE ) "
+                                            . "WHERE 4CODE = ".$code4." AND (";
+                for($i = 0; $i < count($getsuzi); $i++)
+                {
+                        $sql3 .= " DATE_FORMAT(SAGYOUDATE, '%Y-%c') = '".$getsuzi[$i]."' OR";
+                        $sql4 .= " DATE_FORMAT(SAGYOUDATE, '%Y-%c') = '".$getsuzi[$i]."' OR";
+                }
+                $sql3 = substr($sql3,0,-3);
+                $sql4 = substr($sql4,0,-3);
+                $sql3 .= ") GROUP BY DATE_FORMAT(SAGYOUDATE, '%Y%m')";
+                $sql4 .= ") GROUP BY DATE_FORMAT(SAGYOUDATE, '%Y%m')";
+                
+                //5CODEと4CODEで絞った情報
+                $result3 = $con->query($sql3) or ($judge = true);																	// クエリ発行
+                if($judge)
+                {
+                        error_log($con->error,0);
+                }
+                while($result_row3 = $result3->fetch_array(MYSQLI_ASSOC))
+                {
+                        $data['ZANGYOU'.$result_row3['SAGYOUDATE']] = $result_row3['ZANGYOUTIME'];
+                        $data['ZANGYOUKEI'] += $result_row3['ZANGYOUTIME'];
+                        $teizitime[$result_row3['SAGYOUDATE']] = $result_row3['TEIZITIME'];
+                }
+                //4CODEのみで絞った情報
+                $result4 = $con->query($sql4) or ($judge = true);																	// クエリ発行
+                if($judge)
+                {
+                        error_log($con->error,0);
+                }
+                while($result_row4 = $result4->fetch_array(MYSQLI_ASSOC))
+                {
+                        $teizikei[$result_row4['SAGYOUDATE']] = $result_row4['TEIZITIME'];
+                }
+                
+                //按分
+                if(isset($teizitime))
+                {
+                        $month = array_keys($teizitime);
+                        for($i = 0; $i < count($teizitime); $i++)
+                        {
+                                //ある社員の月ごとの「あるPJの定時時間合計」/「全定時時間合計」（有給以外）
+                                $x = $teizitime[$month[$i]] / $teizikei[$month[$i]];
+                                $x = round($x,2);
+                                if($x != 0.00 && $genka != 0)
+                                {       
+                                        //原価をかける
+                                        $data['GENKA'.$month[$i]] = $x * $genka;
+                                        $data['GOUKEI'] += $x * $genka;
+                                }
+                                else
+                                {
+                                        $data['GENKA'.$month[$i]] = 0;
+                                }
+                        }
+                }
+
+                //次回計算が必要な月の情報を更新（現在月次処理済みの月の次の月）
+                $lastmonth = explode('-',$lastmonth[0]);
+                if($lastmonth != 12)
+                {
+                    $lastmonth[1]++;
+                }
+                else
+                {
+                    $lastmonth[1] = 1;
+                }
+                $data['NEXTMONTH'] = $lastmonth[1];
+                
+                //syuekiinfoに登録又は更新
+                $key = array_keys($data);
+                if($result_row1['COUNT(*)'] != 0)
+                {
+                        $sql5 = "UPDATE syuekiinfo SET ";
+                        for($i = 0; $i < count($key); $i++)
+                        {
+                                if($data[$key[$i]] == "")
+                                {
+                                    $value = "null";
+                                }
+                                else
+                                {
+                                    $value = "'".$data[$key[$i]]."'";
+                                }
+                                $sql5 .= $key[$i]." = ".$value." ,";
+                        }
+                        $sql5 = substr($sql5,0,-1);
+                        $sql5 .= "WHERE 4CODE = ".$code4." AND 5CODE = ".$code5;
+                }
+                else
+                {
+                        $sql5 = "INSERT INTO syuekiinfo ( 4CODE,5CODE,";
+                        $value = "'".$code4."','".$code5."',";
+                        for($i = 0; $i < count($key); $i++)
+                        {
+                                $sql5 .= $key[$i]." ,";
+                                $value .= "'".$data[$key[$i]]."' ,";
+                        }
+                        $sql5 = substr($sql5,0,-1);
+                        $value = substr($value,0,-1);
+                        $sql5 .= ") VALUES (".$value.")";
+                }
+                $result5 = $con->query($sql5) or ($judge = true);																	// クエリ発行
+                if($judge)
+                {
+                        error_log($con->error,0);
+                }
+        }
+        return $data;
+}
 ?>

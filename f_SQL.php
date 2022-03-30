@@ -560,80 +560,92 @@ function joinSelectSQL($post,$tablenum){
 	//佐竹
 	if ($filename != 'ENDPJLIST_2' && $filename != 'MONTHLIST_2' && $filename != 'PJLIST_2' && $tablenum == 5)
 	{
-        if($filename == "pjend_5" && isset($_SESSION["list"]["pjstat"]))
-        {
-            if($_SESSION["list"]["pjstat"] == "1")
-            {
-                $select_SQL .= " 5PJSTAT = 1 ";
-                $count_SQL .= " 5PJSTAT = 1 ";
+                if($filename == "pjend_5" && isset($_SESSION["list"]["pjstat"]))
+                {
+                    if($_SESSION["list"]["pjstat"] == "1")
+                    {
+                        $select_SQL .= " 5PJSTAT = 1 ";
+                        $count_SQL .= " 5PJSTAT = 1 ";
 
-            }
-            elseif($_SESSION["list"]["pjstat"] == "2")
-            {
-                $select_SQL .= " 5PJSTAT = 2 ";
-                $count_SQL .= " 5PJSTAT = 2 ";
-                
-                if($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] == "")
-                {
-                    //すべての日付
-                    $select_SQL .= "";
-                    $count_SQL .= "";
+                    }
+                    elseif($_SESSION["list"]["pjstat"] == "2")
+                    {
+                        $select_SQL .= " 5PJSTAT = 2 ";
+                        $count_SQL .= " 5PJSTAT = 2 ";
+
+                        if($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] == "")
+                        {
+                            //すべての日付
+                            $select_SQL .= "";
+                            $count_SQL .= "";
+                        }
+                        elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] == "")
+                        {
+                            //入力日付以降
+                            $select_SQL .= "AND 5ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+                            $count_SQL .= "AND 5ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+                        }
+                        elseif ($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] != "")
+                        {
+                            //入力日付以前
+                            $select_SQL .= "AND 5ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
+                            $count_SQL .= "AND 5ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
+                        }
+                        elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] != "")
+                        {
+                            //入力日付期限内
+                            $select_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
+                            $count_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
+                        }
+                    }
+                    if($_SESSION["list"]["period_0"] < 10)
+                    {
+                        $period = "0".$_SESSION["list"]["period_0"];
+                    }
+                    else
+                    {
+                        $period = $_SESSION["list"]["period_0"];
+                    }
+                    $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
+                    $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
                 }
-                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] == "")
+                else
                 {
-                    //入力日付以降
-                    $select_SQL .= "AND 5ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
-                    $count_SQL .= "AND 5ENDDATE >= '".$_SESSION["list"]["startdate"]."' ";
+                    if($filename != 'SYUEKIHYO_2')
+                    {
+                            $select_SQL .= " 5PJSTAT = 1 ";
+                            $count_SQL .= " 5PJSTAT = 1 ";
+                    }
+                            
+                    //現在の期を求める
+                    $item_ini = parse_ini_file('./ini/item.ini', true);
+                    $year = date_create('NOW');
+                    $year = date_format($year, "Y");
+                    $month = date_create('NOW');
+                    $month = date_format($month, "n");
+                    $startyear = $item_ini['period']['startyear'];
+                    $startmonth = $item_ini['period']['startmonth'];
+                    $period = $year - $startyear;
+                    if($startmonth <= $month)
+                    {
+                        $period = $period + 1;
+                    }
+                    if($filename == 'nenzi_5')
+                    {
+                        $period = $period - 1;
+                    }
+                    
+                    if($filename == 'SYUEKIHYO_2')
+                    {
+                        $select_SQL .= " PROJECTNUM LIKE '".$period."%'";
+                        $count_SQL .= " PROJECTNUM LIKE '".$period."%'";
+                    }
+                    else
+                    {
+                        $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
+                        $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
+                    }
                 }
-                elseif ($_SESSION["list"]["startdate"] == "" && $_SESSION["list"]["enddate"] != "")
-                {
-                    //入力日付以前
-                    $select_SQL .= "AND 5ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
-                    $count_SQL .= "AND 5ENDDATE <= '".$_SESSION["list"]["enddate"]."' ";
-                }
-                elseif($_SESSION["list"]["startdate"] != "" && $_SESSION["list"]["enddate"] != "")
-                {
-                    //入力日付期限内
-                    $select_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
-                    $count_SQL .= "AND 5ENDDATE BETWEEN '".$_SESSION["list"]["startdate"]."' AND '".$_SESSION["list"]["enddate"]."' ";
-                }
-            }
-            if($_SESSION["list"]["period_0"] < 10)
-            {
-                $period = "0".$_SESSION["list"]["period_0"];
-            }
-            else
-            {
-                $period = $_SESSION["list"]["period_0"];
-            }
-            $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
-            $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
-        }
-        else
-        {
-            $select_SQL .= " 5PJSTAT = 1 ";
-            $count_SQL .= " 5PJSTAT = 1 ";
-            
-            //現在の期を求める
-            $item_ini = parse_ini_file('./ini/item.ini', true);
-            $year = date_create('NOW');
-            $year = date_format($year, "Y");
-            $month = date_create('NOW');
-            $month = date_format($month, "n");
-            $startyear = $item_ini['period']['startyear'];
-            $startmonth = $item_ini['period']['startmonth'];
-            $period = $year - $startyear;
-            if($startmonth <= $month)
-            {
-                $period = $period + 1;
-            }
-            if($filename == 'nenzi_5')
-            {
-                $period = $period - 1;
-            }
-            $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
-            $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
-        }
 	}
 	else if ($filename != 'ENDPJLIST_2' && $tablenum == 8)
 	{
@@ -2218,6 +2230,10 @@ function SQLsetOrderby($post,$tablenum,$sql){
         if($filename == 'ENDPJLIST_2' || $filename == 'pjagain_5' || $filename == 'pjend_5')
         {
             $sql[0] .= " ORDER BY projectnuminfo.PROJECTNUM ASC, edabaninfo.EDABAN ASC";
+        }
+        else if($filename == 'GENKAINFO_2')
+        {
+            $sql[0] .= " ORDER BY STAFFID ASC";
         }
         else
         {
