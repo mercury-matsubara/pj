@@ -7800,18 +7800,23 @@ function insert_sousarireki($filename,$sousakubun_num,$data)
         }
     }
 }
-
+/************************************************************************************************************
+û‰v•\CSV‚Ìpathì¬
+function make_syuekihyocsv()
+ 
+–ß‚è’l@$path		
+***********************************************************************************************************/
 function make_syuekihyocsv()
 {
         require_once ("f_SQL.php");
         require_once ("f_File.php");
 
         $csv = "";
-        $pj_csv = "";
-        $uriage_csv = "";
-        $genka_csv = "";
-        $arari_csv = "";
-        $bairitsu_csv = "";
+        $pj_csv = "";   //PJî•ñs
+        $uriage_csv = "";   //”„ãs
+        $genka_csv = "";    //Œ´‰¿s
+        $arari_csv = "";    //‘e—˜s
+        $bairitsu_csv = "";     //”{—¦s
         $getsuzi_month = array();
         $getsuzi = array();
 
@@ -7907,6 +7912,7 @@ function make_syuekihyocsv()
                 if(isset($eda) && $eda != substr($pj_array[$i]['EDABAN'],0,4))
                 {
                         $edaban_bairitsu = "";
+                        $edaban_bairitsukei = 0;
                         $edaban_csv = $projectnum.",".$projectname.",".$eda.",‡Œv,,,,,,,,,,".$edaban_jokyo.",\r\n";
                         $edaban_csv .= $header_csv;
                         $edaban_csv .= "”„ã,";
@@ -7914,26 +7920,39 @@ function make_syuekihyocsv()
                         $edaban_csv3 = "‘e—˜,";
                         $edaban_csv4 = "”{—¦,";
                         foreach($month_array as $m)
-                        {
+                        {   
+                                //ŒŸˆ—ÏŒ‚©‚Ç‚¤‚©
                                 if(in_array($m,$getsuzi_month))
                                 {
                                         $edaban_csv .= $edaban_uriage[$m];
-                                        $edaban_csv2 .= $edaban_genka[$m];
-                                        $edaban_csv3 .= $edaban_arari[$m];
-                                        if($endmonth != "" && $edaban_uriage[$m] != 0 && $edaban_genka[$m] != 0)
+                                        if($edaban_genka[$m] != 0)
+                                        {
+                                                $edaban_csv2 .= $edaban_genka[$m];
+                                                $edaban_csv3 .= $edaban_uriage[$m] - $edaban_genka[$m];
+                                                $edaban_ararikei += $edaban_uriage[$m] - $edaban_genka[$m];
+                                        }
+                                        else if($edaban_genka[$m] == 0 && $edaban_uriage[$m] != 0)
+                                        {
+                                                $edaban_csv3 .= $edaban_uriage[$m];
+                                                $edaban_ararikei += $edaban_uriage[$m];
+                                        }
+                                        if($edaban_uriage[$m] != 0 && $edaban_genka[$m] != 0)
                                         {
                                                 $edaban_bairitsu = $edaban_uriage[$m] / $edaban_genka[$m];
                                                 $edaban_bairitsu = round($edaban_bairitsu,2);
+                                                if($edaban_jokyo == "Œp‘±’†")
+                                                {
+                                                        $edaban_bairitsu = "";
+                                                }
                                         }
-                                        else if($endmonth != "")
+                                        else if($edaban_jokyo != "Œp‘±’†")
                                         {
                                                 $edaban_bairitsu = 0;
                                         }
                                         $edaban_csv4 .= $edaban_bairitsu;
                                         $edaban_uriage[$m] = 0;
                                         $edaban_genka[$m] = 0;
-                                        $edaban_arari[$m] = 0;
-                                        $edaban_bairitsu = 0;
+                                        $edaban_bairitsu = "";
                                 }
                                 $edaban_csv .= ",";
                                 $edaban_csv2 .= ",";
@@ -7945,12 +7964,8 @@ function make_syuekihyocsv()
                                 $edaban_bairitsukei = $edaban_uriagekei / $edaban_genkakei;
                                 $edaban_bairitsukei = round($edaban_bairitsukei,2);
                         }
-                        else
-                        {
-                                $edaban_bairitsu = 0;
-                        }
                         $edaban_csv .= $edaban_uriagekei.",\r\n";
-                        $edaban_csv .= $edaban_csv2.$edaban_genkakei.",\r\n".$edaban_csv3.$edaban_ararikei.",\r\n".$edaban_csv4.$edaban_bairitsu.",\r\n";
+                        $edaban_csv .= $edaban_csv2.$edaban_genkakei.",\r\n".$edaban_csv3.$edaban_ararikei.",\r\n".$edaban_csv4.$edaban_bairitsukei.",\r\n";
                         $csv .= $edaban_csv;
                         $edaban_csv = "";
                         $eda = substr($pj_array[$i]['EDABAN'],0,4);
@@ -7958,7 +7973,7 @@ function make_syuekihyocsv()
                         $edaban_uriagekei = 0;
                         $edaban_genkakei = 0;
                         $edaban_ararikei = 0;
-                        $edaban_bairitsukei = "";
+                        $edaban_bairitsukei = 0;
                 }
                 else if(!isset($eda))
                 {
@@ -7966,12 +7981,11 @@ function make_syuekihyocsv()
                         {
                                 $edaban_uriage[$m] = 0; 
                                 $edaban_genka[$m] = 0;
-                                $edaban_arari[$m] = 0;
                         }
                         $edaban_uriagekei = 0;
                         $edaban_genkakei = 0;
                         $edaban_ararikei = 0;
-                        $edaban_bairitsukei = "";
+                        $edaban_bairitsukei = 0;
                         $eda = substr($pj_array[$i]['EDABAN'],0,4);
                 }
 
@@ -8029,12 +8043,12 @@ function make_syuekihyocsv()
                         $syain_csv .= $staffname.",";
                         $zangyou_csv .= $staffname."c‹Æ(H),";
 
-                        $data_array = syuekiinfo($code5,$code4,$getsuzi,$genka);
+                        $data_array = syueki_syain($code5,$code4,$getsuzi,$genka);
                         foreach($month_array as $m)
                         {   
                                 if(isset($data_array['GENKA'.$m]) && $data_array['GENKA'.$m] != "")
                                 {
-                                        $g = $data_array['GENKA'.$m] / 1000;
+                                        $g = $data_array['GENKA'.$m];
                                         $syain_csv .= $g.",";
                                         $month_genka[$m] += $g;
                                 }
@@ -8055,7 +8069,8 @@ function make_syuekihyocsv()
                         $syain_csv .= $data_array['GOUKEI'].",\r\n";
                         $zangyou_csv .= $data_array['ZANGYOUKEI'].",\r\n";
 
-                        $uriagekei += $syain_array[$j]['DETALECHARGE'] / 1000;
+                        $uriagekei += round($syain_array[$j]['DETALECHARGE'],-3) / 1000;
+                        $uriagekei = round($uriagekei,2);
                 }
 
                 foreach($month_array as $m)
@@ -8063,6 +8078,7 @@ function make_syuekihyocsv()
                         $genka = 0;
                         $uriage = 0;
                         $bairitsu = "";
+                        $arari = "";
                         if(in_array($m,$getsuzi_month))
                         {
                                 if($m == $endmonth || ($endmonth == "" && $m == end($getsuzi_month)))
@@ -8085,10 +8101,17 @@ function make_syuekihyocsv()
                                         $genkakei += $genka;
                                 }
                                 
-                                $arari = $uriage - $genka;
-                                $ararikei += $arari;
+                                if($genka != "")
+                                {
+                                        $arari = $uriage - $genka;
+                                        $ararikei += $arari;
+                                }
+                                else if($genka == "" && $uriage != "")
+                                {
+                                        $arari = $uriage;
+                                        $ararikei += $arari;
+                                }
                                 $arari_csv .= $arari;
-                                $edaban_arari[$m] += $arari;
                                 if($endmonth != "" && $uriage != 0 && $genka != 0)
                                 {
                                         $bairitsu = $uriage / $genka;
@@ -8105,17 +8128,11 @@ function make_syuekihyocsv()
                         $arari_csv .= ",";
                         $bairitsu_csv .= ",";
                 }
-
                 if($endmonth != "" && $uriagekei != 0 && $genkakei != 0)
                 {
                         $bairitsukei = $uriagekei / $genkakei;
                         $bairitsukei = round($bairitsukei,2);
                 }
-                else if($endmonth != "")
-                {
-                        $bairitsukei = 0;
-                }
-
                 $uriage_csv .= $uriagekei.",\r\n";
                 $genka_csv .= $genkakei.",\r\n";
                 $arari_csv .= $ararikei.",\r\n";
@@ -8130,8 +8147,18 @@ function make_syuekihyocsv()
         $path = csv_write($csv);
         return $path;
 }
+/************************************************************************************************************
+û‰v•\CSV‚ÌĞˆõî•ñ
+function syueki_syain()
 
-function syuekiinfo ($code5,$code4,$getsuzi,$genka)
+ˆø”     $code5@5CODE
+        $code4@4CODE
+        $getsuzi@ŒŸˆ—Ï‚ÌŒ
+        $genka  4CODE‚ÌĞˆõ‚ÌŒ´‰¿
+
+–ß‚è’l  $data
+***********************************************************************************************************/
+function syueki_syain ($code5,$code4,$getsuzi,$genka)
 {
         $teizikei = array();
         $value = "";
@@ -8179,7 +8206,8 @@ function syuekiinfo ($code5,$code4,$getsuzi,$genka)
                                             . "WHERE 5CODE = ".$code5." AND 4CODE = ".$code4." AND (";
                 $sql4 = "SELECT DATE_FORMAT(SAGYOUDATE, '%c') as SAGYOUDATE,SUM(TEIZITIME) as TEIZITIME "
                                             . "FROM progressinfo LEFT JOIN projectditealinfo USING(6CODE ) LEFT JOIN syaininfo USING(4CODE ) "
-                                            . "WHERE 4CODE = ".$code4." AND (";
+                                            . "LEFT JOIN projectinfo USING(5CODE) LEFT JOIN edabaninfo USING(2CODE)"
+                                            . "WHERE EDABAN != 'Z00490' AND 4CODE = ".$code4." AND (";
                 for($i = 0; $i < count($getsuzi); $i++)
                 {
                         $sql3 .= " DATE_FORMAT(SAGYOUDATE, '%Y-%c') = '".$getsuzi[$i]."' OR";
@@ -8225,8 +8253,9 @@ function syuekiinfo ($code5,$code4,$getsuzi,$genka)
                                 if($x != 0.00 && $genka != 0)
                                 {       
                                         //Œ´‰¿‚ğ‚©‚¯‚é
-                                        $data['GENKA'.$month[$i]] = $x * $genka;
-                                        $data['GOUKEI'] += $x * $genka;
+                                        $y = $x * $genka;
+                                        $data['GENKA'.$month[$i]] = round($y,-3) / 1000;
+                                        $data['GOUKEI'] += round($y,-3) / 1000;
                                 }
                                 else
                                 {

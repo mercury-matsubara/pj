@@ -48,15 +48,6 @@ else
 	$tablename = mb_convert_encoding($tablename,'sjis-win','SJIS');
 	$file_name = "List_".$tablename."_".$date.".csv";
 }
-if($filename == 'SYUEKIHYO_2')
-{   
-        $_SESSION['path'] = $path;
-        $_SESSION['file_name'] = $file_name;
-	$_SESSION['pre_post'] = $_SESSION['post'];
-	$_SESSION['post'] = null;
-        header("location:".(empty($_SERVER['HTTPS'])? "http://" : "https://").$_SERVER['HTTP_HOST'].dirname($_SERVER["REQUEST_URI"])."/list.php");
-        exit();
-}
 header('Content-Type: application/octet-stream'); 
 header('Content-Disposition: attachment; filename="'.$file_name.'"'); 
 header('Content-Length: '.filesize($path));

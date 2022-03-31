@@ -71,14 +71,6 @@
             $syain = syaget();
             $syain = rtrim($syain, ",");
         }
-        if(isset($_SESSION['path']))
-        {
-                header('Content-Type: application/octet-stream'); 
-                header('Content-Disposition: attachment; filename="'.$_SESSION['file_name'].'"'); 
-                header('Content-Length: '.filesize($_SESSION['path']));
-                readfile($_SESSION['path']);
-                unlink($_SESSION['path']);
-        }
 ?>
 <head>
 <title><?php echo $title1.$title2 ; ?></title>
