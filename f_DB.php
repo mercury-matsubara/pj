@@ -4903,6 +4903,7 @@ function pjend($post){
         {
             $pjid = $_SESSION['seizyou5code'];
             //unset($_SESSION['seizyou5code']);
+            error_log("PJ終了処理前5CODE　".var_export($pjid , true)."\n",3,"pjend.log");
         }
         else
         {
@@ -4913,7 +4914,8 @@ function pjend($post){
 	//      定時チェック      //
 	//------------------------//
 	$con = dbconect();																									// db接続関数実行
-	for($o=0; $o < count($pjid); $o++)
+	error_log("PJ終了処理開始\n",3,"pjend.log");
+    for($o=0; $o < count($pjid); $o++)
         {	
             //------------------------//
             //          変数          //
@@ -5087,6 +5089,7 @@ function pjend($post){
                     $result = $con->query($sql_end) or ($judge = true);																		// クエリ発行
                     if($judge)
                     {
+                        error_log("endpjinfo登録エラー　5CODE：".$pjid[$i]."\n",3,"pjend.log");
                         error_log($con->error,0);
                         $judge = false;
                     }
@@ -5104,6 +5107,7 @@ function pjend($post){
                 $result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
                 if($judge)
                 {
+                    error_log("projectinfo更新エラー　5CODE：".$pjid[$i]."\n",3,"pjend.log");
                     error_log($con->error,0);
                     $judge = false;
                 }
@@ -5113,6 +5117,7 @@ function pjend($post){
                 $result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
                 if($judge)
                 {
+                    error_log("projectditealinfo更新エラー　5CODE：".$pjid[$i]."\n",3,"pjend.log");
                     error_log($con->error,0);
                     $judge = false;
                 }
@@ -5120,6 +5125,7 @@ function pjend($post){
                 $result = $con->query($sql_update) or ($judge = true);																		// クエリ発行
                 if($judge)
                 {
+                    error_log("progressinfo更新エラー　5CODE：".$pjid[$i]."\n",3,"pjend.log");
                     error_log($con->error,0);
                     $judge = false;
                 }
@@ -5133,6 +5139,8 @@ function pjend($post){
                 $message = 'エラー';
             }
         }
+        error_log("PJ終了処理後5CODE".var_export($pjid , true)."\n",3,"pjend.log");
+        error_log("PJ終了処理終了\n",3,"pjend.log");
 	return($message);
 }
 
@@ -6008,7 +6016,9 @@ function pjCheck($post){
 	}
 	else if($filename == 'pjend_5')
 	{
+        error_log("\n\n\n操作人：".$_SESSION["user"]["STAFFNAME"]." ".date("Y-m-d H:i:s")."\n",3,"pjend.log");
 		$pjid = explode(",",$post["5CODE"]);					//プロジェクト終了
+        error_log("チェック処理前5CODE　".var_export($pjid , true)."\n",3,"pjend.log");
 	}
 	else
 	{
@@ -6143,8 +6153,10 @@ function pjCheck($post){
 	}
 	else
 	{
+        error_log("チェック処理開始　".count($pjid)."回繰り返す\n",3,"pjend.log");
 		for($i = 0; $i < count($pjid); $i++)
                 {
+                    error_log("チェックした5CODE　".$pjid[$i]."\n",3,"pjend.log");
                     //------------------------//
                     //          変数          //
                     //------------------------//
@@ -6233,6 +6245,7 @@ function pjCheck($post){
                                         {
                                             $checkflg = true;
                                             //定時エラー//
+                                            error_log("定時エラー5CODE　".$pjid[$i]."\n",3,"pjend.log");
                                             $errrecname = $result_row['STAFFNAME'];
                                             $errrecdate = $result_row['SAGYOUDATE'];
                                             $error[$errorcnt]['STAFFNAME'] = $errrecname;
@@ -6251,6 +6264,7 @@ function pjCheck($post){
                                         {
                                             $checkflg = true;
                                             //定時エラー//
+                                            error_log("定時エラー5CODE　".$pjid[$i]."\n",3,"pjend.log");
                                             $errrecname = $result_row['STAFFNAME'];
                                             $errrecdate = $result_row['SAGYOUDATE'];
                                             $error[$errorcnt]['STAFFNAME'] = $errrecname;
@@ -6268,6 +6282,7 @@ function pjCheck($post){
                                     {
                                         $checkflg = true;
                                         //定時エラー//
+                                        error_log("定時エラー5CODE　".$pjid[$i]."\n",3,"pjend.log");
                                         $errrecname = $result_row['STAFFNAME'];
                                         $errrecdate = $result_row['SAGYOUDATE'];
                                         $error[$errorcnt]['STAFFNAME'] = $errrecname;
@@ -6284,6 +6299,7 @@ function pjCheck($post){
                     }
                     else
                     {
+                        error_log("進捗エラー5CODE　".$pjid[$i]."\n",3,"pjend.log");
                         $pjcode = explode(",",$_SESSION['list']['pjcode']);
                         $edabancode = explode(",",$_SESSION['list']['edabancode']);
                         $pjname = explode(",",$_SESSION['list']['pjname']);
@@ -6294,6 +6310,8 @@ function pjCheck($post){
                         $_SESSION['message'][] = "<a class = 'error'>進捗情報が登録されていません。</a>";
                     }
                 }
+                error_log("チェック処理終了\n\n",3,"pjend.log");                
+                error_log("チェック処理終了後正常5CODE　".var_export($_SESSION["seizyou5code"] , true)."\n",3,"pjend.log");
                 
                 //同じ内容を削除する。
                 $tmperror = array();

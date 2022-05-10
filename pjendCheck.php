@@ -204,7 +204,20 @@
 		echo "</div>";
 		echo "</form>";
         
+        if(isset($_SESSION['seizyou5code']))
+        {
+            unset($_SESSION['seizyou5code']);
+        }
 	}
+    
+    if($judge)
+    {
+        error_log("チェック処理判定結果　正常\n",3,"pjend.log");
+    }
+    else
+    {
+        error_log("チェック処理判定結果　異常\n",3,"pjend.log");
+    }
 ?>
 <script language="JavaScript"><!--
 

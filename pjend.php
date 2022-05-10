@@ -201,6 +201,10 @@
                 alert("終了するプロジェクトを選択してください。");
                 return false;
             }
+            
+            //2重送信防止
+            document.getElementById("endbutton").disabled = true;
+            
             const checkbox = document.form.checkbox;
             var oncheckbox = 0;
             var jadge = false;

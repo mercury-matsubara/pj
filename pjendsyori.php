@@ -21,6 +21,7 @@
 		$message = pjend($_SESSION['list']);        
 		if($message == '完了')
 		{
+            error_log("PJ終了処理結果：　正常\n",3,"pjend.log");
             insert_sousarireki($_SESSION["filename"],"5",$_SESSION["seizyou5code"]);
             unset($_SESSION['seizyou5code']);
 			echo "<div class = 'center'><br><br>";
@@ -40,6 +41,7 @@
 		}
 		else
 		{
+            error_log("PJ終了処理結果：　異常\n",3,"pjend.log");
 			$error = $_SESSION['error'];
 			echo "<div class = 'center'><br><br>";
 			echo "<form action='pageJump.php' method='post'>";
