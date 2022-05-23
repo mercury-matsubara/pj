@@ -57,7 +57,7 @@
 	{
 		$maxover = $_SESSION['max_over'];
 	}
-        
+        $edalist = edaget();
         $syain_total = 0;
         if($filename == 'PJTOUROKU_1')
 	{
@@ -91,7 +91,9 @@
 	
 	var totalcount  = "<?php echo $maxover; ?>";
 	var isCancel = false;
-	
+	var edaitem = "<?php echo $edalist; ?>".split(",");
+    var filename = "<?php echo $filename; ?>";
+    
 	$(window).resize(function()
 	{
 		var t1 =  $('td.one').width();

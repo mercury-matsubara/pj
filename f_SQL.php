@@ -640,6 +640,19 @@ function joinSelectSQL($post,$tablenum){
                         $select_SQL .= " PROJECTNUM LIKE '".$period."%'";
                         $count_SQL .= " PROJECTNUM LIKE '".$period."%'";
                     }
+                    elseif($filename == "PJTOUROKU_2" && isset ($post["period_0"]))
+                    {
+                        if($_SESSION["list"]["period_0"] < 10)
+                        {
+                            $period = "0".$_SESSION["list"]["period_0"];
+                        }
+                        else
+                        {
+                            $period = $_SESSION["list"]["period_0"];
+                        }
+                        $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";
+                        $count_SQL .= "AND PROJECTNUM LIKE '".$period."%'";                        
+                    }
                     else
                     {
                         $select_SQL .= "AND PROJECTNUM LIKE '".$period."%'";

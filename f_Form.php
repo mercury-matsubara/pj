@@ -1361,7 +1361,7 @@ function makeformSerch_set($post,$formName){
         $serch_str .= "<td><input type='date' id='startdate' name='startdate'>　～　<input type='date' id='enddate' name='enddate'></td></tr>";        
     }
     
-    if($filename == "ENDPJLIST_2" || $filename == "PJLIST_2")
+    if($filename == "ENDPJLIST_2" || $filename == "PJLIST_2" || $filename == "PJTOUROKU_2")
     {
         //期のプルダウン作成
         $form_name = "period";

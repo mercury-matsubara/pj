@@ -401,6 +401,33 @@
 			}
 		}
 */
+        //重複チェック(枝番コードが同じかつ製番・案件名)が同じデータが登録されていたらエラーとする。
+		if(filename == 'EDABANINFO_1')
+		{     
+            if(name == "form_202_0" || name == "form_203_0")
+            {
+                var edaitem = "<?php echo $edalist; ?>".split(",");
+                var str1 = document.getElementById("form_202_0").value;
+                var str2 = document.getElementById("form_203_0").value;
+                var numcnt = 0;
+                while(numcnt < edaitem.length - 1)
+                {
+                    if (str1 == edaitem[numcnt + 0] && str2 == edaitem[numcnt + 1])
+                    {
+                        judge = false;
+                        document.getElementById("form_202_0").style.backgroundColor = '#ff0000';
+                        document.getElementById("form_203_0").style.backgroundColor = '#ff0000';
+                        
+                        if(event.type == "change" || (event.type == "submit" && name == "form_202_0"))
+                        {
+                            alert('枝番コード、製番・案件名が同じデータが登録されています。');
+                        }
+                        break;
+                    }
+                    numcnt = numcnt + 2;
+                }
+            }
+        }
 		if(filename == 'KOUTEIINFO_1')
 		{
 			var kouitem = "<?php echo $koulist; ?>".split(",");
